@@ -124,7 +124,6 @@ The Microsoft Docs MCP Server team is working on several enhancements:
 
 - Expanding coverage to additional Microsoft documentation sources
 - Improved query understanding for more precise results
-- Client info tracking and throtlling
 
 ## 📚 Additional Resources
 
