@@ -8,10 +8,11 @@ The Microsoft Docs MCP Server implements the [Model Context Protocol (MCP)](http
 ## 📑 Table of contents
 1. [🎯 Overview](#-overview)
 2. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
-3. [🔌 Installation & Getting Started](#-installation--getting-started)
-4. [❓ Troubleshooting](#-troubleshooting)
-5. [🔮 Future Enhancements](#-future-enhancements)
-6. [📚 Additional Resources](#-additional-resources)
+3. [🌐 The Microsoft Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
+4. [🔌 Installation & Getting Started in Visual Studio](#-installation--getting-started-in-visual-studio)
+5. [❓ Troubleshooting](#-troubleshooting)
+6. [🔮 Future Enhancements](#-future-enhancements)
+7. [📚 Additional Resources](#-additional-resources)
 
 ## 🎯 Overview
 
@@ -26,13 +27,34 @@ The Microsoft Docs MCP Server is a cloud-hosted service that enables MCP hosts l
 - **Optimized Chunking**: Returns up to 10 high-quality content chunks (each max 500 tokens), with article titles, URLs, and self-contained content excerpts.
 - **Real-time Updates**: Access the latest Microsoft documentation as it's published.
 
+## 🌐 The Microsoft Docs MCP Server Endpoint
+
+The Microsoft Docs MCP Server is accessible to any IDE, agent, or tool that supports the Model Context Protocol (MCP). You do not need to use Visual Studio Code—any compatible client can connect directly to the endpoint below:
+
+**Endpoint URL:**
+```
+https://learn.microsoft.com/api/mcp
+```
+
+**Example JSON configuration:**
+```json
+{
+  "servers": {
+    "microsoft.docs.mcp": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
+  }
+}
+```
+
 ## 🛠️ Currently Supported Tools
 
 | Tool Name | Description | Input Parameters |
 |-----------|-------------|------------------|
 | `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentations | `query` (string): The search query for retrieval |
 
-## 🔌 Installation & Getting Started
+## 🔌 Installation & Getting Started in Visual Studio Code
 
 ### ⚡ Prerequisites
 
@@ -91,7 +113,7 @@ For a step-by-step installation, follow these instructions:
 
 ![img](docs/images/mcp04.png)
 
-### 📝 Getting Started
+### 📝 Getting Started in Visual Studio Code
 
 1. Open VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
 
