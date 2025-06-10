@@ -10,7 +10,7 @@ The Microsoft Docs MCP Server implements the [Model Context Protocol (MCP)](http
 2. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
 3. [🌐 The Microsoft Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
 4. [🔌 Installation & Getting Started in VS Code](#-installation--getting-started-in-vs-code)
-5. [🔗 Other MCP Clients](#-other-mcp-clients)
+5. [🔗 Installation for Other MCP Clients](#-installation-for-other-mcp-clients)
 6. [❓ Troubleshooting](#-troubleshooting)
 7. [🔮 Future Enhancements](#-future-enhancements)
 8. [📚 Additional Resources](#-additional-resources)
@@ -40,11 +40,9 @@ https://learn.microsoft.com/api/mcp
 **Example JSON configuration:**
 ```json
 {
-  "servers": {
-    "microsoft.docs.mcp": {
-      "type": "http",
-      "url": "https://learn.microsoft.com/api/mcp"
-    }
+  "microsoft.docs.mcp": {
+    "type": "http",
+    "url": "https://learn.microsoft.com/api/mcp"
   }
 }
 ```
@@ -124,15 +122,13 @@ For a step-by-step installation, follow these instructions:
 
 4. The agent should use the Microsoft Docs MCP Server to retrieve relevant documentation.
 
-## 🔗 Other MCP Clients
+## 🔗 Installation for Other MCP Clients
 
-The Microsoft Docs MCP Server is compatible with various MCP-supported clients. Here are quick installation options for popular clients:
+The Microsoft Docs MCP Server is compatible with various MCP-supported clients beyond VS Code. Here are installation instructions for popular clients:
 
-### Cursor IDE
-
-Install the Microsoft Docs MCP Server directly in Cursor with one click:
-
-<a href="https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D"><img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Add microsoft.docs.mcp MCP server to Cursor" height="32" /></a> <a href="cursor://anysphere.cursor-deeplink/mcp/install?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0="><img src="https://cursor.com/deeplink/mcp-install-light.svg" alt="Add microsoft.docs.mcp MCP server to Cursor" height="32" /></a>
+| Client | Installation Method | Description |
+|--------|-------------------|-------------|
+| **Cursor IDE** | <a href="https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D"><img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Add microsoft.docs.mcp MCP server to Cursor" height="32" /></a> | One-click installation via weblink |
 
 ## ❓ Troubleshooting
 
