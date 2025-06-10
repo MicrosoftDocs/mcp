@@ -9,10 +9,11 @@ The Microsoft Docs MCP Server implements the [Model Context Protocol (MCP)](http
 1. [🎯 Overview](#-overview)
 2. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
 3. [🌐 The Microsoft Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
-4. [🔌 Installation & Getting Started in Visual Studio](#-installation--getting-started-in-visual-studio)
-5. [❓ Troubleshooting](#-troubleshooting)
-6. [🔮 Future Enhancements](#-future-enhancements)
-7. [📚 Additional Resources](#-additional-resources)
+4. [🔌 Installation & Getting Started in VS Code](#-installation--getting-started-in-vs-code)
+5. [🔗 Other MCP Clients](#-other-mcp-clients)
+6. [❓ Troubleshooting](#-troubleshooting)
+7. [🔮 Future Enhancements](#-future-enhancements)
+8. [📚 Additional Resources](#-additional-resources)
 
 ## 🎯 Overview
 
@@ -29,7 +30,7 @@ The Microsoft Docs MCP Server is a cloud-hosted service that enables MCP hosts l
 
 ## 🌐 The Microsoft Docs MCP Server Endpoint
 
-The Microsoft Docs MCP Server is accessible to any IDE, agent, or tool that supports the Model Context Protocol (MCP). You do not need to use Visual Studio Code—any compatible client can connect directly to the endpoint below:
+The Microsoft Docs MCP Server is accessible to any IDE, agent, or tool that supports the Model Context Protocol (MCP). Any compatible client can connect directly to the endpoint below:
 
 **Endpoint URL:**
 ```
@@ -54,7 +55,7 @@ https://learn.microsoft.com/api/mcp
 |-----------|-------------|------------------|
 | `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentations | `query` (string): The search query for retrieval |
 
-## 🔌 Installation & Getting Started in Visual Studio Code
+## 🔌 Installation & Getting Started in VS Code
 
 ### ⚡ Prerequisites
 
@@ -113,7 +114,7 @@ For a step-by-step installation, follow these instructions:
 
 ![img](docs/images/mcp04.png)
 
-### 📝 Getting Started in Visual Studio Code
+### 📝 Getting Started in VS Code
 
 1. Open VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
 
@@ -122,6 +123,16 @@ For a step-by-step installation, follow these instructions:
 3. Test the server by prompting the agent with a query, e.g., "How to create an app service in Azure portal using microsoft docs?"
 
 4. The agent should use the Microsoft Docs MCP Server to retrieve relevant documentation.
+
+## 🔗 Other MCP Clients
+
+The Microsoft Docs MCP Server is compatible with various MCP-supported clients. Here are quick installation options for popular clients:
+
+### Cursor IDE
+
+Install the Microsoft Docs MCP Server directly in Cursor with one click:
+
+<a href="https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D"><img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Add microsoft.docs.mcp MCP server to Cursor" height="32" /></a> <a href="cursor://anysphere.cursor-deeplink/mcp/install?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0="><img src="https://cursor.com/deeplink/mcp-install-light.svg" alt="Add microsoft.docs.mcp MCP server to Cursor" height="32" /></a>
 
 ## ❓ Troubleshooting
 
