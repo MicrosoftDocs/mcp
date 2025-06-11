@@ -9,11 +9,10 @@ The Microsoft Docs MCP Server implements the [Model Context Protocol (MCP)](http
 1. [🎯 Overview](#-overview)
 2. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
 3. [🌐 The Microsoft Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
-4. [🔌 Installation & Getting Started in VS Code](#-installation--getting-started-in-vs-code)
-5. [🔗 Installation for Other MCP Clients](#-installation-for-other-mcp-clients)
-6. [❓ Troubleshooting](#-troubleshooting)
-7. [🔮 Future Enhancements](#-future-enhancements)
-8. [📚 Additional Resources](#-additional-resources)
+4. [🔌 Installation & Getting Started](#-installation--getting-started)
+5. [❓ Troubleshooting](#-troubleshooting)
+6. [🔮 Future Enhancements](#-future-enhancements)
+7. [📚 Additional Resources](#-additional-resources)
 
 ## 🎯 Overview
 
@@ -53,82 +52,15 @@ https://learn.microsoft.com/api/mcp
 |-----------|-------------|------------------|
 | `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentations | `query` (string): The search query for retrieval |
 
-## 🔌 Installation & Getting Started in VS Code
+## 🔌 Installation & Getting Started
 
-### ⚡ Prerequisites
+The Microsoft Docs MCP Server supports quick installation across multiple development environments. Choose your preferred client below for streamlined setup:
 
-1. Install VS Code (either version):
-   * [Stable release](https://code.visualstudio.com/download)
-   * [Insiders release](https://code.visualstudio.com/insiders)
-2. Open VS Code in any workspace
-
-### 🚀 Installation Options
-
-#### ✨ One-Click Installation
-
-For the fastest setup, click one of these buttons to automatically install the Microsoft Docs MCP Server:
-
-[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
-Just one click, and you're ready to go! 🎉
-
-You might get prompted to open the link with VS Code and then select "Install Server".
-Once you've installed the Microsoft Docs MCP Server, make sure you select GitHub Copilot Agent Mode and refresh the tools list. To learn more about Agent Mode, visit the [VS Code Documentation](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
-
-#### 🔧 Manual Installation
-
-For a step-by-step installation, follow these instructions:
-
-1. Open VS Code's command palette by pressing `Ctrl + Shift + P` (Windows/Linux) or `Cmd + Shift + P` (Mac)
-
-2. Type `MCP: Add Server...` and select it when it appears in the dropdown
-
-3. Next select `HTTP (server-sent events)`
-
-![img](docs/images/mcp01.png)
-
-4. Enter the server URL: `https://learn.microsoft.com/api/mcp`
-
-![img](docs/images/mcp02.png)
-
-5. Provide a local name for the server (default or custom).
-
-6. Choose Workspace as the save location.
-
-![img](docs/images/mcp03.png)
-
-7. A file named `mcp.json` will be created in the `.vscode` folder:
-```
-{
-  "servers": {
-    "microsoft.docs.mcp": {
-        "type": "http",
-        "url": "https://learn.microsoft.com/api/mcp"
-    }
-  }
-}
-```
-
-8. If successful, you should be connected to the MCP server and see 1 tool available.
-
-![img](docs/images/mcp04.png)
-
-### 📝 Getting Started in VS Code
-
-1. Open VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
-
-2. Verify that the Microsoft Docs MCP Server (`microsoft.docs.mcp`) appears in the list of tools.
-
-3. Test the server by prompting the agent with a query, e.g., "How to create an app service in Azure portal using microsoft docs?"
-
-4. The agent should use the Microsoft Docs MCP Server to retrieve relevant documentation.
-
-## 🔗 Installation for Other MCP Clients
-
-The Microsoft Docs MCP Server is compatible with various MCP-supported clients beyond VS Code. Here are installation instructions for popular clients:
-
-| Client | Installation Method | Description |
-|--------|-------------------|-------------|
-| **Cursor IDE** | <a href="https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D"><img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Add microsoft.docs.mcp MCP server to Cursor" height="32" /></a> | One-click installation via weblink |
+| Client | One-click Installation | Get Started |
+|--------|----------------------|-------------------|
+| **VS Code** | [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders) | [VS Code MCP Official Guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) |
+| **Visual Studio** | Manual configuration required | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
+| **Cursor IDE** | <a href="https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi0vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D"><img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Add microsoft.docs.mcp MCP server to Cursor" height="32" /></a> | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
 
 ## ❓ Troubleshooting
 
