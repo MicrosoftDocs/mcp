@@ -77,7 +77,6 @@ The Microsoft Docs MCP Server supports quick installation across multiple develo
 For issues with the Microsoft Docs MCP Server:
 - Check the [Model Context Protocol documentation](https://modelcontextprotocol.io)
 - [Give us feedback](https://github.com/MicrosoftDocs/mcp/issues)
-- Want to integrate the Learn MCP server with another product or service? [Contact us here](https://forms.office.com/r/MUHdB9CNx5)
 
 ## 🔮 Future Enhancements
 
