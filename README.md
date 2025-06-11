@@ -7,8 +7,8 @@ The Microsoft Docs MCP Server implements the [Model Context Protocol (MCP)](http
 
 ## 📑 Table of contents
 1. [🎯 Overview](#-overview)
-2. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
-3. [🌐 The Microsoft Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
+2. [🌐 The Microsoft Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
+3. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
 4. [🔌 Installation & Getting Started](#-installation--getting-started)
 5. [❓ Troubleshooting](#-troubleshooting)
 6. [🔮 Future Enhancements](#-future-enhancements)
