@@ -89,5 +89,4 @@ The Microsoft Docs MCP Server team is working on several enhancements:
 ## 📚 Additional Resources
 
 - [Model Context Protocol Specification](https://modelcontextprotocol.io)
-- [VS Code MCP Documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
 - [Microsoft Learn](https://learn.microsoft.com)
