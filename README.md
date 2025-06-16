@@ -29,12 +29,12 @@ The Microsoft Docs MCP Server is a cloud-hosted service that enables MCP hosts l
 
 ## 🌐 The Microsoft Docs MCP Server Endpoint
 
-The Microsoft Docs MCP Server is accessible to any IDE, agent, or tool that supports the Model Context Protocol (MCP). Any compatible client can connect directly to the endpoint below:
+The Microsoft Docs MCP Server is accessible to any IDE, agent, or tool that supports the Model Context Protocol (MCP). Any compatible client can connect to the following **remote MCP endpoint**:
 
-**Endpoint URL:**
 ```
 https://learn.microsoft.com/api/mcp
 ```
+> **Note:** This endpoint is designed for programmatic access by MCP clients via Streamable HTTP. It does not support direct access from a web browser and may return a `405 Method Not Allowed` error if accessed manually.
 
 **Example JSON configuration:**
 ```json
