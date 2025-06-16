@@ -77,6 +77,7 @@ The Microsoft Docs MCP Server supports quick installation across multiple develo
 | Connection errors | Verify your network connection and that the server URL is correctly entered |
 | No results returned | Try rephrasing your query with more specific technical terms |
 | Tool not appearing in VS Code | Restart VS Code or check that the MCP extension is properly installed |
+| HTTP status 405  | Method not allowed happens when a browser tries to connect to the endpoint. Try using the Docs MCP Server through VS Code GitHub Copilot or [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) instead. |
 
 ### 🆘 Getting Support
 
