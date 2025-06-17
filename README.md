@@ -46,6 +46,21 @@ https://learn.microsoft.com/api/mcp
 }
 ```
 
+**Example Claude Desktop configuration:**
+
+Claude Desktop doesn't natively support HTTP MCP servers yet. However, you can connect to your Microsoft Docs MCP server using the `mcp-remote` proxy package. 
+
+```json
+{
+  "mcpServers": {
+    "microsoft.docs.mcp": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://learn.microsoft.com/api/mcp"]
+    }
+  }
+}
+```
+
 ## 🛠️ Currently Supported Tools
 
 | Tool Name | Description | Input Parameters |
