@@ -77,7 +77,6 @@ The Microsoft Docs MCP Server supports quick installation across multiple develo
 | **Visual Studio** | Manual configuration required<br/>Use `"type": "http"` | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
 | **Cursor IDE** | [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
 | **Roo Code** | Manual configuration required<br/>Use `"type": "streamable-http"` | [Roo Code MCP Guide](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
-| **Qodo Gen** | Manual configuration required<br/> <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "url": "https://learn.microsoft.com/api/mcp"<br/>  }<br/>}</pre></details>| [Qodo Gen MCP Guide](https://docs.qodo.ai/qodo-documentation/qodo-gen/qodo-gen-chat/agentic-mode/agentic-tools-mcps) |
 
 ### Alternative Installation (for clients without Streamable HTTP support)
 
