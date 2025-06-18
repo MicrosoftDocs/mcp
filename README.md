@@ -76,7 +76,19 @@ The Microsoft Docs MCP Server supports quick installation across multiple develo
 | **VS Code** | [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders) | [VS Code MCP Official Guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) |
 | **Visual Studio** | Manual configuration required<br/>Use `"type": "http"` | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
 | **Cursor IDE** | [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
+| **[Claude.ai](https://claude.ai/new)** | **Paid subscription required**<br/>Manual configuration needed | [Custom MCP Guide](https://github.com/MicrosoftDocs/mcp/pull/17#issuecomment-2980997508) |
 | **Roo Code** | Manual configuration required<br/>Use `"type": "streamable-http"` | [Roo Code MCP Guide](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
+| **Qodo Gen** | Manual configuration required<br/> <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "url": "https://learn.microsoft.com/api/mcp"<br/>  }<br/>}</pre></details>| [Qodo Gen MCP Guide](https://docs.qodo.ai/qodo-documentation/qodo-gen/qodo-gen-chat/agentic-mode/agentic-tools-mcps) |
+
+### Alternative Installation (for clients without Streamable HTTP support)
+
+Some clients don't support `Streamable HTTP`, so you can use `mcp-remote` as a workaround:
+
+| Client | Manual Configuration | MCP Guide |
+|--------|----------------------|-----------|
+| **Claude Desktop** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Claude Desktop MCP Guide](https://modelcontextprotocol.io/quickstart/user) |
+| **Windsurf** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Windsurf MCP Guide](https://modelcontextprotocol.io/quickstart/user) |
+
 
 ### ▶️ Getting Started
 1. Open GitHub Copilot in VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)
