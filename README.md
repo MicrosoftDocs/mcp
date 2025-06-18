@@ -12,7 +12,8 @@ The Microsoft Docs MCP Server implements the [Model Context Protocol (MCP)](http
 4. [🔌 Installation & Getting Started](#-installation--getting-started)
 5. [❓ Troubleshooting](#-troubleshooting)
 6. [🔮 Future Enhancements](#-future-enhancements)
-7. [📚 Additional Resources](#-additional-resources)
+7. [🤝 Contributing](#-contributing)
+8. [📚 Additional Resources](#-additional-resources)
 
 ## 🎯 Overview
 
@@ -101,6 +102,16 @@ The Microsoft Docs MCP Server team is working on several enhancements:
 
 - Expanding coverage to additional Microsoft documentation sources
 - Improved query understanding for more precise results
+
+## 🤝 Contributing
+
+We welcome documentation improvements and feedback! To contribute:
+
+1. Fork this repository and create a new branch for your updates.
+2. Make your edits and commit them with clear messages.
+3. Submit a pull request for review.
+
+You can also [open an issue](https://github.com/MicrosoftDocs/mcp/issues) or [start a discussion](https://github.com/MicrosoftDocs/mcp/discussions) if you have ideas or questions.
 
 ## 📚 Additional Resources
 
