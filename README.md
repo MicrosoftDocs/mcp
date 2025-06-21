@@ -82,6 +82,20 @@ Some clients don't support `Streamable HTTP`, so you can use `mcp-remote` as a w
 
 ## ❓ Troubleshooting
 
+### 💻 System Prompt
+
+Even tool-friendly models like Claude Sonnet 4.0 will not default to calling MCP tools typically - they need to be given some encouragement in the form of "system prompts."
+
+Here's an example of a Cursor rule (a system prompt) that will cause the LLM to utilize `microsoft.docs.mcp` more frequently:
+
+```md
+## Querying Microsoft Documentation
+
+You have access to an MCP server called `microsoft.docs.mcp` - this tool allows you to search through Microsoft's latest official documentation, and that information might be more detailed or newer than what's in your training data set.
+
+When handling questions around how to work with native Microsoft technologies, such as C#, F#, ASP.NET Core, Microsoft.Extensions, NuGet, Entity Framework, the `dotnet` runtime - please use this tool for research purposes when dealing with specific / narrowly defined questions that may occur.
+```
+
 ### ⚠️ Common Issues
 
 | Issue | Possible Solution |
