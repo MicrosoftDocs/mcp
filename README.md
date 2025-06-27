@@ -18,7 +18,7 @@ The Microsoft Docs MCP Server is a cloud-hosted service that enables MCP hosts l
 
 ### ✨ Example Prompts: Your Source of Truth
 
-Your AI assistant should automatically use this tool for Microsoft-related topics. To ensure it consults the official documentation, you can add a phrase like:
+Your AI assistant should automatically use this tool for Microsoft-related topics. To ensure that it always consults the official documentation, you can add a phrase like:
 
 #### **Generate Azure CLI Commands**
 
