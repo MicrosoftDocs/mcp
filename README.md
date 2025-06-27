@@ -1,13 +1,13 @@
 # 🌟 Microsoft Learn Docs MCP Server
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
 
-The Microsoft Learn Docs MCP Server implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that provides AI assistants with real-time access to official [Microsoft documentation](https://learn.microsoft.com).
+The Microsoft Docs MCP Server is a cloud-hosted service that enables MCP hosts like GitHub Copilot and Cursor to search and retrieve accurate information directly from Microsoft's official documentation. By implementing the standardized [Model Context Protocol (MCP)](https://modelcontextprotocol.io), this service allows any compatible AI system to ground its responses in authoritative [Microsoft documentation](https://learn.microsoft.com).
 
 > Please note that this project is in Public Preview and implementation may significantly change prior to our General Availability.
 
 ## 📑 Table of contents
 1. [🎯 Overview](#-overview)
-2. [🌐 The Microsoft Learn Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
+2. [🌐 The Microsoft Learn Docs MCP Server Endpoint](#-the-microsoft-learn-docs-mcp-server-endpoint)
 3. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
 4. [🔌 Installation & Getting Started](#-installation--getting-started)
 5. [❓ Troubleshooting](#-troubleshooting)
@@ -16,9 +16,21 @@ The Microsoft Learn Docs MCP Server implements the [Model Context Protocol (MCP)
 
 ## 🎯 Overview
 
-### ✨ What is the Microsoft Learn Docs MCP Server?
+### ✨ Example Prompts: Your Source of Truth
 
-The Microsoft Docs MCP Server is a cloud-hosted service that enables MCP hosts like GitHub Copilot and Cursor to search and retrieve accurate information directly from Microsoft's official documentation. By implementing the standardized Model Context Protocol (MCP), this service allows any compatible AI system to ground its responses in authoritative Microsoft content.
+Your AI assistant should automatically use this tool for Microsoft-related topics. To ensure it consults the official documentation, you can add a phrase like:
+
+#### **Generate Azure CLI Commands**
+
+> "Give me the Azure CLI commands to create an Azure Container App with a managed identity. **search Microsoft docs**"
+
+#### **Get Correct .NET Code**
+
+> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API? **search Microsoft docs**"
+
+#### **Factual Q&A**
+
+> "Is gpt-4.1-mini available in EU regions? **search Microsoft docs**"
 
 ### 📊 Key Capabilities
 
@@ -87,7 +99,7 @@ For clients that don't support native remote MCP servers or if you prefer local 
 
 ### 💻 System Prompt
 
-Even tool-friendly models like Claude Sonnet 4.0 will not default to calling MCP tools typically - they need to be given some encouragement in the form of "system prompts."
+Even tool-friendly models like Claude Sonnet 4 sometimes will fail to default to calling MCP tools typically - they need to be given some encouragement in the form of "system prompts."
 
 Here's an example of a Cursor rule (a system prompt) that will cause the LLM to utilize `microsoft.docs.mcp` more frequently:
 
