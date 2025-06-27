@@ -99,7 +99,7 @@ For clients that don't support native remote MCP servers or if you prefer local 
 
 ### 💻 System Prompt
 
-Even tool-friendly models like Claude Sonnet 4 sometimes will fail to default to calling MCP tools typically - they need to be given some encouragement in the form of "system prompts."
+Even tool-friendly models like Claude Sonnet 4 sometimes fail to call MCP tools by default; use system prompts to encourage usage.
 
 Here's an example of a Cursor rule (a system prompt) that will cause the LLM to utilize `microsoft.docs.mcp` more frequently:
 
