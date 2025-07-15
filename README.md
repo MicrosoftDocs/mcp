@@ -88,6 +88,7 @@ For clients that don't support native remote MCP servers or if you prefer local 
 |--------|----------------------|-----------| 
 | **Claude Desktop (legacy config)** | <details><summary>View Config</summary>**Note**: Only use this if Settings → Integrations doesn't work<br/><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre>Add to `claude_desktop_config.json`</details>| [Claude Desktop MCP Guide](https://modelcontextprotocol.io/quickstart/user) |
 | **Windsurf** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Windsurf MCP Guide](https://docs.windsurf.com/windsurf/cascade/mcp) |
+| **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
 
 
 ### ▶️ Getting Started
