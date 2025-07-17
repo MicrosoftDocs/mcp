@@ -1,13 +1,13 @@
 # 🌟 Microsoft Learn Docs MCP Server
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
 
-The Microsoft Learn Docs MCP Server implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that provides AI assistants with real-time access to official [Microsoft documentation](https://learn.microsoft.com).
+The Microsoft Learn Docs MCP Server is a cloud-hosted service that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It is a remote MCP Server using streamable http, which is lightweight for clients to use. 
 
 > Please note that this project is in Public Preview and implementation may significantly change prior to our General Availability.
 
 ## 📑 Table of contents
 1. [🎯 Overview](#-overview)
-2. [🌐 The Microsoft Learn Docs MCP Server Endpoint](#-the-microsoft-docs-mcp-server-endpoint)
+2. [🌐 The Microsoft Learn Docs MCP Server Endpoint](#-the-microsoft-learn-docs-mcp-server-endpoint)
 3. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
 4. [🔌 Installation & Getting Started](#-installation--getting-started)
 5. [❓ Troubleshooting](#-troubleshooting)
@@ -16,9 +16,21 @@ The Microsoft Learn Docs MCP Server implements the [Model Context Protocol (MCP)
 
 ## 🎯 Overview
 
-### ✨ What is the Microsoft Learn Docs MCP Server?
+### ✨ Example Prompts: Your Source of Truth
 
-The Microsoft Docs MCP Server is a cloud-hosted service that enables MCP hosts like GitHub Copilot and Cursor to search and retrieve accurate information directly from Microsoft's official documentation. By implementing the standardized Model Context Protocol (MCP), this service allows any compatible AI system to ground its responses in authoritative Microsoft content.
+Your AI assistant should automatically use this tool for Microsoft-related topics. To ensure that it always consults the official documentation, you can add a phrase like:
+
+#### **Generate Azure CLI Commands**
+
+> "Give me the Azure CLI commands to create an Azure Container App with a managed identity. **search Microsoft docs**"
+
+#### **Get Correct .NET Code**
+
+> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API? **search Microsoft docs**"
+
+#### **Factual Q&A**
+
+> "Is gpt-4.1-mini available in EU regions? **search Microsoft docs**"
 
 ### 📊 Key Capabilities
 
@@ -64,6 +76,9 @@ The Microsoft Learn Docs MCP Server supports quick installation across multiple 
 | **Cursor IDE** | [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=microsoft.docs.mcp&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9hcGkvbWNwIn0%3D) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
 | **Roo Code** | Manual configuration required<br/>Use `"type": "streamable-http"` | [Roo Code MCP Official Guide](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
+| **GitHub** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Navigate to Settings → Coding agent<br/><pre>{<br/>  "mslearn": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ],<br/> "tools":["*"]<br/>  }<br/>}</pre></details>
+
+
 
 ### Alternative Installation (for legacy clients or local configuration)
 
@@ -74,7 +89,7 @@ For clients that don't support native remote MCP servers or if you prefer local 
 | **Claude Desktop (legacy config)** | <details><summary>View Config</summary>**Note**: Only use this if Settings → Integrations doesn't work<br/><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre>Add to `claude_desktop_config.json`</details>| [Claude Desktop MCP Guide](https://modelcontextprotocol.io/quickstart/user) |
 | **Windsurf** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Windsurf MCP Guide](https://docs.windsurf.com/windsurf/cascade/mcp) |
 | **Warp** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ],<br/>    "env": { },<br/>    "working_directory": null,<br/>    "start_on_launch": true<br/>  }<br/>}</pre></details> | [Warp MCP Official Guide](https://docs.warp.dev/knowledge-and-collaboration/mcp) 
-
+| **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
 
 ### ▶️ Getting Started
 
@@ -88,7 +103,7 @@ For clients that don't support native remote MCP servers or if you prefer local 
 
 ### 💻 System Prompt
 
-Even tool-friendly models like Claude Sonnet 4.0 will not default to calling MCP tools typically - they need to be given some encouragement in the form of "system prompts."
+Even tool-friendly models like Claude Sonnet 4 sometimes fail to call MCP tools by default; use system prompts to encourage usage.
 
 Here's an example of a Cursor rule (a system prompt) that will cause the LLM to utilize `microsoft.docs.mcp` more frequently:
 
