@@ -122,6 +122,7 @@ The Microsoft Learn Docs MCP Server team is working on several enhancements:
 
 ## 📚 Additional Resources
 
+- [Microsoft Learn Docs MCP Server product documentation](http://learn.microsoft.com/training/support/mcp)
 - [Microsoft MCP Servers](https://github.com/microsoft/mcp)
 - [Microsoft Learn](https://learn.microsoft.com)
 - [Model Context Protocol Specification](https://modelcontextprotocol.io)
