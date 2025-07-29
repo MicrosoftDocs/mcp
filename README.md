@@ -1,13 +1,13 @@
-# 🌟 Microsoft Learn Docs MCP Server
+# 🌟 Microsoft Learn MCP Server
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
 
-The Microsoft Learn Docs MCP Server is a cloud-hosted service that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It is a remote MCP Server using streamable http, which is lightweight for clients to use. 
+The Microsoft Learn MCP Server is a cloud-hosted service that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It is a remote MCP Server using streamable http, which is lightweight for clients to use. 
 
 > Please note that this project is in Public Preview and implementation may significantly change prior to our General Availability.
 
 ## 📑 Table of contents
 1. [🎯 Overview](#-overview)
-2. [🌐 The Microsoft Learn Docs MCP Server Endpoint](#-the-microsoft-learn-docs-mcp-server-endpoint)
+2. [🌐 The Microsoft Learn MCP Server Endpoint](#-the-microsoft-learn-docs-mcp-server-endpoint)
 3. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
 4. [🔌 Installation & Getting Started](#-installation--getting-started)
 5. [❓ Troubleshooting](#-troubleshooting)
@@ -39,9 +39,9 @@ Your AI assistant should automatically use this tool for Microsoft-related topic
 - **Optimized Chunking**: Returns up to 10 high-quality content chunks (each max 500 tokens), with article titles, URLs, and self-contained content excerpts.
 - **Real-time Updates**: Access the latest Microsoft documentation as it's published.
 
-## 🌐 The Microsoft Learn Docs MCP Server Endpoint
+## 🌐 The Microsoft Learn MCP Server Endpoint
 
-The Microsoft Learn Docs MCP Server is accessible to any IDE, agent, or tool that supports the Model Context Protocol (MCP). Any compatible client can connect to the following **remote MCP endpoint**:
+The Microsoft Learn MCP Server is accessible to any IDE, agent, or tool that supports the Model Context Protocol (MCP). Any compatible client can connect to the following **remote MCP endpoint**:
 
 ```
 https://learn.microsoft.com/api/mcp
@@ -66,7 +66,7 @@ https://learn.microsoft.com/api/mcp
 
 ## 🔌 Installation & Getting Started
 
-The Microsoft Learn Docs MCP Server supports quick installation across multiple development environments. Choose your preferred client below for streamlined setup:
+The Microsoft Learn MCP Server supports quick installation across multiple development environments. Choose your preferred client below for streamlined setup:
 
 | Client | One-click Installation | MCP Guide |
 |--------|----------------------|-------------------|
@@ -95,9 +95,9 @@ For clients that don't support native remote MCP servers or if you prefer local 
 
 1. **For VS Code**: Open GitHub Copilot in VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)
 2. **For Claude Desktop**: After adding the integration, you'll see the MCP tools icon in the chat interface
-3. You should see the Learn Docs MCP Server in the list of available tools
-4. Try a prompt that tells the agent to use the Docs MCP Server, such as "what are the az cli commands to create an Azure container app according to official Microsoft Learn documentation?"
-5. The agent should be able to use the Docs MCP Server tools to complete your query
+3. You should see the Learn MCP Server in the list of available tools
+4. Try a prompt that tells the agent to use the MCP Server, such as "what are the az cli commands to create an Azure container app according to official Microsoft Learn documentation?"
+5. The agent should be able to use the MCP Server tools to complete your query
 
 ## ❓ Troubleshooting
 
@@ -122,7 +122,7 @@ When handling questions around how to work with native Microsoft technologies, s
 | Connection errors | Verify your network connection and that the server URL is correctly entered |
 | No results returned | Try rephrasing your query with more specific technical terms |
 | Tool not appearing in VS Code | Restart VS Code or check that the MCP extension is properly installed |
-| HTTP status 405  | Method not allowed happens when a browser tries to connect to the endpoint. Try using the Docs MCP Server through VS Code GitHub Copilot or [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) instead. |
+| HTTP status 405  | Method not allowed happens when a browser tries to connect to the endpoint. Try using the MCP Server through VS Code GitHub Copilot or [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) instead. |
 
 ### 🆘 Getting Support
 
@@ -131,14 +131,14 @@ When handling questions around how to work with native Microsoft technologies, s
 
 ## 🔮 Future Enhancements
 
-The Microsoft Learn Docs MCP Server team is working on several enhancements:
+The Microsoft Learn MCP Server team is working on several enhancements:
 
 - Expanding coverage to additional Microsoft documentation sources
 - Improved query understanding for more precise results
 
 ## 📚 Additional Resources
 
-- [Microsoft Learn Docs MCP Server product documentation](https://learn.microsoft.com/training/support/mcp)
+- [Microsoft Learn MCP Server product documentation](https://learn.microsoft.com/training/support/mcp)
 - [Microsoft MCP Servers](https://github.com/microsoft/mcp)
 - [Microsoft Learn](https://learn.microsoft.com)
 - [Model Context Protocol Specification](https://modelcontextprotocol.io)
