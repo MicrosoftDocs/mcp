@@ -62,7 +62,7 @@ https://learn.microsoft.com/api/mcp
 
 | Tool Name | Description | Input Parameters |
 |-----------|-------------|------------------|
-| `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentation | `query` (string): The search query for retrieval |
+| `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentation | `question` (string): The search question for retrieval |
 
 ## 🔌 Installation & Getting Started
 
