@@ -107,6 +107,7 @@ For clients that don't support native remote MCP servers or if you prefer local 
 > 2.  **Refresh on Failure:** Your client should handle errors during `tool/invoke` calls. If a tool call fails with an error indicating it is missing or its schema has changed (e.g., an HTTP 404 or 400 error), your client should assume its cache is stale and automatically trigger a refresh by calling `tools/list`.
 > 3.  **Handle Live Updates:** Your client should listen for server notifications (e.g., `listChanged`) and refresh its tool cache accordingly.
 
+>
 ## ❓ Troubleshooting
 
 ### 💻 System Prompt
