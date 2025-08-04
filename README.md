@@ -3,7 +3,7 @@
 
 The Microsoft Learn MCP Server is a cloud-hosted service that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It is a remote MCP Server using streamable http, which is lightweight for clients to use. 
 
-> Please note that this project is in Public Preview and implementation may significantly change prior to our General Availability.
+> Please note that this project is in Public Preview and implementation may significantly change prior to our General Availability. 
 
 ## 📑 Table of contents
 1. [🎯 Overview](#-overview)
@@ -79,8 +79,6 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
 | **GitHub** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Navigate to Settings → Coding agent<br/><pre>{<br/>  "mslearn": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ],<br/> "tools":["*"]<br/>  }<br/>}</pre></details>
 
-
-
 ### Alternative Installation (for legacy clients or local configuration)
 
 For clients that don't support native remote MCP servers or if you prefer local configuration, you can use `mcp-remote` as a proxy:
@@ -91,7 +89,6 @@ For clients that don't support native remote MCP servers or if you prefer local 
 | **Windsurf** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Windsurf MCP Guide](https://docs.windsurf.com/windsurf/cascade/mcp) |
 | **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
 
-
 ### ▶️ Getting Started
 
 1. **For VS Code**: Open GitHub Copilot in VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)
@@ -99,6 +96,16 @@ For clients that don't support native remote MCP servers or if you prefer local 
 3. You should see the Learn MCP Server in the list of available tools
 4. Try a prompt that tells the agent to use the MCP Server, such as "what are the az cli commands to create an Azure container app according to official Microsoft Learn documentation?"
 5. The agent should be able to use the MCP Server tools to complete your query
+
+> ### ⚠️ Building a Custom Client
+>
+> If your use case requires a direct, programmatic integration, it is essential to understand that MCP is a **dynamic protocol, not a static API**. The available tools and their schemas will evolve.
+>
+> To build a resilient client that will not break as the service is updated, you should adhere to the following principles:
+>
+> 1.  **Discover Tools Dynamically:** Your client should fetch current tool definitions from the server at runtime (e.g., using `tools/list`). **Do not hard-code tool names or parameters.**
+> 2.  **Refresh on Failure:** Your client should handle errors during `tool/invoke` calls. If a tool call fails with an error indicating it is missing or its schema has changed (e.g., an HTTP 404 or 400 error), your client should assume its cache is stale and automatically trigger a refresh by calling `tools/list`.
+> 3.  **Handle Live Updates:** Your client should listen for server notifications (e.g., `listChanged`) and refresh its tool cache accordingly.
 
 ## ❓ Troubleshooting
 
