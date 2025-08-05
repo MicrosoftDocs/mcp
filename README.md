@@ -51,10 +51,12 @@ https://learn.microsoft.com/api/mcp
 **Example JSON configuration:**
 ```json
 {
-  "microsoft.docs.mcp": {
-    "type": "http",
-    "url": "https://learn.microsoft.com/api/mcp"
-  }
+    "servers": {
+        "microsoft.docs.mcp": {
+            "type": "http",
+            "url": "https://learn.microsoft.com/api/mcp"
+        }
+    }
 }
 ```
 
