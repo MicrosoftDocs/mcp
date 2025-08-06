@@ -1,7 +1,7 @@
 # 🌟 Microsoft Learn MCP Server
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
 
-The Microsoft Learn MCP Server is a cloud-hosted service that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It is a remote MCP Server using streamable http, which is lightweight for clients to use. 
+The Microsoft Learn MCP Server is a remote MCP Server that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It supports streamable http transport, which is lightweight for clients to use.
 
 > Please note that this project is in Public Preview and implementation may significantly change prior to our General Availability.
 
@@ -18,25 +18,30 @@ The Microsoft Learn MCP Server is a cloud-hosted service that enables clients li
 
 ### ✨ Example Prompts: Your Source of Truth
 
-Your AI assistant should automatically use this tool for Microsoft-related topics. To ensure that it always consults the official documentation, you can add a phrase like:
+Your AI assistant should automatically use these tools for Microsoft-related topics. With both search and fetch capabilities, you can get quick answers or comprehensive deep dives. To ensure that it always consults the official documentation, you can add phrases like `search Microsoft docs`, `deep dive`, `fetch full doc`.
 
-#### **Generate Azure CLI Commands**
+#### **Quick Search & Reference**
 
 > "Give me the Azure CLI commands to create an Azure Container App with a managed identity. **search Microsoft docs**"
 
-#### **Get Correct .NET Code**
+> "Is gpt-4.1-mini available in EU regions? **fetch full doc**"
 
-> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API? **search Microsoft docs**"
+#### **Code Verification & Best Practices**
 
-#### **Factual Q&A**
+> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API? **search Microsoft docs and fetch full doc**"
 
-> "Is gpt-4.1-mini available in EU regions? **search Microsoft docs**"
+> "Show me the complete guide for implementing authentication in ASP.NET Core. **fetch full doc**"
+
+#### **Comprehensive Learning & Deep Dive**
+
+> "I need to understand Azure Functions end-to-end. **search Microsoft docs and deep dive**"
+
+> "Get me the full step-by-step tutorial for deploying a .NET application to Azure App Service. **search Microsoft docs and deep dive**"
 
 ### 📊 Key Capabilities
 
-- **High-Quality Content Retrieval**: Search and retrieve relevant content from Microsoft Learn, Azure documentation, Microsoft 365 documentation, and other official Microsoft sources.
+- **High-Quality Content Retrieval**: Search and retrieve relevant content from Microsoft's official documentation in markdown format.
 - **Semantic Understanding**: Uses advanced vector search to find the most contextually relevant documentation for any query.
-- **Optimized Chunking**: Returns up to 10 high-quality content chunks (each max 500 tokens), with article titles, URLs, and self-contained content excerpts.
 - **Real-time Updates**: Access the latest Microsoft documentation as it's published.
 
 ## 🌐 The Microsoft Learn MCP Server Endpoint
@@ -46,7 +51,7 @@ The Microsoft Learn MCP Server is accessible to any IDE, agent, or tool that sup
 ```
 https://learn.microsoft.com/api/mcp
 ```
-> **Note:** This endpoint is designed for programmatic access by MCP clients via Streamable HTTP. It does not support direct access from a web browser and may return a `405 Method Not Allowed` error if accessed manually.
+> **Note:** This URL is intended for use **within a compliant MCP client** via Streamable HTTP, such as the recommended clients listed in our [Getting Started](#-installation--getting-started) section. It does not support direct access from a web browser and may return a `405 Method Not Allowed` error if accessed manually. For developers who need to build their own solution, please follow the mandatory guidelines in the [Building a Custom Client](#%EF%B8%8F-building-a-custom-client) section to ensure your implementation is resilient and supported.
 
 **Example JSON configuration:**
 ```json
@@ -63,6 +68,7 @@ https://learn.microsoft.com/api/mcp
 | Tool Name | Description | Input Parameters |
 |-----------|-------------|------------------|
 | `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentation | `query` (string): The search query for retrieval |
+| `microsoft_docs_fetch` | Fetch and convert an Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
 
 ## 🔌 Installation & Getting Started
 
@@ -118,7 +124,7 @@ Here's an example of a Cursor rule (a system prompt) that will cause the LLM to 
 ```md
 ## Querying Microsoft Documentation
 
-You have access to an MCP server called `microsoft.docs.mcp` - this tool allows you to search through Microsoft's latest official documentation, and that information might be more detailed or newer than what's in your training data set.
+You have access to MCP tools called `microsoft_docs_search` and `microsoft_docs_fetch` - these tools allow you to search through and fetch Microsoft's latest official documentation, and that information might be more detailed or newer than what's in your training data set.
 
 When handling questions around how to work with native Microsoft technologies, such as C#, F#, ASP.NET Core, Microsoft.Extensions, NuGet, Entity Framework, the `dotnet` runtime - please use this tool for research purposes when dealing with specific / narrowly defined questions that may occur.
 ```
