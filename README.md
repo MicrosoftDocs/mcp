@@ -68,7 +68,7 @@ https://learn.microsoft.com/api/mcp
 | Tool Name | Description | Input Parameters |
 |-----------|-------------|------------------|
 | `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentation | `query` (string): The search query for retrieval |
-| `microsoft_docs_fetch` | Fetch and convert an Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
+| `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
 
 ## 🔌 Installation & Getting Started
 
