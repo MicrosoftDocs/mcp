@@ -147,6 +147,8 @@ When handling questions around how to work with native Microsoft technologies, s
 
 The Microsoft Learn MCP Server team is working on several enhancements:
 
+- microsoft_code_search tool: Helps agents find precise, official Microsoft sample code snippets
+- Improved telemetry to help inform server enhancements
 - Expanding coverage to additional Microsoft documentation sources
 - Improved query understanding for more precise results
 
