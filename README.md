@@ -38,6 +38,8 @@ Your AI assistant should automatically use these tools for Microsoft-related top
 
 > "Get me the full step-by-step tutorial for deploying a .NET application to Azure App Service. **search Microsoft docs and deep dive**"
 
+> "how to do harms eval using azure ai foundry evaluation sdk? **using microsoft.docs.mcp**"
+
 ### 📊 Key Capabilities
 
 - **High-Quality Content Retrieval**: Search and retrieve relevant content from Microsoft's official documentation in markdown format.
@@ -69,6 +71,8 @@ https://learn.microsoft.com/api/mcp
 |-----------|-------------|------------------|
 | `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentation | `query` (string): The search query for retrieval |
 | `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
+| `microsoft_code_sample_search` | Search for official Microsoft/Azure code snippets and examples | `query` (string): Search query for Microsoft/Azure code snippets<br/>`language` (string, optional): Programming language filter.|
+
 
 ## 🔌 Installation & Getting Started
 
@@ -150,7 +154,6 @@ When handling questions around how to work with native Microsoft technologies, s
 
 The Microsoft Learn MCP Server team is working on several enhancements:
 
-- microsoft_code_search tool: Helps agents find precise, official Microsoft sample code snippets
 - Improved telemetry to help inform server enhancements
 - Expanding coverage to additional Microsoft documentation sources
 - Improved query understanding for more precise results
