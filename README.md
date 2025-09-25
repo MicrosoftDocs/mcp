@@ -32,7 +32,7 @@ Your AI assistant should automatically use these tools for Microsoft-related top
 
 > "Show me the complete guide for implementing authentication in ASP.NET Core. **fetch full doc**"
 
-> "give me a detailed, runnable python code to do harms eval using azure ai foundry evaluation sdk **using microsoft_code_sample_search**"
+> "show me the detailed, runnable python code to do harms eval using azure ai foundry evaluation sdk"
 
 #### **Comprehensive Learning & Deep Dive**
 
