@@ -32,15 +32,13 @@ Your AI assistant should automatically use these tools for Microsoft-related top
 
 > "Show me the complete guide for implementing authentication in ASP.NET Core. **fetch full doc**"
 
-> "Get me C# code examples for Azure Service Bus message handling. **search code sample**"
+> "give me a detailed, runnable python code to do harms eval using azure ai foundry evaluation sdk **using microsoft_code_sample_search**"
 
 #### **Comprehensive Learning & Deep Dive**
 
 > "I need to understand Azure Functions end-to-end. **search Microsoft docs and deep dive**"
 
 > "Get me the full step-by-step tutorial for deploying a .NET application to Azure App Service. **search Microsoft docs and deep dive**"
-
-> "how to do harms eval using azure ai foundry evaluation sdk? **using microsoft.docs.mcp**"
 
 ### 📊 Key Capabilities
 
