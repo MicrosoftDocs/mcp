@@ -33,6 +33,8 @@ Your AI assistant should automatically use these tools for Microsoft-related top
 
 > "Show me the complete guide for implementing authentication in ASP.NET Core. **fetch full doc**"
 
+> "show me detailed, runnable python code sample to do harms eval using azure ai foundry evaluation sdk"
+
 #### **Comprehensive Learning & Deep Dive**
 
 > "I need to understand Azure Functions end-to-end. **search Microsoft docs and deep dive**"
@@ -42,6 +44,7 @@ Your AI assistant should automatically use these tools for Microsoft-related top
 ### 📊 Key Capabilities
 
 - **High-Quality Content Retrieval**: Search and retrieve relevant content from Microsoft's official documentation in markdown format.
+- **Code Sample Discovery**: Find official Microsoft/Azure code snippets and examples with language-specific filtering.
 - **Semantic Understanding**: Uses advanced vector search to find the most contextually relevant documentation for any query.
 - **Real-time Updates**: Access the latest Microsoft documentation as it's published.
 
@@ -70,6 +73,8 @@ https://learn.microsoft.com/api/mcp
 |-----------|-------------|------------------|
 | `microsoft_docs_search` | Performs semantic search against Microsoft official technical documentation | `query` (string): The search query for retrieval |
 | `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
+| `microsoft_code_sample_search` | Search for official Microsoft/Azure code snippets and examples | `query` (string): Search query for Microsoft/Azure code snippets<br/>`language` (string, optional): Programming language filter.|
+
 
 ## 🔌 Installation & Getting Started
 
@@ -86,7 +91,7 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
 | **Gemini CLI** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.gemini/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)|
 | **Qwen Code** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.qwen/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [Configure the MCP server in settings.json](https://qwenlm.github.io/qwen-code-docs/en/cli/tutorials/#configure-the-mcp-server-in-settingsjson)|
-| **GitHub** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Navigate to Settings → Coding agent<br/><pre>{<br/>  "mslearn": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ],<br/> "tools":["*"]<br/>  }<br/>}</pre></details>
+| **GitHub** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Navigate to Settings → Coding agent<br/><pre>{<br/>  "mslearn": {<br/>    "type": "http",<br/>    "url": "https://learn.microsoft.com/api/mcp",<br/>    "tools": [<br/>      "*"<br/>    ]<br/>  }<br/>}</pre></details>
 | **ChatGPT** | Manual configuration required<br/> <details><summary>View Instructions</summary>1. Open ChatGPT in the browser<br/>2. Go to **Settings → Connectors → Advanced settings → Turn Developer mode on**<br/>3. Go back to connectors and click **create**<br/>4. Give the connector a **name**, enter **URL** `https://learn.microsoft.com/api/mcp`, set **authentication** to `No authentication` and **trust** the application<br/>5. Click **create**<br/> </details> | [ChatGPT Official Guide](https://platform.openai.com/docs/guides/developer-mode)|
 
 ### Alternative Installation (for legacy clients or local configuration)
@@ -128,9 +133,9 @@ Here's an example of a Cursor rule (a system prompt) that will cause the LLM to 
 ```md
 ## Querying Microsoft Documentation
 
-You have access to MCP tools called `microsoft_docs_search` and `microsoft_docs_fetch` - these tools allow you to search through and fetch Microsoft's latest official documentation, and that information might be more detailed or newer than what's in your training data set.
+You have access to MCP tools called `microsoft_docs_search`, `microsoft_docs_fetch`, and `microsoft_code_sample_search` - these tools allow you to search through and fetch Microsoft's latest official documentation and code samples, and that information might be more detailed or newer than what's in your training data set.
 
-When handling questions around how to work with native Microsoft technologies, such as C#, F#, ASP.NET Core, Microsoft.Extensions, NuGet, Entity Framework, the `dotnet` runtime - please use this tool for research purposes when dealing with specific / narrowly defined questions that may occur.
+When handling questions around how to work with native Microsoft technologies, such as C#, F#, ASP.NET Core, Microsoft.Extensions, NuGet, Entity Framework, the `dotnet` runtime - please use these tools for research purposes when dealing with specific / narrowly defined questions that may occur.
 ```
 
 ### ⚠️ Common Issues
@@ -151,7 +156,6 @@ When handling questions around how to work with native Microsoft technologies, s
 
 The Microsoft Learn MCP Server team is working on several enhancements:
 
-- microsoft_code_search tool: Helps agents find precise, official Microsoft sample code snippets
 - Improved telemetry to help inform server enhancements
 - Expanding coverage to additional Microsoft documentation sources
 - Improved query understanding for more precise results
