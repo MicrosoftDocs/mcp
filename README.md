@@ -57,7 +57,7 @@ https://learn.microsoft.com/api/mcp
 > **Note:** This URL is intended for use **within a compliant MCP client** via Streamable HTTP, such as the recommended clients listed in our [Getting Started](#-installation--getting-started) section. It does not support direct access from a web browser and may return a `405 Method Not Allowed` error if accessed manually. For developers who need to build their own solution, please follow the mandatory guidelines in the [Building a Custom Client](#%EF%B8%8F-building-a-custom-client) section to ensure your implementation is resilient and supported.
 
 **Standard config** works in most clients:
-```js
+```json
 {
   "servers": {
     "microsoft-learn": {
@@ -93,7 +93,7 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
 | **Gemini CLI** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.gemini/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)|
 | **Qwen Code** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.qwen/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [Configure the MCP server in settings.json](https://qwenlm.github.io/qwen-code-docs/en/cli/tutorials/#configure-the-mcp-server-in-settingsjson)|
-| **GitHub** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Navigate to Settings → Coding agent<br/><pre>{<br/>  "mslearn": {<br/>    "type": "http",<br/>    "url": "https://learn.microsoft.com/api/mcp",<br/>    "tools": [<br/>      "*"<br/>    ]<br/>  }<br/>}</pre></details>
+| **GitHub** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Navigate to Settings → Coding agent<br/><pre>{<br/>  "mslearn": {<br/>    "type": "http",<br/>    "url": "https://learn.microsoft.com/api/mcp",<br/>    "tools": [<br/>      "*"<br/>    ]<br/>  }<br/>}</pre></details> |
 | **ChatGPT** | Manual configuration required<br/> <details><summary>View Instructions</summary>1. Open ChatGPT in the browser<br/>2. Go to **Settings → Connectors → Advanced settings → Turn Developer mode on**<br/>3. Go back to connectors and click **create**<br/>4. Give the connector a **name**, enter **URL** `https://learn.microsoft.com/api/mcp`, set **authentication** to `No authentication` and **trust** the application<br/>5. Click **create**<br/> </details> | [ChatGPT Official Guide](https://platform.openai.com/docs/guides/developer-mode)|
 | **Windsurf** | Manual configuration required<br/> <details><summary>View Config</summary><pre>{<br/>  "mcpServers": {<br/>    "microsoft-learn": {<br/>      "serverUrl": "https://learn.microsoft.com/api/mcp"<br/>    }<br/>  }<br/>}</pre></details>| [Windsurf MCP Guide](https://docs.windsurf.com/windsurf/cascade/mcp) |
 
