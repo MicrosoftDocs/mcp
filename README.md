@@ -1,5 +1,5 @@
 # 🌟 Microsoft Learn MCP Server
-[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft.docs.mcp&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Docs_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Docs_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
 
 The Microsoft Learn MCP Server is a remote MCP Server that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It supports streamable http transport, which is lightweight for clients to use.
 
@@ -18,17 +18,17 @@ The Microsoft Learn MCP Server is a remote MCP Server that enables clients like 
 
 ### ✨ Example Prompts: Your Source of Truth
 
-Your AI assistant should automatically use these tools for Microsoft-related topics. With both search and fetch capabilities, you can get quick answers or comprehensive deep dives. To ensure that it always consults the official documentation, you can add phrases like `search Microsoft docs`, `deep dive`, `fetch full doc`.
+Your AI assistant should automatically use these tools for Microsoft-related topics. With both search and fetch capabilities, you can get quick answers or comprehensive deep dives. To ensure that it always consults the official documentation, you can add phrases like `search Microsoft Learn`, `deep dive`, `fetch full doc`.
 
 #### **Quick Search & Reference**
 
-> "Give me the Azure CLI commands to create an Azure Container App with a managed identity. **search Microsoft docs**"
+> "Give me the Azure CLI commands to create an Azure Container App with a managed identity. **search Microsoft Learn**"
 
 > "Is gpt-4.1-mini available in EU regions? **fetch full doc**"
 
 #### **Code Verification & Best Practices**
 
-> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API? **search Microsoft docs and fetch full doc**"
+> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API? **search Microsoft Learn and fetch full doc**"
 
 > "Show me the complete guide for implementing authentication in ASP.NET Core. **fetch full doc**"
 
@@ -36,9 +36,9 @@ Your AI assistant should automatically use these tools for Microsoft-related top
 
 #### **Comprehensive Learning & Deep Dive**
 
-> "I need to understand Azure Functions end-to-end. **search Microsoft docs and deep dive**"
+> "I need to understand Azure Functions end-to-end. **search Microsoft Learn and deep dive**"
 
-> "Get me the full step-by-step tutorial for deploying a .NET application to Azure App Service. **search Microsoft docs and deep dive**"
+> "Get me the full step-by-step tutorial for deploying a .NET application to Azure App Service. **search Microsoft Learn and deep dive**"
 
 ### 📊 Key Capabilities
 
@@ -85,7 +85,7 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 |--------|----------------------|-------------------|
 | **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) <br/> or search "@mcp learn" in Extensions to show "Microsoft Learn" MCP | [VS Code MCP Official Guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) |
 | **Claude Desktop** | Follow "Add custom connector" instructions in official guide. | [Claude Desktop Remote MCP Guide](https://modelcontextprotocol.io/docs/develop/connect-remote-servers) |
-| **Claude Code** | <details><summary>View Instructions</summary>1. Open a CLI<br/>2. Type `claude mcp add --transport http microsoft_docs_mcp https://learn.microsoft.com/api/mcp` and press enter<br/>3. (optional) Type `--scope user` directly after `claude mcp add` to make this MCP server available in Claude Code for all of your projects</details> | [Claude Code Remote MCP Guide](https://docs.anthropic.com/en/docs/claude-code/mcp) |
+| **Claude Code** | <details><summary>View Instructions</summary>1. Open a CLI<br/>2. Type `claude mcp add --transport http microsoft-learn https://learn.microsoft.com/api/mcp` and press enter<br/>3. (optional) Type `--scope user` directly after `claude mcp add` to make this MCP server available in Claude Code for all of your projects</details> | [Claude Code Remote MCP Guide](https://docs.anthropic.com/en/docs/claude-code/mcp) |
 | **Visual Studio** | Upgrade to latest VS 2022 or 2026, "Microsoft Learn" MCP is already built-in | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
 | **Cursor IDE** | [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=microsoft-learn&config=eyJuYW1lIjoibWljcm9zb2Z0LWxlYXJuIiwidHlwZSI6Imh0dHAiLCJ1cmwiOiJodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vYXBpL21jcCJ9) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
 | **Codex** | Manual configuration required<br/> <details><summary>View Instructions</summary> Create or edit the configuration file `~/.codex/config.toml` and add: <pre>[mcp_servers.microsoft-learn] <br/>url = "https://learn.microsoft.com/api/mcp"</pre></details>| [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers) |
@@ -103,8 +103,8 @@ For clients that don't support native remote MCP servers or if you prefer local 
 
 | Client | Manual Configuration | MCP Guide |
 |--------|----------------------|-----------| 
-| **Claude Desktop (legacy config)** | <details><summary>View Config</summary>**Note**: Only use this if Settings → Integrations doesn't work<br/><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre>Add to `claude_desktop_config.json`</details>| [Claude Desktop MCP Guide](https://modelcontextprotocol.io/quickstart/user) |
-| **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft.docs.mcp": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
+| **Claude Desktop (legacy config)** | <details><summary>View Config</summary>**Note**: Only use this if Settings → Integrations doesn't work<br/><pre>{<br/>  "microsoft-learn": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre>Add to `claude_desktop_config.json`</details>| [Claude Desktop MCP Guide](https://modelcontextprotocol.io/quickstart/user) |
+| **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft-learn": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
 
 ### ▶️ Getting Started
 
@@ -130,7 +130,7 @@ For clients that don't support native remote MCP servers or if you prefer local 
 
 Even tool-friendly models like Claude Sonnet 4 sometimes fail to call MCP tools by default; use system prompts to encourage usage.
 
-Here's an example of a Cursor rule (a system prompt) that will cause the LLM to utilize `microsoft.docs.mcp` more frequently:
+Here's an example of a Cursor rule (a system prompt) that will cause the LLM to utilize `microsoft-learn` more frequently:
 
 ```md
 ## Querying Microsoft Documentation
