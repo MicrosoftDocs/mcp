@@ -56,12 +56,14 @@ https://learn.microsoft.com/api/mcp
 ```
 > **Note:** This URL is intended for use **within a compliant MCP client** via Streamable HTTP, such as the recommended clients listed in our [Getting Started](#-installation--getting-started) section. It does not support direct access from a web browser and may return a `405 Method Not Allowed` error if accessed manually. For developers who need to build their own solution, please follow the mandatory guidelines in the [Building a Custom Client](#%EF%B8%8F-building-a-custom-client) section to ensure your implementation is resilient and supported.
 
-**Example JSON configuration:**
-```json
+**Standard config** works in most clients:
+```js
 {
-  "microsoft.docs.mcp": {
-    "type": "http",
-    "url": "https://learn.microsoft.com/api/mcp"
+  "servers": {
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
   }
 }
 ```
@@ -86,6 +88,7 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **Claude Code** | <details><summary>View Instructions</summary>1. Open a CLI<br/>2. Type `claude mcp add --transport http microsoft_docs_mcp https://learn.microsoft.com/api/mcp` and press enter<br/>3. (optional) Type `--scope user` directly after `claude mcp add` to make this MCP server available in Claude Code for all of your projects</details> | [Claude Code Remote MCP Guide](https://docs.anthropic.com/en/docs/claude-code/mcp) |
 | **Visual Studio** | Upgrade to latest VS 2022 or 2026, "Microsoft Learn" MCP is already built-in | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
 | **Cursor IDE** | [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=microsoft-learn&config=eyJuYW1lIjoibWljcm9zb2Z0LWxlYXJuIiwidHlwZSI6Imh0dHAiLCJ1cmwiOiJodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vYXBpL21jcCJ9) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
+| **Codex** | Manual configuration required<br/> <details><summary>View Instructions</summary> Create or edit the configuration file `~/.codex/config.toml` and add: <pre>[mcp_servers.microsoft-learn] <br/>url = "https://learn.microsoft.com/api/mcp"</pre></details>| [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers) |
 | **Roo Code** | Open [Roo Code Marketplace](https://docs.roocode.com/features/marketplace), search for `Microsoft Learn`, and click `Install` | [Roo Code MCP Official Guide](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
 | **Gemini CLI** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.gemini/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)|
