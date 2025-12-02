@@ -1,19 +1,25 @@
 # 🌟 Microsoft Learn MCP Server
-[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Learn_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Learn_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Microsoft_Learn_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D)
+[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Microsoft_Learn_MCP-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D&quality=insiders)
 
-The Microsoft Learn MCP Server is a remote MCP Server that enables clients like GitHub Copilot and other AI agents to bring trusted and up-to-date information directly from Microsoft's official documentation. It supports streamable http transport, which is lightweight for clients to use.
+> **Stop AI Hallucinations.** Give your AI assistant (Claude, Cursor, Copilot, Codex, ...) direct access to the latest official Microsoft documentation.
+>
+> **✨ Free. One-click install. No key needed.**
 
+## 🎯 Why install this?
 
-## 📑 Table of contents
-1. [🎯 Overview](#-overview)
-2. [🌐 The Microsoft Learn MCP Server Endpoint](#-the-microsoft-learn-mcp-server-endpoint)
-3. [🛠️ Currently Supported Tools](#%EF%B8%8F-currently-supported-tools)
-4. [🔌 Installation & Getting Started](#-installation--getting-started)
-5. [❓ Troubleshooting](#-troubleshooting)
-6. [🔮 Future Enhancements](#-future-enhancements)
-7. [📚 Additional Resources](#-additional-resources)
+Stop relying on outdated training data or risky web searches. Learn MCP server provides secure, direct access to Microsoft official docs.
 
-## 🎯 Overview
+* 🧠 **Eliminate Hallucinations.**
+  Stop your AI from inventing non-existent Azure SDK methods or hallucinating library packages. Get code that actually compiles.
+
+* 🔌 **Plug & Play (No Auth).**
+  No API keys, no logins, no sign-ups required. Just one-click install and start coding immediately.
+
+* 🛡️ **100% Trusted & Safe.**
+  Protect your supply chain. Unlike generic web searches that may scrape insecure blogs or malicious sites, this tool **only** accesses official 1st-party Microsoft documentation.
+
+* 💸 **Completely Free.** High search capacity tailored for seamless, heavy coding sessions..
 
 ### ✨ Example Prompts: Your Source of Truth
 
