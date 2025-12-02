@@ -19,7 +19,7 @@ Stop relying on outdated training data or risky web searches. Learn MCP server p
 * 🛡️ **100% Trusted & Safe.**
   Protect your supply chain. Unlike generic web searches that may scrape insecure blogs or malicious sites, this tool **only** accesses official 1st-party Microsoft documentation.
 
-* 💸 **Completely Free.** High search capacity tailored for seamless, heavy coding sessions..
+* 💸 **Completely Free.** High search capacity tailored for seamless, heavy coding sessions.
 
 ### ✨ Example Prompts: Your Source of Truth
 
