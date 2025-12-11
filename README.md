@@ -75,7 +75,7 @@ https://learn.microsoft.com/api/mcp
 
 **OpenAI Learn MCP server config** (aligned to OpenAI spec):
 ```json
- {
+{
   "servers": {
     "microsoft-learn-openai-compatible": {
       "type": "http",
