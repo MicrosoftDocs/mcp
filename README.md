@@ -73,7 +73,7 @@ https://learn.microsoft.com/api/mcp
 }
 ```
 
-**OpenAI Learn MCP server config** (aligned to OpenAI spec):
+**OpenAI-compatible config** [providing search and fetch interface](https://platform.openai.com/docs/mcp):
 ```json
 {
   "servers": {
