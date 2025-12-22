@@ -1,6 +1,6 @@
 ---
 name: microsoft-code-reference
-description: Look up Microsoft API references, find working code samples, and verify SDK code is correct. Use when implementing Azure SDKs, .NET libraries, or Microsoft APIs—to find the right method, check parameters, get working examples, or troubleshoot errors. Catches hallucinated methods, wrong signatures, and deprecated patterns by querying official docs.
+description: Look up Microsoft API references, find working code samples, and verify SDK code is correct. Use when working with Azure SDKs, .NET libraries, or Microsoft APIs—to find the right method, check parameters, get working examples, or troubleshoot errors. Catches hallucinated methods, wrong signatures, and deprecated patterns by querying official docs.
 compatibility: Requires Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp)
 ---
 
@@ -27,7 +27,7 @@ microsoft_code_sample_search(query: "send message service bus", language: "javas
 Languages: `python`, `csharp`, `javascript`, `typescript`, `java`, `go`, `powershell`, `cli`
 
 **When to use:**
-- Before implementing—find a working pattern to follow
+- Before writing code—find a working pattern to follow
 - After errors—compare your code against a known-good sample
 - Unsure of initialization/setup—samples show complete context
 
