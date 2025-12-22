@@ -73,6 +73,18 @@ https://learn.microsoft.com/api/mcp
 }
 ```
 
+**OpenAI-compatible config** [providing search and fetch interface](https://platform.openai.com/docs/mcp):
+```json
+{
+  "servers": {
+    "microsoft-learn-openai-compatible": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp/openai-compatible"
+    }
+  }
+}
+```
+
 ## 🛠️ Currently Supported Tools
 
 | Tool Name | Description | Input Parameters |
