@@ -104,16 +104,10 @@ https://learn.microsoft.com/api/mcp
 
 ### Quick Setup
 
-Copy the skills to your project:
-
-```bash
-# Copy both skills
-cp -r .github/skills/microsoft-docs .github/skills/
-cp -r .github/skills/microsoft-code-reference .github/skills/
-
-# Or just one
-cp -r .github/skills/microsoft-code-reference .github/skills/
-```
+1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
+2. **Copy the skill folders** to your project's `.github/skills/` directory:
+   - [`microsoft-docs`](.github/skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
+   - [`microsoft-code-reference`](.github/skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
 
 ### Supported Agents
 
