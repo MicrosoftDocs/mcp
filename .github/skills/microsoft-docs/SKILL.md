@@ -1,6 +1,7 @@
 ---
 name: microsoft-docs
 description: Query official Microsoft documentation to understand concepts, find tutorials, and learn how services work. Use for Azure, .NET, Microsoft 365, Windows, Power Platform, and all Microsoft technologies. Get accurate, current information from learn.microsoft.com and other official Microsoft websites—architecture overviews, quickstarts, configuration guides, limits, and best practices.
+compatibility: Requires Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp)
 ---
 
 # Microsoft Docs
