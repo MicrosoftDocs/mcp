@@ -12,7 +12,7 @@ compatibility: Requires Microsoft Learn MCP Server (https://learn.microsoft.com/
 |------|------|---------|
 | API method/class lookup | `microsoft_docs_search` | `"BlobClient UploadAsync Azure.Storage.Blobs"` |
 | Working code sample | `microsoft_code_sample_search` | `query: "upload blob managed identity", language: "python"` |
-| Full API reference | `microsoft_docs_fetch` | Fetch URL from search (for overloads, full signatures) |
+| Full API reference | `microsoft_docs_fetch` | Fetch URL from `microsoft_docs_search` (for overloads, full signatures) |
 
 ## Finding Code Samples
 
@@ -23,8 +23,6 @@ microsoft_code_sample_search(query: "upload file to blob storage", language: "cs
 microsoft_code_sample_search(query: "authenticate with managed identity", language: "python")
 microsoft_code_sample_search(query: "send message service bus", language: "javascript")
 ```
-
-Languages: `python`, `csharp`, `javascript`, `typescript`, `java`, `go`, `powershell`, `cli`
 
 **When to use:**
 - Before writing code—find a working pattern to follow
@@ -50,6 +48,8 @@ Fetch full page when method has multiple overloads or you need complete paramete
 
 ## Error Troubleshooting
 
+Use `microsoft_code_sample_search` to find working code samples and compare with your implementation. For specific errors, use `microsoft_docs_search` and `microsoft_docs_fetch`:
+
 | Error Type | Query |
 |------------|-------|
 | Method not found | `"[ClassName] methods [Namespace]"` |
@@ -61,15 +61,18 @@ Fetch full page when method has multiple overloads or you need complete paramete
 
 ## When to Verify
 
-Check before using when:
+Always verify when:
 - Method name seems "too convenient" (`UploadFile` vs actual `Upload`)
 - Mixing SDK versions (v11 `CloudBlobClient` vs v12 `BlobServiceClient`)
 - Package name doesn't follow conventions (`Azure.*` for .NET, `azure-*` for Python)
-- First time using this API
+- Using an API for the first time
 
-## Quick Validation
+## Validation Workflow
 
-Before generating Microsoft SDK code:
-1. **Package exists** — `microsoft_docs_search(query: "[PackageName] NuGet")`
-2. **Method is real** — `microsoft_docs_search(query: "[ClassName] [MethodName] [Namespace]")`
-3. **Get working sample** — `microsoft_code_sample_search(query: "[what you're doing]", language: "[lang]")`
+Before generating code using Microsoft SDKs, verify it's correct:
+
+1. **Confirm method or package exists** — `microsoft_docs_search(query: "[ClassName] [MethodName] [Namespace]")`
+2. **Fetch full details** (for overloads/complex params) — `microsoft_docs_fetch(url: "...")`
+3. **Find working sample** — `microsoft_code_sample_search(query: "[task]", language: "[lang]")`
+
+For simple lookups, step 1 alone may suffice. For complex API usage, complete all three steps.
