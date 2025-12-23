@@ -93,6 +93,37 @@ https://learn.microsoft.com/api/mcp
 | `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
 | `microsoft_code_sample_search` | Search for official Microsoft/Azure code snippets and examples | `query` (string): Search query for Microsoft/Azure code snippets<br/>`language` (string, optional): Programming language filter.|
 
+## 🤖 Agent Skills
+
+[Agent Skills](https://agentskills.io/) are portable instruction packages that help AI agents use tools more effectively. We provide two skills that guide agents on when and how to use the Microsoft Learn MCP tools:
+
+| Skill | Purpose | Best For |
+|-------|---------|----------|
+| [`microsoft-docs`](.github/skills/microsoft-docs/SKILL.md) | Understanding concepts, tutorials, architecture, limits | "How does X work?", learning, configuration guides |
+| [`microsoft-code-reference`](.github/skills/microsoft-code-reference/SKILL.md) | API lookups, code samples, verification, error fixing | Implementing code, finding correct methods, troubleshooting |
+
+### Quick Setup
+
+1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
+2. **Copy the skill folders** to your project's `.github/skills/` directory:
+   - [`microsoft-docs`](.github/skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
+   - [`microsoft-code-reference`](.github/skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
+
+### Supported Agents
+
+Agent Skills work across multiple AI agents:
+- **VS Code** (Insiders) — enable `chat.useAgentSkills` setting
+- **GitHub Copilot CLI** & **Copilot coding agent**
+- **Claude Code**, **Cursor**, **OpenAI Codex**, and [more](https://agentskills.io/)
+
+### Which Skill Do I Need?
+
+| If you want to... | Install |
+|-------------------|---------|
+| Cover all Microsoft docs scenarios | Both skills |
+| Focus on coding (APIs, samples, errors) | `microsoft-code-reference` only |
+| Focus on facts & concepts (limits, config, tutorials) | `microsoft-docs` only |
+
 
 ## 🔌 Installation & Getting Started
 
