@@ -1,0 +1,11 @@
+{
+  "name": "microsoft-docs",
+  "description": "Access official Microsoft documentation, API references, and code samples for Azure, .NET, Windows, and more.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Microsoft"
+  },
+  "homepage": "https://learn.microsoft.com",
+  "repository": "https://github.com/microsoftdocs/mcp",
+  "keywords": ["microsoft", "docs", "azure", ".net", "windows", "api", "documentation", "rag", "dynamics", "powerbi", "office"]
+}

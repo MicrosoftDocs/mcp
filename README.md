@@ -73,17 +73,7 @@ https://learn.microsoft.com/api/mcp
 }
 ```
 
-**OpenAI-compatible config** [providing search and fetch interface](https://platform.openai.com/docs/mcp):
-```json
-{
-  "servers": {
-    "microsoft-learn-openai-compatible": {
-      "type": "http",
-      "url": "https://learn.microsoft.com/api/mcp/openai-compatible"
-    }
-  }
-}
-```
+**OpenAI-compatible endpoint** [supports OpenAI Deep Research models](https://platform.openai.com/docs/mcp): use `https://learn.microsoft.com/api/mcp/openai-compatible`.
 
 ## 🛠️ Currently Supported Tools
 
@@ -99,15 +89,21 @@ https://learn.microsoft.com/api/mcp
 
 | Skill | Purpose | Best For |
 |-------|---------|----------|
-| [`microsoft-docs`](.github/skills/microsoft-docs/SKILL.md) | Understanding concepts, tutorials, architecture, limits | "How does X work?", learning, configuration guides |
-| [`microsoft-code-reference`](.github/skills/microsoft-code-reference/SKILL.md) | API lookups, code samples, verification, error fixing | Implementing code, finding correct methods, troubleshooting |
+| [`microsoft-docs`](skills/microsoft-docs/SKILL.md) | Understanding concepts, tutorials, architecture, limits | "How does X work?", learning, configuration guides |
+| [`microsoft-code-reference`](skills/microsoft-code-reference/SKILL.md) | API lookups, code samples, verification, error fixing | Implementing code, finding correct methods, troubleshooting |
 
 ### Quick Setup
 
+If you use `claude-code`:
+```bash
+/plugin marketplace add microsoftdocs/mcp
+/plugin install microsoft-docs@microsoft-docs-marketplace
+```
+Otherwise:
 1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
-2. **Copy the skill folders** to your project's `.github/skills/` directory:
-   - [`microsoft-docs`](.github/skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
-   - [`microsoft-code-reference`](.github/skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
+2. **Copy the skill folders** to your project's `.github/skills/` or `.claude/skills/` directory:
+   - [`microsoft-docs`](skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
+   - [`microsoft-code-reference`](skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
 
 ### Supported Agents
 

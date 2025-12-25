@@ -1,0 +1,20 @@
+name: Validate Repository Structure
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Claude Plugin & Skills
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run validation script
+        shell: pwsh
+        run: ./scripts/validate-repo.ps1
