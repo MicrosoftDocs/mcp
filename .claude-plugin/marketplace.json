@@ -1,0 +1,13 @@
+{
+  "name": "microsoft-docs-marketplace",
+  "owner": {
+    "name": "Microsoft"
+  },
+  "plugins": [
+    {
+      "name": "microsoft-docs",
+      "source": "./",
+      "description": "Access official Microsoft documentation, API references, and code samples for Azure, .NET, Windows, and more."
+    }
+  ]
+}
