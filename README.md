@@ -99,7 +99,7 @@ If you use `claude-code`:
 /plugin marketplace add microsoftdocs/mcp
 /plugin install microsoft-docs@microsoft-docs-marketplace
 ```
-otherwise:
+Otherwise:
 1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
 2. **Copy the skill folders** to your project's `.github/skills/` or `.claude/skills/` directory:
    - [`microsoft-docs`](skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
