@@ -94,7 +94,7 @@ https://learn.microsoft.com/api/mcp
 
 ### Quick Setup
 
-If you use `claude-code`:
+If you use Claude Code, run the following commands and restart Claude Code:
 ```bash
 /plugin marketplace add microsoftdocs/mcp
 /plugin install microsoft-docs@microsoft-docs-marketplace
@@ -129,10 +129,10 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 |--------|----------------------|-------------------|
 | **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) <br/> or search "@mcp learn" in Extensions to show "Microsoft Learn" MCP | [VS Code MCP Official Guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) |
 | **Claude Desktop** | Follow "Add custom connector" instructions in official guide. | [Claude Desktop Remote MCP Guide](https://modelcontextprotocol.io/docs/develop/connect-remote-servers) |
-| **Claude Code** | <details><summary>View Instructions</summary>1. Open a CLI<br/>2. Type `claude mcp add --transport http microsoft-learn https://learn.microsoft.com/api/mcp` and press enter<br/>3. (optional) Type `--scope user` directly after `claude mcp add` to make this MCP server available in Claude Code for all of your projects</details> | [Claude Code Remote MCP Guide](https://docs.anthropic.com/en/docs/claude-code/mcp) |
+| **Claude Code** | Install via plugin marketplace (includes MCP server + skills) - see [Quick Setup](#-agent-skills) | [Claude Code Remote MCP Guide](https://code.claude.com/docs/en/mcp) |
 | **Visual Studio** | Upgrade to latest VS 2022 or 2026, "Microsoft Learn" MCP is already built-in | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
 | **Cursor IDE** | [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=microsoft-learn&config=eyJuYW1lIjoibWljcm9zb2Z0LWxlYXJuIiwidHlwZSI6Imh0dHAiLCJ1cmwiOiJodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vYXBpL21jcCJ9) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
-| **Codex** | Manual configuration required<br/> <details><summary>View Instructions</summary> Create or edit the configuration file `~/.codex/config.toml` and add: <pre>[mcp_servers.microsoft-learn] <br/>url = "https://learn.microsoft.com/api/mcp"</pre></details>| [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers) |
+| **Codex** | `codex mcp add "microsoft-learn" --url "https://learn.microsoft.com/api/mcp"`| [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers) |
 | **Roo Code** | Open [Roo Code Marketplace](https://docs.roocode.com/features/marketplace), search for `Microsoft Learn`, and click `Install` | [Roo Code MCP Official Guide](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
 | **Gemini CLI** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.gemini/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)|
@@ -140,15 +140,8 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **GitHub** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Navigate to Settings → Coding agent<br/><pre>{<br/>  "mslearn": {<br/>    "type": "http",<br/>    "url": "https://learn.microsoft.com/api/mcp",<br/>    "tools": [<br/>      "*"<br/>    ]<br/>  }<br/>}</pre></details> |
 | **ChatGPT** | Manual configuration required<br/> <details><summary>View Instructions</summary>1. Open ChatGPT in the browser<br/>2. Go to **Settings → Connectors → Advanced settings → Turn Developer mode on**<br/>3. Go back to connectors and click **create**<br/>4. Give the connector a **name**, enter **URL** `https://learn.microsoft.com/api/mcp`, set **authentication** to `No authentication` and **trust** the application<br/>5. Click **create**<br/> </details> | [ChatGPT Official Guide](https://platform.openai.com/docs/guides/developer-mode)|
 | **Windsurf** | Manual configuration required<br/> <details><summary>View Config</summary><pre>{<br/>  "mcpServers": {<br/>    "microsoft-learn": {<br/>      "serverUrl": "https://learn.microsoft.com/api/mcp"<br/>    }<br/>  }<br/>}</pre></details>| [Windsurf MCP Guide](https://docs.windsurf.com/windsurf/cascade/mcp) |
+| **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft-learn": {<br/>    "url": "https://learn.microsoft.com/api/mcp"<br/>    }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
 
-### Alternative Installation (for legacy clients or local configuration)
-
-For clients that don't support native remote MCP servers or if you prefer local configuration, you can use `mcp-remote` as a proxy:
-
-| Client | Manual Configuration | MCP Guide |
-|--------|----------------------|-----------| 
-| **Claude Desktop (legacy config)** | <details><summary>View Config</summary>**Note**: Only use this if Settings → Integrations doesn't work<br/><pre>{<br/>  "microsoft-learn": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre>Add to `claude_desktop_config.json`</details>| [Claude Desktop MCP Guide](https://modelcontextprotocol.io/quickstart/user) |
-| **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft-learn": {<br/>    "command": "npx",<br/>    "args": [<br/>      "-y",<br/>      "mcp-remote",<br/>      "https://learn.microsoft.com/api/mcp"<br/>    ]<br/>  }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
 
 ### ▶️ Getting Started
 
