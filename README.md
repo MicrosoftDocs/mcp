@@ -73,7 +73,48 @@ https://learn.microsoft.com/api/mcp
 }
 ```
 
-**OpenAI-compatible endpoint** [supports OpenAI Deep Research models](https://platform.openai.com/docs/mcp): use `https://learn.microsoft.com/api/mcp/openai-compatible`.
+For experimental features, see the [Experimental Features](#-experimental-features) section below.
+
+## 🧪 Experimental Features
+
+The Microsoft Learn MCP Server offers experimental features that are under active development. These features may change or be refined based on user feedback and usage patterns.
+
+### OpenAI-Compatible Endpoint
+
+For applications that require OpenAI Deep Research model compatibility, you can use the OpenAI-compatible endpoint:
+
+```
+https://learn.microsoft.com/api/mcp/openai-compatible
+```
+
+This endpoint [supports OpenAI Deep Research models](https://platform.openai.com/docs/mcp) and follows the OpenAI MCP specification.
+
+### Token Budget Control
+
+To manage token usage and control costs, you can append the `maxTokenBudget` query parameter to the MCP endpoint URL. This parameter limits the token count in search tool responses by truncating the content to meet your specified budget.
+
+**Usage Example:**
+
+```
+https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
+```
+
+**Configuration Example:**
+
+```json
+{
+  "servers": {
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp?maxTokenBudget=2000"
+    }
+  }
+}
+```
+
+This will limit search tool responses to approximately 2000 tokens, helping you manage API costs and response sizes.
+
+> **Note:** These experimental features are subject to change. We welcome feedback through our [GitHub Discussions](https://github.com/MicrosoftDocs/mcp/discussions).
 
 ## 🛠️ Currently Supported Tools
 
