@@ -97,8 +97,6 @@ To manage token usage and control costs, you can append the `maxTokenBudget` que
 https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 ```
 
-This will truncate search tool responses to fit within the specified token budget (e.g., 2000 tokens), helping you manage API costs and response sizes.
-
 > **Note:** These experimental features are subject to change. We welcome feedback through our [GitHub Discussions](https://github.com/MicrosoftDocs/mcp/discussions).
 
 ## 🛠️ Currently Supported Tools
