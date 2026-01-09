@@ -93,23 +93,8 @@ This endpoint [supports OpenAI Deep Research models](https://platform.openai.com
 
 To manage token usage and control costs, you can append the `maxTokenBudget` query parameter to the MCP endpoint URL. This parameter limits the token count in search tool responses by truncating the content to meet your specified budget.
 
-**Usage Example:**
-
 ```
 https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
-```
-
-**Configuration Example:**
-
-```json
-{
-  "servers": {
-    "microsoft-learn": {
-      "type": "http",
-      "url": "https://learn.microsoft.com/api/mcp?maxTokenBudget=2000"
-    }
-  }
-}
 ```
 
 This will truncate search tool responses to fit within the specified token budget (e.g., 2000 tokens), helping you manage API costs and response sizes.
