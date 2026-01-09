@@ -112,7 +112,7 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 }
 ```
 
-This will limit search tool responses to approximately 2000 tokens, helping you manage API costs and response sizes.
+This will truncate search tool responses to fit within the specified token budget (e.g., 2000 tokens), helping you manage API costs and response sizes.
 
 > **Note:** These experimental features are subject to change. We welcome feedback through our [GitHub Discussions](https://github.com/MicrosoftDocs/mcp/discussions).
 
