@@ -99,6 +99,14 @@ If you use Claude Code, run the following commands and restart Claude Code:
 /plugin marketplace add microsoftdocs/mcp
 /plugin install microsoft-docs@microsoft-docs-marketplace
 ```
+
+Or install via [sk](https://github.com/803/skills-supply), the universal skills package manager for coding agents (supports Claude Code, Amp, Codex, OpenCode, etc.):
+```bash
+# Add --global flag if you'd like to install in user-scope (defaults to project-scope)
+sk pkg add claude-plugin microsoft-docs@MicrosoftDocs/mcp
+sk sync
+```
+
 Otherwise:
 1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
 2. **Copy the skill folders** to your project's `.github/skills/` or `.claude/skills/` directory:

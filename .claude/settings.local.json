@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "microsoft-learn"
+  ],
+  "enableAllProjectMcpServers": true
+}
