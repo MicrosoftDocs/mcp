@@ -154,7 +154,7 @@ For more issues: `microsoft_docs_search(query="{service} troubleshoot {symptom}"
 
 | Topic | How to Find |
 |-------|-------------|
-| REST API | Fetch [{API Reference}]({url}) |
+| REST API | microsoft_docs_fetch(url="{url}") |
 | ARM/Bicep | `microsoft_docs_search(query="{service} bicep template")` |
 | Security | `microsoft_docs_search(query="{service} security best practices")` |
 ```
