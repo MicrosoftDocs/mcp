@@ -306,7 +306,7 @@ description: Interact with {API/Protocol}. Use when agents need to {primary oper
 
 | Topic | How to Find |
 |-------|-------------|
-| Full endpoint reference | Fetch [{API Docs}]({url}) |
+| Full endpoint reference | `microsoft_docs_fetch(url="{url}")` |
 | Permissions | `microsoft_docs_search(query="{api} permissions {resource}")` |
 | SDKs | `microsoft_docs_search(query="{api} SDK {language}")` |
 ```
