@@ -54,7 +54,7 @@ description: {What it does}. Use when agents need to {primary task} with {techno
 
 For full API documentation:
 - `microsoft_docs_search(query="{sdk} {class} API reference")`
-- Fetch: [{API Reference}]({url})
+- `microsoft_docs_fetch(url="{url}")`
 
 ## Best Practices
 
@@ -69,7 +69,7 @@ See [best-practices.md](references/best-practices.md) for detailed guidance.
 | Topic | How to Find |
 |-------|-------------|
 | {Advanced topic 1} | `microsoft_docs_search(query="{sdk} {topic}")` |
-| {Advanced topic 2} | Fetch [{page}]({url}) |
+| {Advanced topic 2} | `microsoft_docs_fetch(url="{url}")` |
 | {Code examples} | `microsoft_code_sample_search(query="{sdk} {scenario}", language="{lang}")` |
 ```
 
@@ -154,7 +154,7 @@ For more issues: `microsoft_docs_search(query="{service} troubleshoot {symptom}"
 
 | Topic | How to Find |
 |-------|-------------|
-| REST API | microsoft_docs_fetch(url="{url}") |
+| REST API | `microsoft_docs_fetch(url="{url}")` |
 | ARM/Bicep | `microsoft_docs_search(query="{service} bicep template")` |
 | Security | `microsoft_docs_search(query="{service} security best practices")` |
 ```
@@ -234,7 +234,7 @@ For detailed deployment: `microsoft_docs_search(query="{framework} deploy {targe
 | Topic | How to Find |
 |-------|-------------|
 | {Advanced feature} | `microsoft_docs_search(query="{framework} {feature}")` |
-| {Integration} | Fetch [{Guide}]({url}) |
+| {Integration} | `microsoft_docs_fetch(url="{url}")` |
 | {Samples} | `microsoft_code_sample_search(query="{framework} {scenario}")` |
 ```
 
