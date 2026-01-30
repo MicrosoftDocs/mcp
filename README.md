@@ -109,12 +109,13 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 
 ## 🤖 Agent Skills
 
-[Agent Skills](https://agentskills.io/) are portable instruction packages that help AI agents use tools more effectively. We provide two skills that guide agents on when and how to use the Microsoft Learn MCP tools:
+[Agent Skills](https://agentskills.io/) are portable instruction packages that help AI agents use tools more effectively. We provide three skills that guide agents on when and how to use the Microsoft Learn MCP tools:
 
 | Skill | Purpose | Best For |
 |-------|---------|----------|
 | [`microsoft-docs`](skills/microsoft-docs/SKILL.md) | Understanding concepts, tutorials, architecture, limits | "How does X work?", learning, configuration guides |
 | [`microsoft-code-reference`](skills/microsoft-code-reference/SKILL.md) | API lookups, code samples, verification, error fixing | Implementing code, finding correct methods, troubleshooting |
+| [`microsoft-skill-creator`](skills/microsoft-skill-creator/SKILL.md) | Create agent skills for Microsoft technologies using Learn MCP tools | Building specialized skills for Microsoft tech, libraries, frameworks, or services |
 
 ### Quick Setup
 
@@ -128,6 +129,7 @@ Otherwise:
 2. **Copy the skill folders** to your project's `.github/skills/` or `.claude/skills/` directory:
    - [`microsoft-docs`](skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
    - [`microsoft-code-reference`](skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
+   - [`microsoft-skill-creator`](skills/microsoft-skill-creator/) — for creating new agent skills for Microsoft technologies
 
 ### Supported Agents
 
@@ -140,9 +142,10 @@ Agent Skills work across multiple AI agents:
 
 | If you want to... | Install |
 |-------------------|---------|
-| Cover all Microsoft docs scenarios | Both skills |
+| Cover all Microsoft docs scenarios | All three skills |
 | Focus on coding (APIs, samples, errors) | `microsoft-code-reference` only |
 | Focus on facts & concepts (limits, config, tutorials) | `microsoft-docs` only |
+| Create specialized skills for Microsoft technologies | `microsoft-skill-creator` only |
 
 
 ## 🔌 Installation & Getting Started
