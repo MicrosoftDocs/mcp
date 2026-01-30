@@ -44,20 +44,20 @@ skill-name/
 Build deep understanding using Learn MCP tools in three phases:
 
 **Phase 1 - Scope Discovery:**
-```python
+```
 microsoft_docs_search(query="{technology} overview what is")
 microsoft_docs_search(query="{technology} concepts architecture")
 microsoft_docs_search(query="{technology} getting started tutorial")
 ```
 
 **Phase 2 - Core Content:**
-```python
+```
 microsoft_docs_fetch(url="...")  # Fetch pages from Phase 1
 microsoft_code_sample_search(query="{technology}", language="{lang}")
 ```
 
 **Phase 3 - Depth:**
-```python
+```
 microsoft_docs_search(query="{technology} best practices")
 microsoft_docs_search(query="{technology} troubleshooting errors")
 ```
@@ -126,16 +126,11 @@ Use the appropriate template from [skill-templates.md](references/skill-template
 | Troubleshooting | | Search queries |
 | Full API reference | | Doc links |
 
-### Step 5: Validate and Package
+### Step 5: Validate
 
 1. Review: Is local content sufficient for common tasks?
 2. Test: Do suggested search queries return useful results?
 3. Verify: Do code samples run without errors?
-
-Package using:
-```bash
-python scripts/package_skill.py path/to/{skill-name}
-```
 
 ## Common Investigation Patterns
 
