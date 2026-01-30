@@ -164,7 +164,7 @@ Use the appropriate template from [skill-templates.md](references/skill-template
 
 ### Investigation
 
-```python
+```
 microsoft_docs_search(query="semantic kernel overview")
 microsoft_docs_search(query="semantic kernel plugins functions")
 microsoft_code_sample_search(query="semantic kernel", language="csharp")
