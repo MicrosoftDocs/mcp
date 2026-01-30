@@ -115,7 +115,7 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 |-------|---------|----------|
 | [`microsoft-docs`](skills/microsoft-docs/SKILL.md) | Understanding concepts, tutorials, architecture, limits | "How does X work?", learning, configuration guides |
 | [`microsoft-code-reference`](skills/microsoft-code-reference/SKILL.md) | API lookups, code samples, verification, error fixing | Implementing code, finding correct methods, troubleshooting |
-| [`microsoft-skill-creator`](skills/microsoft-skill-creator/SKILL.md) | Create agent skills for Microsoft technologies using Learn MCP tools | Building specialized skills for Microsoft tech, libraries, frameworks, or services |
+| [`microsoft-skill-creator`](skills/microsoft-skill-creator/SKILL.md) | Meta-skill that generates custom agent skills for any Microsoft technology | Creating a skill to teach agents about a new Azure library, .NET feature, or other Microsoft tech |
 
 ### Quick Setup
 
@@ -129,7 +129,7 @@ Otherwise:
 2. **Copy the skill folders** to your project's `.github/skills/` or `.claude/skills/` directory:
    - [`microsoft-docs`](skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
    - [`microsoft-code-reference`](skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
-   - [`microsoft-skill-creator`](skills/microsoft-skill-creator/) — for creating new agent skills for Microsoft technologies
+   - [`microsoft-skill-creator`](skills/microsoft-skill-creator/) — meta-skill for generating custom skills about Microsoft technologies
 
 ### Supported Agents
 
@@ -145,7 +145,7 @@ Agent Skills work across multiple AI agents:
 | Cover all Microsoft docs scenarios | All three skills |
 | Focus on coding (APIs, samples, errors) | `microsoft-code-reference` only |
 | Focus on facts & concepts (limits, config, tutorials) | `microsoft-docs` only |
-| Create specialized skills for Microsoft technologies | `microsoft-skill-creator` only |
+| Generate a custom skill for a specific Microsoft technology | `microsoft-skill-creator` only |
 
 
 ## 🔌 Installation & Getting Started
