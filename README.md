@@ -119,10 +119,15 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 
 ### Quick Setup
 
-If you use Claude Code, run the following commands and restart Claude Code:
+These agent skills are packed in a `microsoft-docs` plugin together with the Learn MCP server itself. If you use Claude Code, run the following commands and restart Claude Code:
 ```bash
 /plugin marketplace add microsoftdocs/mcp
 /plugin install microsoft-docs@microsoft-docs-marketplace
+```
+
+Or if you use GitHub Copilot CLI, run this command:
+```bash
+/plugin install microsoftdocs/mcp
 ```
 Otherwise:
 1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
@@ -155,6 +160,7 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | Client | One-click Installation | MCP Guide |
 |--------|----------------------|-------------------|
 | **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) <br/> or search "@mcp learn" in Extensions to show "Microsoft Learn" MCP | [VS Code MCP Official Guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) |
+| **GitHub Copilot CLI** | `/plugin install microsoftdocs/mcp` | |
 | **Claude Desktop** | Follow "Add custom connector" instructions in official guide. | [Claude Desktop Remote MCP Guide](https://modelcontextprotocol.io/docs/develop/connect-remote-servers) |
 | **Claude Code** | Install via plugin marketplace (includes MCP server + skills) - see [Quick Setup](#-agent-skills) | [Claude Code Remote MCP Guide](https://code.claude.com/docs/en/mcp) |
 | **Visual Studio** | Upgrade to latest VS 2022 or 2026, "Microsoft Learn" MCP is already built-in | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
