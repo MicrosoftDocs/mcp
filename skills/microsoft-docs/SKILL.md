@@ -7,6 +7,26 @@ compatibility: Requires Microsoft Learn MCP Server (https://learn.microsoft.com/
 
 # Microsoft Docs
 
+## Prerequisites: Connect to the Microsoft Learn MCP Server
+
+This skill requires the **Microsoft Learn MCP Server**. If it's not already connected, add it to your MCP client configuration:
+
+**Remote MCP Endpoint:** `https://learn.microsoft.com/api/mcp`
+
+**Sample config (works in most MCP clients):**
+```json
+{
+  "mcpServers": {
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
+  }
+}
+```
+
+No API key or authentication required. For client-specific setup (VS Code, Claude, Cursor, etc.), see the [full installation guide](https://github.com/MicrosoftDocs/mcp#-installation--getting-started).
+
 ## Tools
 
 | Tool | Use For |

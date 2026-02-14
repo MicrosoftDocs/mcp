@@ -9,6 +9,26 @@ compatibility: Requires Microsoft Learn MCP Server (https://learn.microsoft.com/
 
 Create hybrid skills for Microsoft technologies that store essential knowledge locally while enabling dynamic Learn MCP lookups for deeper details.
 
+## Prerequisites: Connect to the Microsoft Learn MCP Server
+
+This skill requires the **Microsoft Learn MCP Server**. If it's not already connected, add it to your MCP client configuration:
+
+**Remote MCP Endpoint:** `https://learn.microsoft.com/api/mcp`
+
+**Sample config (works in most MCP clients):**
+```json
+{
+  "mcpServers": {
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    }
+  }
+}
+```
+
+No API key or authentication required. For client-specific setup (VS Code, Claude, Cursor, etc.), see the [full installation guide](https://github.com/MicrosoftDocs/mcp#-installation--getting-started).
+
 ## About Skills
 
 Skills are modular packages that extend agent capabilities with specialized knowledge and workflows. A skill transforms a general-purpose agent into a specialized one for a specific domain.
