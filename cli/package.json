@@ -1,0 +1,50 @@
+{
+  "name": "@microsoft/learn-cli",
+  "version": "0.1.0",
+  "description": "Thin companion CLI for the Microsoft Learn MCP server.",
+  "type": "module",
+  "bin": {
+    "mslearn": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "microsoft",
+    "learn",
+    "mcp",
+    "cli",
+    "azure",
+    "docs"
+  ],
+  "author": "Microsoft",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoftdocs/mcp.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/microsoftdocs/mcp/issues"
+  },
+  "homepage": "https://github.com/microsoftdocs/mcp/tree/main/cli",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "commander": "^14.0.3",
+    "env-paths": "^4.0.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

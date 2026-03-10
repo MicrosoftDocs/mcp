@@ -121,6 +121,59 @@ if (Test-Path $mcpJsonPath) {
 }
 
 # ============================================================================
+# Validation 4: Companion CLI Structure
+# The cli folder contains the open source companion CLI implementation
+# ============================================================================
+Write-ValidationHeader "Validating Companion CLI (cli/)"
+
+$cliDir = Join-Path $repoRoot "cli"
+if (-not (Test-Path $cliDir)) {
+    Write-ValidationError "Missing: cli/ directory"
+} else {
+    Write-ValidationSuccess "Found: cli/ directory"
+
+    $cliJsonFiles = @(
+        "package.json",
+        "tsconfig.json"
+    )
+
+    foreach ($file in $cliJsonFiles) {
+        $path = Join-Path $cliDir $file
+        if (Test-Path $path) {
+            Write-ValidationSuccess "Found: cli/$file"
+            if (Test-ValidJson $path) {
+                Write-ValidationSuccess "Valid JSON: cli/$file"
+            } else {
+                Write-ValidationError "Invalid JSON: cli/$file"
+            }
+        } else {
+            Write-ValidationError "Missing: cli/$file"
+        }
+    }
+
+    $cliRequiredFiles = @(
+        "README.md",
+        "src/index.ts",
+        "src/commands/search.ts",
+        "src/commands/fetch.ts",
+        "src/commands/code-search.ts",
+        "src/commands/doctor.ts",
+        "src/mcp/client.ts",
+        "src/mcp/tool-discovery.ts",
+        "test/unit/cli.test.ts"
+    )
+
+    foreach ($file in $cliRequiredFiles) {
+        $path = Join-Path $cliDir $file
+        if (Test-Path $path) {
+            Write-ValidationSuccess "Found: cli/$file"
+        } else {
+            Write-ValidationError "Missing: cli/$file"
+        }
+    }
+}
+
+# ============================================================================
 # Summary
 # ============================================================================
 Write-Host "`n" ("-" * 50) -ForegroundColor Gray

@@ -4,5 +4,6 @@ _site/
 .optemp/
 _themes*/
 _repo.*/
-
+node_modules/
 .openpublishing.buildcore.ps1
+.claude/settings.local.json
