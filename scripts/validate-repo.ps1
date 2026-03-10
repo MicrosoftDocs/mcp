@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Validates the repository structure for Claude Plugin and Agent Skills.
+    Validates the repository structure for the Claude plugin, agent skills, MCP config, and companion CLI.
 
 .DESCRIPTION
     This script validates that all required files and folders exist for:
@@ -13,9 +13,12 @@
     2. Agent Skills (skills/)
        - Each subfolder must contain a SKILL.md file describing the skill
        - Skills help AI agents use MCP tools more effectively
-    
+     
     3. MCP Configuration (.mcp.json)
        - Root-level MCP server configuration
+
+    4. Companion CLI (cli/)
+       - TypeScript source, tests, and package metadata for the in-repo Learn CLI
 
     Run this script to verify your changes before submitting a PR.
 
@@ -118,6 +121,59 @@ if (Test-Path $mcpJsonPath) {
     }
 } else {
     Write-ValidationError "Missing: .mcp.json at repository root"
+}
+
+# ============================================================================
+# Validation 4: Companion CLI Structure
+# The cli folder contains the open source companion CLI implementation
+# ============================================================================
+Write-ValidationHeader "Validating Companion CLI (cli/)"
+
+$cliDir = Join-Path $repoRoot "cli"
+if (-not (Test-Path $cliDir)) {
+    Write-ValidationError "Missing: cli/ directory"
+} else {
+    Write-ValidationSuccess "Found: cli/ directory"
+
+    $cliJsonFiles = @(
+        "package.json",
+        "tsconfig.json"
+    )
+
+    foreach ($file in $cliJsonFiles) {
+        $path = Join-Path $cliDir $file
+        if (Test-Path $path) {
+            Write-ValidationSuccess "Found: cli/$file"
+            if (Test-ValidJson $path) {
+                Write-ValidationSuccess "Valid JSON: cli/$file"
+            } else {
+                Write-ValidationError "Invalid JSON: cli/$file"
+            }
+        } else {
+            Write-ValidationError "Missing: cli/$file"
+        }
+    }
+
+    $cliRequiredFiles = @(
+        "README.md",
+        "src/index.ts",
+        "src/commands/search.ts",
+        "src/commands/fetch.ts",
+        "src/commands/code-search.ts",
+        "src/commands/doctor.ts",
+        "src/mcp/client.ts",
+        "src/mcp/tool-discovery.ts",
+        "test/unit/cli.test.ts"
+    )
+
+    foreach ($file in $cliRequiredFiles) {
+        $path = Join-Path $cliDir $file
+        if (Test-Path $path) {
+            Write-ValidationSuccess "Found: cli/$file"
+        } else {
+            Write-ValidationError "Missing: cli/$file"
+        }
+    }
 }
 
 # ============================================================================

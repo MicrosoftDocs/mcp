@@ -8,12 +8,34 @@ on:
 
 jobs:
   validate:
-    name: Validate Claude Plugin & Skills
+    name: Validate Repository (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-    
+    strategy:
+      matrix:
+        node-version: [22, 24]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: cli/package-lock.json
+
+      - name: Install CLI dependencies
+        working-directory: cli
+        run: npm ci
+
+      - name: Build CLI
+        working-directory: cli
+        run: npm run build
+
+      - name: Test CLI
+        working-directory: cli
+        run: npm test
 
       - name: Run validation script
         shell: pwsh
