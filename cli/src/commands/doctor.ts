@@ -48,7 +48,7 @@ async function runDoctorChecks(endpoint: string, context: CliContext): Promise<D
   });
 
   try {
-    const mapping = await client.getToolMapping();
+    const mapping = await client.getToolMapping(true);
     connected = true;
     discovered = true;
     tools.docsSearch = mapping.docsSearch.name;

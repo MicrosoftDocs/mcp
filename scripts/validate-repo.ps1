@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Validates the repository structure for Claude Plugin and Agent Skills.
+    Validates the repository structure for the Claude plugin, agent skills, MCP config, and companion CLI.
 
 .DESCRIPTION
     This script validates that all required files and folders exist for:
@@ -15,7 +15,10 @@
        - Skills help AI agents use MCP tools more effectively
     
     3. MCP Configuration (.mcp.json)
-       - Root-level MCP server configuration
+        - Root-level MCP server configuration
+
+    4. Companion CLI (cli/)
+       - TypeScript source, tests, and package metadata for the in-repo Learn CLI
 
     Run this script to verify your changes before submitting a PR.
 

@@ -108,6 +108,21 @@ describe('runCli', () => {
     expect(JSON.parse(stdout.join('')).ok).toBe(false);
   });
 
+  it('forces a fresh connection check in doctor instead of using cached tool mappings', async () => {
+    const getToolMapping = vi.fn<LearnCliClientLike['getToolMapping']>().mockResolvedValue({
+      docsSearch: { name: 'microsoft_docs_search', inputSchema: { type: 'object' } },
+      docsFetch: { name: 'microsoft_docs_fetch', inputSchema: { type: 'object' } },
+      codeSearch: { name: 'microsoft_code_sample_search', inputSchema: { type: 'object' } },
+    });
+    const client = createMockClient({ getToolMapping });
+    const { context } = createTestContext(client);
+
+    const exitCode = await runCli(['node', 'mslearn', 'doctor'], context);
+
+    expect(exitCode).toBe(0);
+    expect(getToolMapping).toHaveBeenCalledWith(true);
+  });
+
   it('returns a usage error for missing required arguments', async () => {
     const client = createMockClient();
     const { context, stderr } = createTestContext(client);

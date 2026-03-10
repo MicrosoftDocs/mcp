@@ -51,6 +51,8 @@ export async function probeEndpoint(endpoint: string, fetchImpl: typeof fetch): 
     });
 
     return {
+      // The Learn MCP endpoint currently returns HTTP 405 to GET requests, so any HTTP
+      // response here means the endpoint is reachable even if the probe method is unsupported.
       ok: true,
       status: response.status,
       detail: `HTTP ${response.status}`,
@@ -402,7 +404,10 @@ function classifyToolError(error: unknown): ToolErrorAction {
   const message = error.message.toLowerCase();
   if (
     message.includes('invalid session') ||
-    message.includes('session') ||
+    message.includes('expired session') ||
+    message.includes('unknown session') ||
+    message.includes('missing session') ||
+    message.includes('mcp-session-id') ||
     message.includes('401') ||
     message.includes('403') ||
     message.includes('unauthorized') ||
