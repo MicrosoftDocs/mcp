@@ -8,8 +8,8 @@ The CLI should:
 
 - connect to the public Learn MCP endpoint over Streamable HTTP
 - discover tools dynamically at runtime
-- normalize the current Learn tool payloads into a shell-friendly contract
-- make common agent and terminal workflows easier through deterministic formatting
+- pass through the current Learn tool payloads with only minimal CLI-side text handling
+- make common agent and terminal workflows easier without inventing an extra output contract
 
 The CLI should **not**:
 
@@ -178,28 +178,12 @@ Implementation note:
 
 - The CLI may maintain an internal, local mapping such as `search -> discovered docs search tool`, but users should never need to know the remote tool names
 
-### 8. Output formatting
+### 8. Output behavior
 
-#### JSONL
-
-- emit one valid JSON object per line
-- no trailing commas
-- no banner text
-
-#### JSON
-
-- emit a single JSON object or array with stable field names
-
-#### Text
-
-- emit readable, grep-friendly plain text
-- include titles and URLs for result lists
-- include clear section markers for fetch output
-
-#### Markdown
-
-- only used by `fetch`
-- preserve the fetched markdown as closely as practical after optional section filtering and truncation
+- `search` should print the raw docs-search payload text returned by Learn
+- `code-search` should print the raw code-search payload text returned by Learn
+- `fetch` should preserve the fetched markdown as closely as practical after optional section filtering and truncation
+- `doctor` may render either plain text or JSON because it is CLI-generated diagnostics, not passthrough Learn content
 
 ### 9. Error handling
 
@@ -225,20 +209,22 @@ The repository should include the CLI implementation directly:
       fetch.ts
       code-search.ts
       doctor.ts
-    /formatters
-      json.ts
-      jsonl.ts
-      markdown.ts
-      text.ts
     /mcp
       client.ts
+      cache.ts
       tool-discovery.ts
     /utils
+      contracts.ts
+      errors.ts
+      markdown.ts
+      options.ts
+      text.ts
     index.ts
+    context.ts
   /test
     /unit
-    /fixtures
   package.json
+  package-lock.json
   tsconfig.json
   README.md
 ```
@@ -263,7 +249,7 @@ Before publishing, verify the packed artifact:
 npm pack
 npm install -g ./microsoft-learn-cli-<version>.tgz
 mslearn doctor
-mslearn search "azure functions timeout" --top 3
+mslearn search "azure functions timeout"
 ```
 
 ### 12. Testing strategy
@@ -282,7 +268,6 @@ Test:
 - `--version`
 - invalid args
 - JSON validity
-- JSONL validity
 - `fetch --section`
 - retry-on-refresh behavior
 

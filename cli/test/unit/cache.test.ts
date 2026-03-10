@@ -310,4 +310,49 @@ describe('LearnCliClient session reuse', () => {
     expect(fakeClient.callTool).toHaveBeenCalledOnce();
     expect(seenSessionIds).toEqual(['cached-session']);
   });
+
+  it('falls back to text content when toolResult is present but undefined', async () => {
+    const tools = [
+      createTool('microsoft_docs_search', 'Search docs'),
+      createTool('microsoft_docs_fetch', 'Fetch docs'),
+      createTool('microsoft_code_sample_search', 'Search code samples'),
+    ];
+
+    const client = createLearnCliClient({
+      endpoint: 'https://learn.microsoft.com/api/mcp',
+      cacheStore: {
+        read: vi.fn(async () => undefined),
+        write: vi.fn(async (value: { endpoint: string; sessionId?: string; tools?: ListedTool[] }) => ({
+          endpoint: value.endpoint,
+          sessionId: value.sessionId,
+          tools: value.tools,
+          updatedAt: new Date(0).toISOString(),
+          expiresAt: new Date(Date.now() + 60_000).toISOString(),
+        })),
+        clear: vi.fn(async () => undefined),
+      },
+      createSdkClient: () => ({
+        connect: vi.fn<(transport: unknown) => Promise<void>>().mockResolvedValue(undefined),
+        listTools: vi.fn(async () => ({
+          tools,
+        })),
+        callTool: vi.fn(async () => ({
+          toolResult: undefined,
+          content: [
+            {
+              type: 'text' as const,
+              text: 'fallback text',
+            },
+          ],
+        })),
+      }),
+      createTransport: () => ({
+        sessionId: 'fresh-session',
+        close: async () => undefined,
+      }),
+    });
+
+    await expect(client.searchDocs('azure functions timeout')).resolves.toBe('fallback text');
+    await client.close();
+  });
 });

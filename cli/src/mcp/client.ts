@@ -375,7 +375,7 @@ function readToolText(result: ToolCallResult, context: string): string {
     throw new OperationError(`The ${context} tool reported an error.`);
   }
 
-  if ('toolResult' in result) {
+  if ('toolResult' in result && result.toolResult !== undefined && result.toolResult !== null) {
     return JSON.stringify(result.toolResult);
   }
 
@@ -383,8 +383,9 @@ function readToolText(result: ToolCallResult, context: string): string {
     return JSON.stringify(result.structuredContent);
   }
 
-  const text = result.content
-    .filter((item): item is { type: 'text'; text: string } => item.type === 'text')
+  const content = Array.isArray(result.content) ? result.content : [];
+  const text = content
+    .filter(isTextContentItem)
     .map((item) => item.text)
     .join('\n')
     .trim();
@@ -394,6 +395,17 @@ function readToolText(result: ToolCallResult, context: string): string {
   }
 
   return text;
+}
+
+function isTextContentItem(item: unknown): item is { type: 'text'; text: string } {
+  return (
+    typeof item === 'object' &&
+    item !== null &&
+    'type' in item &&
+    item.type === 'text' &&
+    'text' in item &&
+    typeof item.text === 'string'
+  );
 }
 
 function classifyToolError(error: unknown): ToolErrorAction {

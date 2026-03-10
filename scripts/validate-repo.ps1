@@ -13,9 +13,9 @@
     2. Agent Skills (skills/)
        - Each subfolder must contain a SKILL.md file describing the skill
        - Skills help AI agents use MCP tools more effectively
-    
+     
     3. MCP Configuration (.mcp.json)
-        - Root-level MCP server configuration
+       - Root-level MCP server configuration
 
     4. Companion CLI (cli/)
        - TypeScript source, tests, and package metadata for the in-repo Learn CLI
