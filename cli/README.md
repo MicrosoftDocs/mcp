@@ -1,6 +1,6 @@
 # Microsoft Learn Companion CLI
 
-`mslearn` is a thin companion CLI for the public Microsoft Learn MCP server. 
+`mslearn` is a thin companion CLI for the public Microsoft Learn MCP server.
 
 It gives you terminal-friendly commands for docs search, docs fetch, code sample search, and environment diagnostics.
 

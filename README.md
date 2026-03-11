@@ -107,6 +107,10 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 | `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
 | `microsoft_code_sample_search` | Search for official Microsoft/Azure code snippets and examples | `query` (string): Search query for Microsoft/Azure code snippets<br/>`language` (string, optional): Programming language filter.|
 
+## 💻 Companion CLI
+
+This repository also includes an in-repo companion CLI. See [`cli/README.md`](cli/README.md) for installation, usage, and full command reference.
+
 ## 🤖 Agent Skills
 
 [Agent Skills](https://agentskills.io/) are portable instruction packages that help AI agents use tools more effectively. We provide three skills that guide agents on when and how to use the Microsoft Learn MCP tools:

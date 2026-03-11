@@ -106,13 +106,19 @@ function isZeroExitError(error: unknown): boolean {
   return typeof error === 'object' && error !== null && 'exitCode' in error && (error as { exitCode?: unknown }).exitCode === 0;
 }
 
-const resolvedArgv = (() => {
+export function resolveMainModuleUrl(argv1: string | undefined = process.argv[1]): string {
   try {
-    return pathToFileURL(realpathSync(process.argv[1] ?? '')).href;
+    return pathToFileURL(realpathSync(argv1 ?? '')).href;
   } catch {
-    return pathToFileURL(process.argv[1] ?? '').href;
+    try {
+      return pathToFileURL(argv1 ?? '').href;
+    } catch {
+      return '';
+    }
   }
-})();
+}
+
+const resolvedArgv = resolveMainModuleUrl();
 
 if (import.meta.url === resolvedArgv) {
   const exitCode = await runCli();
