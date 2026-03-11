@@ -2,6 +2,7 @@
 
 import { Command, CommanderError, Option } from 'commander';
 import { createRequire } from 'node:module';
+import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 import { registerCodeSearchCommand } from './commands/code-search.js';
@@ -105,7 +106,21 @@ function isZeroExitError(error: unknown): boolean {
   return typeof error === 'object' && error !== null && 'exitCode' in error && (error as { exitCode?: unknown }).exitCode === 0;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+export function resolveMainModuleUrl(argv1: string | undefined = process.argv[1]): string {
+  try {
+    return pathToFileURL(realpathSync(argv1 ?? '')).href;
+  } catch {
+    try {
+      return pathToFileURL(argv1 ?? '').href;
+    } catch {
+      return '';
+    }
+  }
+}
+
+const resolvedArgv = resolveMainModuleUrl();
+
+if (import.meta.url === resolvedArgv) {
   const exitCode = await runCli();
   if (exitCode !== 0) {
     process.exitCode = exitCode;

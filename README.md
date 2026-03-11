@@ -109,14 +109,7 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 
 ## 💻 Companion CLI
 
-This repository now also includes an in-repo companion CLI under [`/cli`](cli/). The `mslearn` CLI is a thin MCP client for the public Learn endpoint and adds shell-friendly commands for docs search, docs fetch, code sample search, and diagnostics.
-
-```bash
-cd cli
-npm install
-npm run build
-node dist/index.js --help
-```
+This repository also includes an in-repo companion CLI. See [`cli/README.md`](cli/README.md) for installation, usage, and full command reference.
 
 ## 🤖 Agent Skills
 
