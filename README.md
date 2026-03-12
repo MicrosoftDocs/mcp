@@ -107,9 +107,28 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 | `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
 | `microsoft_code_sample_search` | Search for official Microsoft/Azure code snippets and examples | `query` (string): Search query for Microsoft/Azure code snippets<br/>`language` (string, optional): Programming language filter.|
 
-## 💻 Companion CLI
+## 💻 Microsoft Learn CLI
 
-This repository also includes an in-repo companion CLI. See [`cli/README.md`](cli/README.md) for installation, usage, and full command reference.
+The [`@microsoft/learn-cli`](https://www.npmjs.com/package/@microsoft/learn-cli) package gives you terminal access to the same tools — search docs, fetch pages, and find code samples — without an MCP client.
+
+```bash
+# Run instantly (no install)
+npx @microsoft/learn-cli search "azure functions timeout"
+
+# Or install globally
+npm install -g @microsoft/learn-cli
+mslearn search "azure functions timeout"
+mslearn code-search "BlobServiceClient" --language python
+mslearn fetch "https://learn.microsoft.com/azure/azure-functions/functions-versions"
+```
+
+Pass `--json` to get raw JSON output for piping to other tools:
+
+```bash
+mslearn search "azure openai" --json | jq '.results[].title'
+```
+
+See [`cli/README.md`](cli/README.md) for the full command reference.
 
 ## 🤖 Agent Skills
 

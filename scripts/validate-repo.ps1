@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Validates the repository structure for the Claude plugin, agent skills, MCP config, and companion CLI.
+    Validates the repository structure for the Claude plugin, agent skills, MCP config, and CLI.
 
 .DESCRIPTION
     This script validates that all required files and folders exist for:
@@ -17,7 +17,7 @@
     3. MCP Configuration (.mcp.json)
        - Root-level MCP server configuration
 
-    4. Companion CLI (cli/)
+    4. CLI (cli/)
        - TypeScript source, tests, and package metadata for the in-repo Learn CLI
 
     Run this script to verify your changes before submitting a PR.
@@ -124,10 +124,10 @@ if (Test-Path $mcpJsonPath) {
 }
 
 # ============================================================================
-# Validation 4: Companion CLI Structure
-# The cli folder contains the open source companion CLI implementation
+# Validation 4: CLI Structure
+# The cli folder contains the open source CLI implementation
 # ============================================================================
-Write-ValidationHeader "Validating Companion CLI (cli/)"
+Write-ValidationHeader "Validating CLI (cli/)"
 
 $cliDir = Join-Path $repoRoot "cli"
 if (-not (Test-Path $cliDir)) {
