@@ -1,14 +1,19 @@
 const INDENT = '    ';
 
+interface FormatOptions {
+  /** When true, apply code-search-specific cleanup (description metadata stripping, language suffix). */
+  codeSearch?: boolean;
+}
+
 export function formatSearchResults(payload: string): string {
-  return formatResultsPayload(payload);
+  return formatResultsPayload(payload, { codeSearch: false });
 }
 
 export function formatCodeSearchResults(payload: string): string {
-  return formatResultsPayload(payload);
+  return formatResultsPayload(payload, { codeSearch: true });
 }
 
-function formatResultsPayload(payload: string): string {
+function formatResultsPayload(payload: string, options: FormatOptions): string {
   let data: unknown;
   try {
     data = JSON.parse(payload);
@@ -21,8 +26,9 @@ function formatResultsPayload(payload: string): string {
     return JSON.stringify(data, null, 2);
   }
 
+  const formatter = options.codeSearch ? formatCodeSearchResult : formatDocsSearchResult;
   return results
-    .map((item, index) => formatSingleResult(item as Record<string, unknown>, index + 1))
+    .map((item, index) => formatter(item as Record<string, unknown>, index + 1))
     .join('\n\n');
 }
 
@@ -41,12 +47,32 @@ function extractResultsArray(data: unknown): unknown[] | undefined {
   return undefined;
 }
 
-function formatSingleResult(result: Record<string, unknown>, index: number): string {
-  const rawTitle = stringField(result, 'title') ?? stringField(result, 'description');
-  const title = rawTitle ? cleanDescription(rawTitle) : `Result ${index}`;
-  const url = stringField(result, 'contentUrl') ?? stringField(result, 'link') ?? stringField(result, 'url');
+function formatDocsSearchResult(result: Record<string, unknown>, index: number): string {
+  const title = stringField(result, 'title') ?? `Result ${index}`;
+  const url = stringField(result, 'contentUrl') ?? stringField(result, 'url');
+  const body = stringField(result, 'content');
+
+  const lines: string[] = [];
+  lines.push(`[${index}] ${title}`);
+
+  if (url) {
+    lines.push(`${INDENT}${url}`);
+  }
+
+  if (body) {
+    lines.push('');
+    lines.push(body);
+  }
+
+  return lines.join('\n');
+}
+
+function formatCodeSearchResult(result: Record<string, unknown>, index: number): string {
+  const rawTitle = stringField(result, 'description') ?? stringField(result, 'title');
+  const title = rawTitle ? cleanCodeSearchDescription(rawTitle) : `Result ${index}`;
+  const url = stringField(result, 'link') ?? stringField(result, 'contentUrl') ?? stringField(result, 'url');
   const language = stringField(result, 'language');
-  const body = stringField(result, 'content') ?? stringField(result, 'codeSnippet');
+  const body = stringField(result, 'codeSnippet') ?? stringField(result, 'content');
 
   const lines: string[] = [];
 
@@ -70,16 +96,16 @@ function formatSingleResult(result: Record<string, unknown>, index: number): str
  * metadata lines (e.g. "description: …\npackage: …\nlanguage: …\n").
  * Strip those so the title line stays clean.
  */
-function cleanDescription(raw: string): string {
+function cleanCodeSearchDescription(raw: string): string {
   let text = raw;
 
   // Strip leading "description: " prefix (case-insensitive).
-  text = text.replace(/^description:\s*/i, '');
+  text = text.replace(/^\s*description:\s*/i, '');
 
   // Drop trailing metadata lines like "package: ..." and "language: ...".
   text = text
     .split(/\r?\n/)
-    .filter((line) => !/^(package|language):\s/i.test(line))
+    .filter((line) => !/^\s*(package|language):\s*/i.test(line))
     .join(' ')
     .trim();
 

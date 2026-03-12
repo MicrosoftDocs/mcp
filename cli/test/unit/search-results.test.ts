@@ -112,14 +112,15 @@ describe('formatSearchResults', () => {
     expect(output).toContain('https://example.com/fallback');
   });
 
-  it('uses description field as title fallback', () => {
+  it('does not append language suffix for docs search results', () => {
     const payload = JSON.stringify({
-      results: [{ description: 'A description used as title', content: 'Body.' }],
+      results: [{ title: 'Article (programming-language-csharp)', contentUrl: 'https://example.com', content: 'Body.' }],
     });
 
     const output = formatSearchResults(payload);
 
-    expect(output).toContain('[1] A description used as title');
+    expect(output).toContain('[1] Article (programming-language-csharp)');
+    expect(output).not.toContain(') (');
   });
 });
 
@@ -144,6 +145,23 @@ describe('formatCodeSearchResults', () => {
     expect(output).not.toContain('package:');
     expect(output).toContain('    https://learn.microsoft.com/azure/example');
     expect(output).toContain('from azure.storage.blob import BlobServiceClient');
+  });
+
+  it('strips metadata lines even without whitespace after the colon', () => {
+    const payload = JSON.stringify({
+      results: [
+        {
+          description: 'description:No space.\npackage:azure-storage-blob\nlanguage:python\n',
+          language: 'python',
+          codeSnippet: 'x = 1',
+        },
+      ],
+    });
+
+    const output = formatCodeSearchResults(payload);
+
+    expect(output).toContain('[1] No space. (python)');
+    expect(output).not.toContain('package:');
   });
 
   it('separates multiple code results with blank lines', () => {
