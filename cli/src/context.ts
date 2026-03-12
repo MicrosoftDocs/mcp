@@ -1,4 +1,5 @@
 import { createLearnCliClient, type LearnCliClientLike, type LearnClientOptions } from './mcp/client.js';
+import { createFileAnnotationStore, type AnnotationStore } from './utils/annotations.js';
 
 export interface CliContext {
   env: NodeJS.ProcessEnv;
@@ -7,6 +8,7 @@ export interface CliContext {
   writeErr: (value: string) => void;
   fetchImpl: typeof fetch;
   createClient: (options: LearnClientOptions) => LearnCliClientLike;
+  createAnnotationStore: () => AnnotationStore;
 }
 
 export function createDefaultContext(version: string): CliContext {
@@ -21,5 +23,6 @@ export function createDefaultContext(version: string): CliContext {
     },
     fetchImpl: globalThis.fetch.bind(globalThis) as typeof fetch,
     createClient: (options) => createLearnCliClient(options),
+    createAnnotationStore: () => createFileAnnotationStore(),
   };
 }
