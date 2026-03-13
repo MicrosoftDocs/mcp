@@ -1,8 +1,13 @@
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
 import { describe, expect, it, vi } from 'vitest';
 
 import { runCli } from '../../src/index.js';
 import type { CliContext } from '../../src/context.js';
 import type { LearnCliClientLike } from '../../src/mcp/client.js';
+import { createFileAnnotationStore } from '../../src/utils/annotations.js';
 
 function createMockClient(overrides: Partial<LearnCliClientLike> = {}): LearnCliClientLike {
   return {
@@ -26,6 +31,7 @@ function createTestContext(client: LearnCliClientLike): {
 } {
   const stdout: string[] = [];
   const stderr: string[] = [];
+  const annotationsDir = mkdtempSync(join(tmpdir(), 'mslearn-test-annotations-'));
 
   return {
     context: {
@@ -39,6 +45,7 @@ function createTestContext(client: LearnCliClientLike): {
       },
       fetchImpl: vi.fn(async () => new Response(null, { status: 405 })) as unknown as typeof fetch,
       createClient: () => client,
+      createAnnotationStore: () => createFileAnnotationStore({ annotationsDir }),
     },
     stdout,
     stderr,
@@ -154,5 +161,127 @@ describe('runCli', () => {
 
     expect(exitCode).toBe(2);
     expect(stderr.join('')).toContain('missing required argument');
+  });
+});
+
+describe('annotate command', () => {
+  it('saves and retrieves an annotation for a URL', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    const exitCode = await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/azure/functions/', 'Needs raw body for webhooks'],
+      context,
+    );
+
+    expect(exitCode).toBe(0);
+    expect(stdout.join('')).toContain('Annotation saved for');
+    expect(stdout.join('')).toContain('https://learn.microsoft.com/en-us/azure/functions/');
+  });
+
+  it('reads an existing annotation when no note is provided', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/azure/functions/', 'Webhook note'],
+      context,
+    );
+    stdout.length = 0;
+
+    const exitCode = await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/azure/functions/'],
+      context,
+    );
+
+    expect(exitCode).toBe(0);
+    expect(stdout.join('')).toContain('Webhook note');
+  });
+
+  it('shows a message for a non-existent annotation', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    const exitCode = await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/nonexistent'],
+      context,
+    );
+
+    expect(exitCode).toBe(0);
+    expect(stdout.join('')).toContain('No annotation for');
+  });
+
+  it('clears an existing annotation with --clear', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/azure/functions/', 'temp note'],
+      context,
+    );
+    stdout.length = 0;
+
+    const exitCode = await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/azure/functions/', '--clear'],
+      context,
+    );
+
+    expect(exitCode).toBe(0);
+    expect(stdout.join('')).toContain('Annotation cleared for');
+  });
+
+  it('reports when --clear targets a non-existent annotation', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    const exitCode = await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/nonexistent', '--clear'],
+      context,
+    );
+
+    expect(exitCode).toBe(0);
+    expect(stdout.join('')).toContain('No annotation found for');
+  });
+
+  it('lists all annotations with --list', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/azure/functions/', 'functions note'],
+      context,
+    );
+    await runCli(
+      ['node', 'mslearn', 'annotate', 'https://learn.microsoft.com/en-us/azure/storage/', 'storage note'],
+      context,
+    );
+    stdout.length = 0;
+
+    const exitCode = await runCli(['node', 'mslearn', 'annotate', '--list'], context);
+
+    expect(exitCode).toBe(0);
+    const output = stdout.join('');
+    expect(output).toContain('functions note');
+    expect(output).toContain('storage note');
+  });
+
+  it('shows a message when --list finds no annotations', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    const exitCode = await runCli(['node', 'mslearn', 'annotate', '--list'], context);
+
+    expect(exitCode).toBe(0);
+    expect(stdout.join('')).toContain('No annotations.');
+  });
+
+  it('returns a usage error when no URL is provided without --list', async () => {
+    const client = createMockClient();
+    const { context, stderr } = createTestContext(client);
+
+    const exitCode = await runCli(['node', 'mslearn', 'annotate'], context);
+
+    expect(exitCode).toBe(2);
+    expect(stderr.join('')).toContain('Missing required argument');
   });
 });

@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
+import { registerAnnotateCommand } from './commands/annotate.js';
 import { registerCodeSearchCommand } from './commands/code-search.js';
 import { registerDoctorCommand } from './commands/doctor.js';
 import { registerFetchCommand } from './commands/fetch.js';
@@ -40,6 +41,7 @@ export function createProgram(context: CliContext): Command {
   registerFetchCommand(program, context);
   registerCodeSearchCommand(program, context);
   registerDoctorCommand(program, context);
+  registerAnnotateCommand(program, context);
 
   return program;
 }
