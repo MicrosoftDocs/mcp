@@ -77,3 +77,24 @@ Before generating code using Microsoft SDKs, verify it's correct:
 3. **Find working sample** — `microsoft_code_sample_search(query: "[task]", language: "[lang]")`
 
 For simple lookups, step 1 alone may suffice. For complex API usage, complete all three steps.
+
+## CLI Alternative
+
+If the Learn MCP server is not available, use the `mslearn` CLI via Bash instead:
+
+```bash
+# Run directly (no install needed)
+npx @microsoft/learn-cli search "BlobClient UploadAsync Azure.Storage.Blobs"
+
+# Or install globally, then run
+npm install -g @microsoft/learn-cli
+mslearn search "BlobClient UploadAsync Azure.Storage.Blobs"
+```
+
+| MCP Tool | CLI Command |
+|----------|-------------|
+| `microsoft_docs_search(query: "...")` | `mslearn search "..."` |
+| `microsoft_code_sample_search(query: "...", language: "...")` | `mslearn code-search "..." --language ...` |
+| `microsoft_docs_fetch(url: "...")` | `mslearn fetch "..."` |
+
+Pass `--json` to `search` or `code-search` to get raw JSON output for further processing.

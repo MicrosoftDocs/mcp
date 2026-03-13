@@ -37,6 +37,27 @@ skill-name/
 | `microsoft_docs_fetch` | Get full page content | Deep dive into important pages |
 | `microsoft_code_sample_search` | Find code examples | Get implementation patterns |
 
+### CLI Alternative
+
+If the Learn MCP server is not available, use the `mslearn` CLI via Bash instead:
+
+```bash
+# Run directly (no install needed)
+npx @microsoft/learn-cli search "semantic kernel overview"
+
+# Or install globally, then run
+npm install -g @microsoft/learn-cli
+mslearn search "semantic kernel overview"
+```
+
+| MCP Tool | CLI Command |
+|----------|-------------|
+| `microsoft_docs_search(query: "...")` | `mslearn search "..."` |
+| `microsoft_code_sample_search(query: "...", language: "...")` | `mslearn code-search "..." --language ...` |
+| `microsoft_docs_fetch(url: "...")` | `mslearn fetch "..."` |
+
+Generated skills should include this same CLI fallback table so agents can use either path.
+
 ## Creation Process
 
 ### Step 1: Investigate the Topic

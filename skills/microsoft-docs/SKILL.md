@@ -50,6 +50,26 @@ Fetch after search when:
 - **Deep dives** — user wants comprehensive coverage
 - **Search excerpt is cut off** — full context needed
 
+## CLI Alternative
+
+If the Learn MCP server is not available, use the `mslearn` CLI via Bash instead:
+
+```bash
+# Run directly (no install needed)
+npx @microsoft/learn-cli search "azure functions timeout"
+
+# Or install globally, then run
+npm install -g @microsoft/learn-cli
+mslearn search "azure functions timeout"
+```
+
+| MCP Tool | CLI Command |
+|----------|-------------|
+| `microsoft_docs_search(query: "...")` | `mslearn search "..."` |
+| `microsoft_docs_fetch(url: "...")` | `mslearn fetch "..."` |
+
+The `fetch` command also supports `--section <heading>` to extract a single section and `--max-chars <number>` to truncate output.
+
 ## Why Use This
 
 - **Accuracy** — live docs, not training data that may be outdated
