@@ -20,6 +20,11 @@ export function createDefaultContext(version: string): CliContext {
       process.stderr.write(value);
     },
     fetchImpl: globalThis.fetch.bind(globalThis) as typeof fetch,
-    createClient: (options) => createLearnCliClient(options),
+    createClient: (options) =>
+      createLearnCliClient({
+        clientName: 'learn-cli',
+        clientVersion: version,
+        ...options,
+      }),
   };
 }

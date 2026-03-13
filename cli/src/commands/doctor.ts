@@ -41,11 +41,7 @@ async function runDoctorChecks(endpoint: string, context: CliContext): Promise<D
   let connected = false;
   let discovered = false;
 
-  const client = context.createClient({
-    endpoint,
-    clientName: 'mslearn',
-    clientVersion: context.version,
-  });
+  const client = context.createClient({ endpoint });
 
   try {
     const mapping = await client.getToolMapping(true);
