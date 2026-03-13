@@ -1,4 +1,4 @@
-import { createLearnCliClient, type LearnCliClientLike, type LearnClientOptions } from './mcp/client.js';
+import { createLearnCliClient, DEFAULT_CLIENT_NAME, type LearnCliClientLike, type LearnClientOptions } from './mcp/client.js';
 
 export interface CliContext {
   env: NodeJS.ProcessEnv;
@@ -10,6 +10,8 @@ export interface CliContext {
 }
 
 export function createDefaultContext(version: string): CliContext {
+  const fetchImpl = globalThis.fetch.bind(globalThis) as typeof fetch;
+
   return {
     env: process.env,
     version,
@@ -19,11 +21,12 @@ export function createDefaultContext(version: string): CliContext {
     writeErr: (value) => {
       process.stderr.write(value);
     },
-    fetchImpl: globalThis.fetch.bind(globalThis) as typeof fetch,
+    fetchImpl,
     createClient: (options) =>
       createLearnCliClient({
-        clientName: 'learn-cli',
+        clientName: DEFAULT_CLIENT_NAME,
         clientVersion: version,
+        fetchImpl,
         ...options,
       }),
   };
