@@ -271,7 +271,7 @@ class LearnCliClient implements LearnCliClientLike {
   private createDefaultSdkClient(): SdkClientLike {
     return new Client(
       {
-        name: this.options.clientName ?? 'mslearn',
+        name: this.options.clientName ?? 'learn-cli',
         version: this.options.clientVersion ?? '0.1.0',
       },
       {

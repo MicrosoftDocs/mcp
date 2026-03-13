@@ -20,11 +20,7 @@ export function registerFetchCommand(program: Command, context: CliContext): voi
     .action(async (url: string, options: FetchCommandOptions) => {
       const endpoint = resolveEndpoint(program.opts<{ endpoint?: string }>().endpoint, context.env);
       const normalizedUrl = normalizeUrl(url);
-      const client = context.createClient({
-        endpoint,
-        clientName: 'mslearn',
-        clientVersion: context.version,
-      });
+      const client = context.createClient({ endpoint });
 
       try {
         const markdown = await client.fetchDocument(normalizedUrl);
