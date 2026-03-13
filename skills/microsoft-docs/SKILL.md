@@ -2,7 +2,7 @@
 name: microsoft-docs
 description: Query official Microsoft documentation to understand concepts, find tutorials, and learn how services work. Use for Azure, .NET, Microsoft 365, Windows, Power Platform, and all Microsoft technologies. Get accurate, current information from learn.microsoft.com and other official Microsoft websites—architecture overviews, quickstarts, configuration guides, limits, and best practices.
 context: fork
-compatibility: Requires Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp)
+compatibility: Works best with Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp). Can also use the mslearn CLI as a fallback.
 ---
 
 # Microsoft Docs
@@ -50,6 +50,12 @@ Fetch after search when:
 - **Deep dives** — user wants comprehensive coverage
 - **Search excerpt is cut off** — full context needed
 
+## Why Use This
+
+- **Accuracy** — live docs, not training data that may be outdated
+- **Completeness** — tutorials have all steps, not fragments
+- **Authority** — official Microsoft documentation
+
 ## CLI Alternative
 
 If the Learn MCP server is not available, use the `mslearn` CLI via Bash instead:
@@ -69,9 +75,3 @@ mslearn search "azure functions timeout"
 | `microsoft_docs_fetch(url: "...")` | `mslearn fetch "..."` |
 
 The `fetch` command also supports `--section <heading>` to extract a single section and `--max-chars <number>` to truncate output.
-
-## Why Use This
-
-- **Accuracy** — live docs, not training data that may be outdated
-- **Completeness** — tutorials have all steps, not fragments
-- **Authority** — official Microsoft documentation

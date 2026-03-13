@@ -2,7 +2,7 @@
 name: microsoft-skill-creator
 description: Create agent skills for Microsoft technologies using Learn MCP tools. Use when users want to create a skill that teaches agents about any Microsoft technology, library, framework, or service (Azure, .NET, M365, VS Code, Bicep, etc.). Investigates topics deeply, then generates a hybrid skill storing essential knowledge locally while enabling dynamic deeper investigation.
 context: fork
-compatibility: Requires Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp)
+compatibility: Works best with Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp). Can also use the mslearn CLI as a fallback.
 ---
 
 # Microsoft Skill Creator
@@ -235,4 +235,16 @@ See [getting-started/hello-kernel.cs](sample_codes/getting-started/hello-kernel.
 | Plugin development | `microsoft_docs_search(query="semantic kernel plugins custom functions")` |
 | Planners | `microsoft_docs_search(query="semantic kernel planner")` |
 | Memory | `microsoft_docs_fetch(url="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-memory")` |
+
+## CLI Alternative
+
+If the Learn MCP server is not available, use the `mslearn` CLI instead:
+
+| MCP Tool | CLI Command |
+|----------|-------------|
+| `microsoft_docs_search(query: "...")` | `mslearn search "..."` |
+| `microsoft_code_sample_search(query: "...", language: "...")` | `mslearn code-search "..." --language ...` |
+| `microsoft_docs_fetch(url: "...")` | `mslearn fetch "..."` |
+
+Run directly with `npx @microsoft/learn-cli <command>` or install globally with `npm install -g @microsoft/learn-cli`.
 ```
