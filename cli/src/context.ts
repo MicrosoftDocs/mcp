@@ -5,7 +5,6 @@ export interface CliContext {
   version: string;
   writeOut: (value: string) => void;
   writeErr: (value: string) => void;
-  fetchImpl: typeof fetch;
   createClient: (options: LearnClientOptions) => LearnCliClientLike;
 }
 
@@ -19,7 +18,10 @@ export function createDefaultContext(version: string): CliContext {
     writeErr: (value) => {
       process.stderr.write(value);
     },
-    fetchImpl: globalThis.fetch.bind(globalThis) as typeof fetch,
-    createClient: (options) => createLearnCliClient(options),
+    createClient: (options) =>
+      createLearnCliClient({
+        clientVersion: version,
+        ...options,
+      }),
   };
 }

@@ -58,9 +58,9 @@ Fetch after search when:
 
 ## CLI Alternative
 
-If the Learn MCP server is not available, use the `mslearn` CLI via Bash instead:
+If the Learn MCP server is not available, use the `mslearn` CLI from the command line instead:
 
-```bash
+```sh
 # Run directly (no install needed)
 npx @microsoft/learn-cli search "azure functions timeout"
 

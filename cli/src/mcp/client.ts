@@ -7,6 +7,8 @@ import { OperationError } from '../utils/errors.js';
 import { createFileLearnSessionCacheStore, type LearnSessionCacheStore } from './cache.js';
 import { discoverLearnTools, type DiscoveredLearnTools, type ListedTool } from './tool-discovery.js';
 
+const DEFAULT_CLIENT_NAME = 'learn-cli';
+
 export interface LearnClientOptions {
   endpoint: string;
   clientName?: string;
@@ -43,7 +45,7 @@ interface TransportLike {
   close(): Promise<void>;
 }
 
-export async function probeEndpoint(endpoint: string, fetchImpl: typeof fetch): Promise<ReachabilityReport> {
+export async function probeEndpoint(endpoint: string, fetchImpl: typeof fetch = globalThis.fetch): Promise<ReachabilityReport> {
   try {
     const response = await fetchImpl(endpoint, {
       method: 'GET',
@@ -271,7 +273,7 @@ class LearnCliClient implements LearnCliClientLike {
   private createDefaultSdkClient(): SdkClientLike {
     return new Client(
       {
-        name: this.options.clientName ?? 'mslearn',
+        name: this.options.clientName ?? DEFAULT_CLIENT_NAME,
         version: this.options.clientVersion ?? '0.1.0',
       },
       {
