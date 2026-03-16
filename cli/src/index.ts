@@ -25,12 +25,8 @@ export function createProgram(context: CliContext): Command {
     .addOption(new Option('--endpoint <url>', 'Override the Learn MCP endpoint for this command.').hideHelp())
     .showHelpAfterError()
     .configureOutput({
-      writeOut: (value) => {
-        context.writeOut(value);
-      },
-      writeErr: (value) => {
-        context.writeErr(value);
-      },
+      writeOut: context.writeOut,
+      writeErr: context.writeErr,
       outputError: (value, write) => {
         write(value);
       },

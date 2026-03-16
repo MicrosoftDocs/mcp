@@ -7,7 +7,7 @@ import { OperationError } from '../utils/errors.js';
 import { createFileLearnSessionCacheStore, type LearnSessionCacheStore } from './cache.js';
 import { discoverLearnTools, type DiscoveredLearnTools, type ListedTool } from './tool-discovery.js';
 
-export const DEFAULT_CLIENT_NAME = 'learn-cli';
+const DEFAULT_CLIENT_NAME = 'learn-cli';
 
 export interface LearnClientOptions {
   endpoint: string;
@@ -45,7 +45,7 @@ interface TransportLike {
   close(): Promise<void>;
 }
 
-export async function probeEndpoint(endpoint: string, fetchImpl: typeof fetch): Promise<ReachabilityReport> {
+export async function probeEndpoint(endpoint: string, fetchImpl: typeof fetch = globalThis.fetch): Promise<ReachabilityReport> {
   try {
     const response = await fetchImpl(endpoint, {
       method: 'GET',

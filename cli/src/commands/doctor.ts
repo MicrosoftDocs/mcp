@@ -35,7 +35,7 @@ export function registerDoctorCommand(program: Command, context: CliContext): vo
 async function runDoctorChecks(endpoint: string, context: CliContext): Promise<DoctorReport> {
   const runtimeVersion = process.versions.node;
   const runtimeSupported = Number.parseInt(runtimeVersion.split('.')[0] ?? '0', 10) >= 22;
-  const reachability = await probeEndpoint(endpoint, context.fetchImpl);
+  const reachability = await probeEndpoint(endpoint);
   const errors: string[] = [];
   const tools: DoctorReport['tools'] = {};
   let connected = false;
