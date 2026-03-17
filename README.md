@@ -21,36 +21,15 @@ Stop relying on outdated training data or risky web searches. Learn MCP server p
 
 * 💸 **Completely Free.** High search capacity tailored for seamless, heavy coding sessions.
 
-### ✨ Example Prompts: Your Source of Truth
+### ✨ Example Prompts
 
-Your AI assistant should automatically use these tools for Microsoft-related topics. With both search and fetch capabilities, you can get quick answers or comprehensive deep dives. To ensure that it always consults the official documentation, you can add phrases like `search Microsoft Learn`, `deep dive`, `fetch full doc`.
+> "Give me the Azure CLI commands to create an Azure Container App with a managed identity."
 
-#### **Quick Search & Reference**
+> "Is gpt-5.4 available in Azure EU regions?"
 
-> "Give me the Azure CLI commands to create an Azure Container App with a managed identity. **search Microsoft Learn**"
+> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API?"
 
-> "Is gpt-4.1-mini available in EU regions? **fetch full doc**"
-
-#### **Code Verification & Best Practices**
-
-> "Are you sure this is the right way to implement `IHttpClientFactory` in a .NET 8 minimal API? **search Microsoft Learn and fetch full doc**"
-
-> "Show me the complete guide for implementing authentication in ASP.NET Core. **fetch full doc**"
-
-> "show me detailed, runnable python code sample to do harms eval using azure ai foundry evaluation sdk"
-
-#### **Comprehensive Learning & Deep Dive**
-
-> "I need to understand Azure Functions end-to-end. **search Microsoft Learn and deep dive**"
-
-> "Get me the full step-by-step tutorial for deploying a .NET application to Azure App Service. **search Microsoft Learn and deep dive**"
-
-### 📊 Key Capabilities
-
-- **High-Quality Content Retrieval**: Search and retrieve relevant content from Microsoft's official documentation in markdown format.
-- **Code Sample Discovery**: Find official Microsoft/Azure code snippets and examples with language-specific filtering.
-- **Semantic Understanding**: Uses advanced vector search to find the most contextually relevant documentation for any query.
-- **Real-time Updates**: Access the latest Microsoft documentation as it's published.
+> "Show me runnable Python code to do harms eval using the Azure AI Foundry evaluation SDK."
 
 ## 🌐 The Microsoft Learn MCP Server Endpoint
 
@@ -107,24 +86,25 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 | `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
 | `microsoft_code_sample_search` | Search for official Microsoft/Azure code snippets and examples | `query` (string): Search query for Microsoft/Azure code snippets<br/>`language` (string, optional): Programming language filter.|
 
-## 💻 Microsoft Learn CLI
+## 💻 Microsoft Learn CLI `preview`
+
+[![npm version](https://img.shields.io/npm/v/@microsoft/learn-cli?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/@microsoft/learn-cli)
 
 The [`@microsoft/learn-cli`](https://www.npmjs.com/package/@microsoft/learn-cli) package gives you terminal access to the same tools — search docs, fetch pages, and find code samples — without an MCP client.
 
-```bash
+```sh
 # Run instantly (no install)
 npx @microsoft/learn-cli search "azure functions timeout"
 
 # Or install globally
 npm install -g @microsoft/learn-cli
+# then use `mslearn`
 mslearn search "azure functions timeout"
-mslearn code-search "BlobServiceClient" --language python
-mslearn fetch "https://learn.microsoft.com/azure/azure-functions/functions-versions"
 ```
 
-Pass `--json` to get raw JSON output for piping to other tools:
+Pass `--json` to get structured JSON output, useful for programmatic processing:
 
-```bash
+```sh
 mslearn search "azure openai" --json | jq '.results[].title'
 ```
 
@@ -143,13 +123,13 @@ See [`cli/README.md`](cli/README.md) for the full command reference.
 ### Quick Setup
 
 These agent skills are packed in a `microsoft-docs` plugin together with the Learn MCP server itself. If you use Claude Code, run the following commands and restart Claude Code:
-```bash
+```
 /plugin marketplace add microsoftdocs/mcp
 /plugin install microsoft-docs@microsoft-docs-marketplace
 ```
 
 Or if you use GitHub Copilot CLI, run this command:
-```bash
+```
 /plugin install microsoftdocs/mcp
 ```
 Otherwise:
@@ -199,14 +179,6 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft-learn": {<br/>    "url": "https://learn.microsoft.com/api/mcp"<br/>    }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
 
 
-### ▶️ Getting Started
-
-1. **For VS Code**: Open GitHub Copilot in VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)
-2. **For Claude Desktop**: After adding the integration, you'll see the MCP tools icon in the chat interface
-3. You should see the Learn MCP Server in the list of available tools
-4. Try a prompt that tells the agent to use the MCP Server, such as "what are the az cli commands to create an Azure container app according to official Microsoft Learn documentation?"
-5. The agent should be able to use the MCP Server tools to complete your query
-
 > ### ⚠️ Building a Custom Client
 >
 > If your use case requires a direct, programmatic integration, it is essential to understand that MCP is a **dynamic protocol, not a static API**. The available tools and their schemas will evolve.
@@ -246,14 +218,6 @@ When handling questions around how to work with native Microsoft technologies, s
 
 - [Ask questions, share ideas](https://github.com/MicrosoftDocs/mcp/discussions)
 - [Create an issue](https://github.com/MicrosoftDocs/mcp/issues)
-
-## 🔮 Future Enhancements
-
-The Microsoft Learn MCP Server team is working on several enhancements:
-
-- Improved telemetry to help inform server enhancements
-- Expanding coverage to additional Microsoft documentation sources
-- Improved query understanding for more precise results
 
 ## 📚 Additional Resources
 
