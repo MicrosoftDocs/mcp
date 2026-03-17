@@ -1,6 +1,6 @@
-# Microsoft Learn Companion CLI
+# Microsoft Learn CLI
 
-`mslearn` is a thin companion CLI for the public Microsoft Learn MCP server.
+`mslearn` is a terminal CLI for the public Microsoft Learn MCP server.
 
 It gives you terminal-friendly commands for docs search, docs fetch, code sample search, and environment diagnostics.
 
@@ -18,45 +18,19 @@ This project requires Node.js 22 or later.
 node --version
 ```
 
-## Quick Start
+## Installation
 
-From the `cli` directory:
+### Option A: Run instantly with `npx` (no install)
 
 ```bash
-npm install
-npm run build
-npm test
-node dist/index.js --help
+npx @microsoft/learn-cli search "azure functions timeout"
 ```
 
-After building, you can run the CLI in three ways.
-
-### Option A: Run with Node directly
+### Option B: Install globally
 
 ```bash
-node dist/index.js search "azure functions timeout"
-```
-
-### Option B: Run with `npx`
-
-```bash
-npx . search "azure functions timeout"
-```
-
-### Option C: Use `npm link` for local CLI-style usage
-
-```bash
-npm link
+npm install -g @microsoft/learn-cli
 mslearn search "azure functions timeout"
-```
-
-After `npm link`, you can use the CLI like a normal command:
-
-```bash
-mslearn search "azure functions timeout"
-mslearn fetch "https://learn.microsoft.com/azure/azure-functions/functions-versions" --section "Function app timeout duration"
-mslearn code-search "cosmos db change feed processor" --language csharp
-mslearn doctor
 ```
 
 ## Commands
@@ -81,6 +55,15 @@ Available commands:
 - `code-search <query> --language <name>` searches official code samples.
 - `doctor [--format text|json]` checks runtime and connectivity.
 
+The `search` and `code-search` commands output human-readable formatted text by
+default. Pass `--json` to get the raw JSON response, which is useful for piping
+to other tools:
+
+```bash
+mslearn search "azure functions" --json | jq '.results[].title'
+mslearn code-search "BlobServiceClient" --language python --json
+```
+
 ## Endpoint configuration
 
 To override the default endpoint, set `MSLEARN_ENDPOINT` or pass `--endpoint <url>` for a single command.
@@ -90,4 +73,16 @@ Example in PowerShell:
 ```powershell
 $env:MSLEARN_ENDPOINT = "https://learn.microsoft.com/api/mcp"
 mslearn doctor
+```
+
+## Development
+
+To build and test from source:
+
+```bash
+cd cli
+npm install
+npm run build
+npm test
+node dist/index.js --help
 ```

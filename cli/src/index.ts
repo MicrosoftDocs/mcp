@@ -21,7 +21,7 @@ export function createProgram(context: CliContext): Command {
 
   program
     .name('mslearn')
-    .description('Thin companion CLI for the Microsoft Learn MCP server.')
+    .description('CLI for the Microsoft Learn MCP server.')
     .version(context.version)
     .addOption(new Option('--endpoint <url>', 'Override the Learn MCP endpoint for this command.').hideHelp())
     .showHelpAfterError()

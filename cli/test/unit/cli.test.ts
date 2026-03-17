@@ -63,7 +63,7 @@ describe('runCli', () => {
     expect(stdout.join('')).not.toContain('--endpoint <url>');
   });
 
-  it('returns the raw search payload', async () => {
+  it('formats search results with one result per block', async () => {
     const client = createMockClient({
       searchDocs: vi
         .fn()
@@ -76,15 +76,38 @@ describe('runCli', () => {
     const exitCode = await runCli(['node', 'mslearn', 'search', 'azure functions timeout'], context);
 
     expect(exitCode).toBe(0);
-    expect(JSON.parse(stdout.join(''))).toEqual({
-      results: [
-        {
-          title: 'Azure Functions runtime versions overview',
-          contentUrl: 'https://learn.microsoft.com/example',
-          content: 'The functionTimeout property in host.json sets the timeout duration.',
-        },
-      ],
+    const output = stdout.join('');
+    expect(output).toContain('[1] Azure Functions runtime versions overview');
+    expect(output).toContain('https://learn.microsoft.com/example');
+    expect(output).toContain('The functionTimeout property in host.json sets the timeout duration.');
+  });
+
+  it('outputs raw JSON from search when --json is passed', async () => {
+    const rawPayload =
+      '{"results":[{"title":"Test","contentUrl":"https://learn.microsoft.com/example","content":"Body."}]}';
+    const client = createMockClient({
+      searchDocs: vi.fn().mockResolvedValue(rawPayload),
     });
+    const { context, stdout } = createTestContext(client);
+
+    const exitCode = await runCli(['node', 'mslearn', 'search', 'test query', '--json'], context);
+
+    expect(exitCode).toBe(0);
+    expect(JSON.parse(stdout.join(''))).toEqual(JSON.parse(rawPayload));
+  });
+
+  it('outputs raw JSON from code-search when --json is passed', async () => {
+    const rawPayload =
+      '{"results":[{"description":"desc","codeSnippet":"x = 1","link":"https://example.com","language":"python"}]}';
+    const client = createMockClient({
+      searchCodeSamples: vi.fn().mockResolvedValue(rawPayload),
+    });
+    const { context, stdout } = createTestContext(client);
+
+    const exitCode = await runCli(['node', 'mslearn', 'code-search', 'test query', '--json'], context);
+
+    expect(exitCode).toBe(0);
+    expect(JSON.parse(stdout.join(''))).toEqual(JSON.parse(rawPayload));
   });
 
   it('filters fetched markdown by section', async () => {
