@@ -43,7 +43,6 @@ function createTestContext(client: LearnCliClientLike): {
       writeErr: (value) => {
         stderr.push(value);
       },
-      fetchImpl: vi.fn(async () => new Response(null, { status: 405 })) as unknown as typeof fetch,
       createClient: () => client,
       createAnnotationStore: () => createFileAnnotationStore({ annotationsDir }),
     },

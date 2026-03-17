@@ -17,11 +17,7 @@ export function registerSearchCommand(program: Command, context: CliContext): vo
     .option('--json', 'Output raw JSON instead of formatted text.')
     .action(async (query: string, options: SearchCommandOptions) => {
       const endpoint = resolveEndpoint(program.opts<{ endpoint?: string }>().endpoint, context.env);
-      const client = context.createClient({
-        endpoint,
-        clientName: 'mslearn',
-        clientVersion: context.version,
-      });
+      const client = context.createClient({ endpoint });
 
       try {
         const payload = await client.searchDocs(query);
