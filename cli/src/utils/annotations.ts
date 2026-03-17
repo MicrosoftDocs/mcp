@@ -88,8 +88,14 @@ class FileAnnotationStore implements AnnotationStore {
         }
       }
       return results;
-    } catch {
-      return [];
+    } catch (error: unknown) {
+      const err = error as NodeJS.ErrnoException;
+      if (err && err.code === 'ENOENT') {
+        // Treat missing annotations directory as "no annotations".
+        return [];
+      }
+      // Surface other I/O errors so callers can diagnose issues.
+      throw error;
     }
   }
 }
