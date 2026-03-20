@@ -2,7 +2,7 @@
 name: microsoft-skill-creator
 description: Create agent skills for Microsoft technologies using official documentation. Use whenever the user wants to build, generate, or scaffold a skill for any Microsoft technology (Azure, .NET, M365, VS Code, Bicep, etc.)—even phrased casually like "make a skill for Cosmos DB." Investigates the topic via official docs, then generates a hybrid skill with essential knowledge stored locally and dynamic lookups for depth.
 context: fork
-compatibility: Uses Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp) or the mslearn CLI (`npx @microsoft/learn-cli`). Either works equally well.
+compatibility: Primarily uses the Microsoft Learn MCP Server (https://learn.microsoft.com/api/mcp); if that is unavailable, fall back to the mslearn CLI (`npx @microsoft/learn-cli`).
 ---
 
 # Microsoft Skill Creator
