@@ -79,6 +79,31 @@ foreach ($file in $claudePluginFiles) {
 }
 
 # ============================================================================
+# Validation 1b: Plugin JSON Sync
+# .claude-plugin/plugin.json and .github/plugin/plugin.json must stay in sync.
+# .claude-plugin/plugin.json is the source of truth; .github/plugin/plugin.json
+# is consumed by GitHub and must mirror it exactly.
+# ============================================================================
+Write-ValidationHeader "Validating plugin.json sync"
+
+$claudePluginJson = Join-Path $repoRoot ".claude-plugin" "plugin.json"
+$githubPluginJson = Join-Path $repoRoot ".github" "plugin" "plugin.json"
+
+if ((Test-Path $claudePluginJson) -and (Test-Path $githubPluginJson)) {
+    $claudeContent = Get-Content $claudePluginJson -Raw
+    $githubContent = Get-Content $githubPluginJson -Raw
+    if ($claudeContent -eq $githubContent) {
+        Write-ValidationSuccess "plugin.json files are in sync (.claude-plugin/ and .github/plugin/)"
+    } else {
+        Write-ValidationError "plugin.json drift detected: .claude-plugin/plugin.json and .github/plugin/plugin.json differ. Update both files or copy from the source of truth (.claude-plugin/plugin.json)."
+    }
+} elseif (-not (Test-Path $githubPluginJson)) {
+    Write-ValidationError "Missing: .github/plugin/plugin.json"
+} else {
+    # .claude-plugin/plugin.json missing is already reported in Validation 1
+}
+
+# ============================================================================
 # Validation 2: Agent Skills Structure
 # Each skill folder under /skills must have a SKILL.md describing the skill
 # ============================================================================
