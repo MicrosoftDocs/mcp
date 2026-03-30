@@ -22,7 +22,7 @@ When editing shared plugin metadata, edit `.claude-plugin/plugin.json` first, th
 
 ## CLI
 
-Source is in `cli/src/`, built output is checked into `cli/dist/`. If you change CLI behavior, run `npm run build && npm test` from `cli/`. Targets Node.js 22+. Keep `cli/README.md` aligned with the actual command surface.
+Source is in `cli/src/`, and built output is generated into `cli/dist/` during the build (locally and in CI) rather than checked into the repo. If you change CLI behavior, run `npm run build && npm test` from `cli/`. Targets Node.js 22+. Keep `cli/README.md` aligned with the actual command surface.
 
 ## Validation
 

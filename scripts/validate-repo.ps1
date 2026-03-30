@@ -210,7 +210,7 @@ if ((Test-Path $codexMarketplaceJson) -and (Test-ValidJson $codexMarketplaceJson
 # ============================================================================
 Write-ValidationHeader "Validating Codex plugin.json sync"
 
-if ((Test-Path $claudePluginJson) -and (Test-Path $codexPluginJson) -and (Test-ValidJson $codexPluginJson)) {
+if ((Test-Path $claudePluginJson) -and (Test-ValidJson $claudePluginJson) -and (Test-Path $codexPluginJson) -and (Test-ValidJson $codexPluginJson)) {
     $claudeObj = Get-Content $claudePluginJson -Raw | ConvertFrom-Json
     $codexObj  = Get-Content $codexPluginJson  -Raw | ConvertFrom-Json
 
