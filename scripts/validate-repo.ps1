@@ -239,10 +239,10 @@ if ((Test-Path $claudePluginJson) -and (Test-Path $codexPluginJson) -and (Test-V
     }
 
     $codexPluginRoot = $codexPluginDir
-    $skillsPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.skills))).TrimEnd('\')
-    $mcpServersPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.mcpServers))).TrimEnd('\')
-    $repoMcpJsonPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot ".mcp.json"))).TrimEnd('\')
-    $repoSkillsPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot "skills"))).TrimEnd('\')
+    $skillsPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.skills))).TrimEnd('\', '/')
+    $mcpServersPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.mcpServers))).TrimEnd('\', '/')
+    $repoMcpJsonPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot ".mcp.json"))).TrimEnd('\', '/')
+    $repoSkillsPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot "skills"))).TrimEnd('\', '/')
 
     if ($codexObj.skills -ne "./skills/") {
         Write-ValidationError "Codex plugin.json field 'skills' must be './skills/'."
