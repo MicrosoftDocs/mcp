@@ -131,6 +131,9 @@ Or if you use GitHub Copilot CLI, run this command:
 ```
 /plugin install microsoftdocs/mcp
 ```
+
+Or if you use OpenAI Codex in this repo, open the repo root and browse `codex /plugins`. This repository already includes a local marketplace entry at `.agents/plugins/marketplace.json` that points to the repo root plugin (`./`) backed by [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json), [`skills/`](skills/), and [`.mcp.json`](.mcp.json) (see [Codex Plugins](https://developers.openai.com/codex/plugins)).
+
 Otherwise:
 1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
 2. **Copy the skill folders** to your project's `.github/skills/` or `.claude/skills/` directory:
@@ -167,7 +170,7 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **Claude Code** | `/plugin install microsoft-docs@claude-plugins-official` (includes MCP server + skills) | [Claude Code Remote MCP Guide](https://code.claude.com/docs/en/mcp) |
 | **Visual Studio** | Upgrade to latest VS 2022 or 2026, "Microsoft Learn" MCP is already built-in | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
 | **Cursor IDE** | [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=microsoft-learn&config=eyJuYW1lIjoibWljcm9zb2Z0LWxlYXJuIiwidHlwZSI6Imh0dHAiLCJ1cmwiOiJodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vYXBpL21jcCJ9) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
-| **Codex** | `codex mcp add "microsoft-learn" --url "https://learn.microsoft.com/api/mcp"`| [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers) |
+| **Codex** | Open this repo and run `codex /plugins` to browse the repo-root local plugin, or MCP only: `codex mcp add "microsoft-learn" --url "https://learn.microsoft.com/api/mcp"`| [Codex Plugins](https://developers.openai.com/codex/plugins) |
 | **Roo Code** | Open [Roo Code Marketplace](https://docs.roocode.com/features/marketplace), search for `Microsoft Learn`, and click `Install` | [Roo Code MCP Official Guide](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
 | **Gemini CLI** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.gemini/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)|
