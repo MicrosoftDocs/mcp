@@ -1,7 +1,7 @@
 {
   "name": "microsoftdocs-local",
   "interface": {
-    "displayName": "Microsoft Docs Local Plugins"
+    "displayName": "Microsoft Docs Local Plugins Marketplace"
   },
   "plugins": [
     {
