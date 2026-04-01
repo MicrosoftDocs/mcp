@@ -1,0 +1,31 @@
+{
+  "name": "microsoft-docs",
+  "description": "Access official Microsoft documentation, API references, and code samples for Azure, .NET, Windows, and more.",
+  "version": "0.3.1",
+  "author": {
+    "name": "Microsoft"
+  },
+  "homepage": "https://learn.microsoft.com",
+  "repository": "https://github.com/microsoftdocs/mcp",
+  "license": "MIT",
+  "keywords": ["microsoft", "docs", "azure", ".net", "windows", "api", "documentation", "rag", "dynamics", "powerbi", "office"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Microsoft Docs",
+    "shortDescription": "Search official Microsoft docs and code samples.",
+    "longDescription": "Access official Microsoft documentation, API references, and code samples for Azure, .NET, Windows, Microsoft 365, and more through the Microsoft Learn MCP server.",
+    "developerName": "Microsoft",
+    "category": "Productivity",
+    "capabilities": ["Research", "Reference"],
+    "websiteURL": "https://learn.microsoft.com",
+    "privacyPolicyURL": "https://privacy.microsoft.com/privacystatement",
+    "termsOfServiceURL": "https://www.microsoft.com/servicesagreement",
+    "defaultPrompt": [
+      "Find the official Azure Functions timeout limits.",
+      "Show official .NET examples for HttpClientFactory.",
+      "Look up Microsoft docs for Azure OpenAI quotas."
+    ],
+    "brandColor": "#0078D4"
+  }
+}

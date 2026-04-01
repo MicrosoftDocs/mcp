@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Validates the repository structure for the Claude plugin, agent skills, MCP config, and CLI.
+    Validates the repository structure for the Claude plugin, the repo-local Codex plugin, agent skills, MCP config, and CLI.
 
 .DESCRIPTION
     This script validates that all required files and folders exist for:
@@ -9,6 +9,10 @@
     1. Claude Plugin (.claude-plugin/)
        - marketplace.json  : Plugin metadata for Claude marketplace
        - plugin.json       : Plugin configuration and capabilities
+
+    1b. Codex Plugin (repo-local)
+        - .agents/plugins/marketplace.json : Local marketplace entry that makes the plugin appear in `codex /plugins`
+        - .codex-plugin/plugin.json        : Plugin manifest for the repo-root OpenAI Codex plugin
     
     2. Agent Skills (skills/)
        - Each subfolder must contain a SKILL.md file describing the skill
@@ -99,6 +103,183 @@ if ((Test-Path $claudePluginJson) -and (Test-Path $githubPluginJson)) {
     }
 } elseif (-not (Test-Path $githubPluginJson)) {
     Write-ValidationError "Missing: .github/plugin/plugin.json"
+} else {
+    # .claude-plugin/plugin.json missing is already reported in Validation 1
+}
+
+# ============================================================================
+# Validation 1c: Codex Plugin Files
+# Codex uses a repo-local marketplace entry that points at the repository root,
+# where `.codex-plugin/plugin.json` defines the plugin shown in `codex /plugins`.
+# ============================================================================
+Write-ValidationHeader "Validating Codex Plugin (repo-local marketplace)"
+
+$codexPluginName = "microsoft-docs"
+$codexMarketplaceJson = Join-Path $repoRoot ".agents" "plugins" "marketplace.json"
+$codexPluginDir = $repoRoot
+$codexPluginJson = Join-Path $codexPluginDir ".codex-plugin" "plugin.json"
+
+if (Test-Path $codexMarketplaceJson) {
+    Write-ValidationSuccess "Found: .agents/plugins/marketplace.json"
+    if (Test-ValidJson $codexMarketplaceJson) {
+        Write-ValidationSuccess "Valid JSON: .agents/plugins/marketplace.json"
+    } else {
+        Write-ValidationError "Invalid JSON: .agents/plugins/marketplace.json"
+    }
+} else {
+    Write-ValidationError "Missing: .agents/plugins/marketplace.json"
+}
+
+if (Test-Path $codexPluginJson) {
+    Write-ValidationSuccess "Found: .codex-plugin/plugin.json"
+    if (Test-ValidJson $codexPluginJson) {
+        Write-ValidationSuccess "Valid JSON: .codex-plugin/plugin.json"
+    } else {
+        Write-ValidationError "Invalid JSON: .codex-plugin/plugin.json"
+    }
+} else {
+    Write-ValidationError "Missing: .codex-plugin/plugin.json"
+}
+
+# ============================================================================
+# Validation 1d: Codex Marketplace Wiring
+# The local marketplace entry must point to the repository root plugin and
+# include the policy fields required for Codex to show the plugin in /plugins.
+# ============================================================================
+Write-ValidationHeader "Validating Codex marketplace wiring"
+
+if ((Test-Path $codexMarketplaceJson) -and (Test-ValidJson $codexMarketplaceJson)) {
+    $marketplaceObj = Get-Content $codexMarketplaceJson -Raw | ConvertFrom-Json
+    $marketplaceEntry = $marketplaceObj.plugins | Where-Object { $_.name -eq $codexPluginName } | Select-Object -First 1
+
+    if ([string]::IsNullOrWhiteSpace($marketplaceObj.name) -or $marketplaceObj.name.StartsWith("[TODO:")) {
+        Write-ValidationError "Codex marketplace root 'name' must be set to a real value."
+    } else {
+        Write-ValidationSuccess "Codex marketplace root name is set"
+    }
+
+    if ([string]::IsNullOrWhiteSpace($marketplaceObj.interface.displayName) -or $marketplaceObj.interface.displayName.StartsWith("[TODO:")) {
+        Write-ValidationError "Codex marketplace interface.displayName must be set to a real value."
+    } else {
+        Write-ValidationSuccess "Codex marketplace display name is set"
+    }
+
+    if ($null -eq $marketplaceEntry) {
+        Write-ValidationError "Missing plugin entry '$codexPluginName' in .agents/plugins/marketplace.json"
+    } else {
+        Write-ValidationSuccess "Found marketplace entry for '$codexPluginName'"
+
+        if ($marketplaceEntry.source.source -ne "local") {
+            Write-ValidationError "Codex marketplace entry '$codexPluginName' must use source.source = 'local'."
+        } else {
+            Write-ValidationSuccess "Codex marketplace entry uses local source"
+        }
+
+        $expectedPluginPath = "./"
+        if ($marketplaceEntry.source.path -ne $expectedPluginPath) {
+            Write-ValidationError "Codex marketplace entry '$codexPluginName' must use source.path = '$expectedPluginPath'."
+        } else {
+            Write-ValidationSuccess "Codex marketplace entry points to $expectedPluginPath"
+        }
+
+        if ([string]::IsNullOrWhiteSpace($marketplaceEntry.policy.installation)) {
+            Write-ValidationError "Codex marketplace entry '$codexPluginName' is missing policy.installation."
+        } else {
+            Write-ValidationSuccess "Codex marketplace entry includes policy.installation"
+        }
+
+        if ([string]::IsNullOrWhiteSpace($marketplaceEntry.policy.authentication)) {
+            Write-ValidationError "Codex marketplace entry '$codexPluginName' is missing policy.authentication."
+        } else {
+            Write-ValidationSuccess "Codex marketplace entry includes policy.authentication"
+        }
+
+        if ([string]::IsNullOrWhiteSpace($marketplaceEntry.category)) {
+            Write-ValidationError "Codex marketplace entry '$codexPluginName' is missing category."
+        } else {
+            Write-ValidationSuccess "Codex marketplace entry includes category"
+        }
+    }
+}
+
+# ============================================================================
+# Validation 1e: Codex Plugin JSON Sync
+# The shared fields in the repo-root Codex plugin.json must match the source of
+# truth (.claude-plugin/plugin.json). The Codex file may have additional fields
+# (skills, mcpServers, interface) that are not present in the Claude file.
+# ============================================================================
+Write-ValidationHeader "Validating Codex plugin.json sync"
+
+if ((Test-Path $claudePluginJson) -and (Test-ValidJson $claudePluginJson) -and (Test-Path $codexPluginJson) -and (Test-ValidJson $codexPluginJson)) {
+    $claudeObj = Get-Content $claudePluginJson -Raw | ConvertFrom-Json
+    $codexObj  = Get-Content $codexPluginJson  -Raw | ConvertFrom-Json
+
+    $sharedKeys = @("name", "description", "version", "homepage", "repository")
+    $syncOk = $true
+
+    foreach ($key in $sharedKeys) {
+        $claudeVal = $claudeObj.$key
+        $codexVal  = $codexObj.$key
+        if ("$claudeVal" -ne "$codexVal") {
+            Write-ValidationError "Codex plugin.json field '$key' differs from source of truth (.claude-plugin/plugin.json). Expected '$claudeVal', got '$codexVal'."
+            $syncOk = $false
+        }
+    }
+
+    if ($claudeObj.author.name -ne $codexObj.author.name) {
+        Write-ValidationError "Codex plugin.json field 'author.name' differs from source of truth. Expected '$($claudeObj.author.name)', got '$($codexObj.author.name)'."
+        $syncOk = $false
+    }
+
+    $claudeKw = ($claudeObj.keywords | Sort-Object) -join ","
+    $codexKw  = ($codexObj.keywords  | Sort-Object) -join ","
+    if ($claudeKw -ne $codexKw) {
+        Write-ValidationError "Codex plugin.json 'keywords' differ from source of truth (.claude-plugin/plugin.json)."
+        $syncOk = $false
+    }
+
+    $codexPluginRoot = $codexPluginDir
+    $skillsPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.skills))).TrimEnd('\', '/')
+    $mcpServersPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.mcpServers))).TrimEnd('\', '/')
+    $repoMcpJsonPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot ".mcp.json"))).TrimEnd('\', '/')
+    $repoSkillsPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot "skills"))).TrimEnd('\', '/')
+
+    if ($codexObj.skills -ne "./skills/") {
+        Write-ValidationError "Codex plugin.json field 'skills' must be './skills/'."
+        $syncOk = $false
+    } elseif (-not (Test-Path $skillsPath)) {
+        Write-ValidationError "Codex plugin.json 'skills' path does not resolve to an existing directory: $skillsPath"
+        $syncOk = $false
+    } elseif ($skillsPath -ne $repoSkillsPath) {
+        Write-ValidationError "Codex plugin.json 'skills' path must resolve to the repo root skills directory: $repoSkillsPath"
+        $syncOk = $false
+    } else {
+        Write-ValidationSuccess "Codex plugin.json skills path resolves to repo root skills/"
+    }
+
+    if ($codexObj.mcpServers -ne "./.mcp.json") {
+        Write-ValidationError "Codex plugin.json field 'mcpServers' must be './.mcp.json'."
+        $syncOk = $false
+    } elseif (-not (Test-Path $mcpServersPath)) {
+        Write-ValidationError "Codex plugin.json 'mcpServers' path does not resolve to an existing file: $mcpServersPath"
+        $syncOk = $false
+    } elseif ($mcpServersPath -ne $repoMcpJsonPath) {
+        Write-ValidationError "Codex plugin.json 'mcpServers' path must resolve to repo root .mcp.json: $repoMcpJsonPath"
+        $syncOk = $false
+    } else {
+        Write-ValidationSuccess "Codex plugin.json MCP server path resolves to repo root .mcp.json"
+    }
+
+    if ($codexObj.name -ne $codexPluginName) {
+        Write-ValidationError "Codex plugin.json name must be '$codexPluginName'."
+        $syncOk = $false
+    }
+
+    if ($syncOk) {
+        Write-ValidationSuccess "Codex plugin.json is in sync with source of truth and wired to repo-root assets"
+    }
+} elseif (-not (Test-Path $codexPluginJson)) {
+    # Already reported above
 } else {
     # .claude-plugin/plugin.json missing is already reported in Validation 1
 }

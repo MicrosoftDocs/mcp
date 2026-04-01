@@ -1,0 +1,20 @@
+{
+  "name": "microsoftdocs-local",
+  "interface": {
+    "displayName": "Microsoft Docs Local Plugins Marketplace"
+  },
+  "plugins": [
+    {
+      "name": "microsoft-docs",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
