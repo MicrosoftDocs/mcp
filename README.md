@@ -212,6 +212,7 @@ When handling questions around how to work with native Microsoft technologies, s
 | No results returned | Try rephrasing your query with more specific technical terms |
 | Tool not appearing in VS Code | Restart VS Code or check that the MCP extension is properly installed |
 | HTTP status 405  | Method not allowed happens when a browser tries to connect to the endpoint. Try using the MCP Server through VS Code GitHub Copilot or [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) instead. |
+| MCP server 'Microsoft Learn' marked as unavailable in Visual Studio (Reason: Eclipsed) | Visual Studio 2022 (17.13+) ships "Microsoft Learn" as a built-in MCP server at a higher-priority scope. "Eclipsed" means a higher-priority definition already exists and the duplicate lower-priority entry is suppressed. Remove any manually added `microsoft-learn` entry from your `~/.mcp.json` or workspace `.mcp.json` to avoid conflicts. The built-in server will then become active automatically. No additional configuration is required for Visual Studio users. |
 
 ### 🆘 Getting Support
 
