@@ -224,3 +224,4 @@ When handling questions around how to work with native Microsoft technologies, s
 - [Microsoft MCP Servers](https://github.com/microsoft/mcp)
 - [Microsoft Learn](https://learn.microsoft.com)
 - [Model Context Protocol Specification](https://modelcontextprotocol.io)
+- [Microsoft Learn Terms of Use](https://learn.microsoft.com/legal/termsofuse)
