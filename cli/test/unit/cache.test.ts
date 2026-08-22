@@ -125,11 +125,12 @@ describe('LearnCliClient session reuse', () => {
     });
 
     const seenSessionIds: Array<string | undefined> = [];
+    const createSdkClient = vi.fn(() => fakeClient);
     const client = createLearnCliClient({
       endpoint: 'https://learn.microsoft.com/api/mcp',
       fetchImpl,
       cacheStore,
-      createSdkClient: () => fakeClient,
+      createSdkClient,
       createTransport: (_endpoint, sessionId) => {
         seenSessionIds.push(sessionId);
         return {
@@ -143,6 +144,7 @@ describe('LearnCliClient session reuse', () => {
     await client.close();
 
     expect(fetchImpl).toHaveBeenCalledOnce();
+    expect(createSdkClient).not.toHaveBeenCalled();
     expect(seenSessionIds).toEqual([]);
     expect(fakeClient.connect).not.toHaveBeenCalled();
     expect(fakeClient.listTools).not.toHaveBeenCalled();
