@@ -3,48 +3,69 @@ import { readdir, rm, rmdir } from 'node:fs/promises';
 import { Command } from 'commander';
 
 import type { CliContext } from '../context.js';
-import { getCopilotDiscoveryPaths } from '../setup/copilot.js';
+import {
+  getAgentDiscoveryPaths,
+  getSelectedDiscoveryAgents,
+  type DiscoveryAgentOptions,
+} from '../setup/agents.js';
+import { removeManagedSection } from '../setup/managed-markdown.js';
 import { UsageError } from '../utils/errors.js';
 
-interface RemoveCommandOptions {
+interface RemoveCommandOptions extends DiscoveryAgentOptions {
   cli?: boolean;
-  copilot?: boolean;
   project?: boolean;
 }
 
 export function registerRemoveCommand(program: Command, context: CliContext): void {
   program
     .command('remove')
-    .description('Remove GitHub Copilot discovery for the standalone Microsoft Learn CLI.')
+    .description('Remove agent discovery for the standalone Microsoft Learn CLI.')
     .option('--cli', 'Remove discovery for the standalone CLI.')
     .option('--copilot', 'Remove GitHub Copilot discovery.')
+    .option('--claude', 'Remove Claude Code discovery.')
+    .option('--codex', 'Remove Codex discovery.')
     .option('--project', 'Remove discovery from the current project instead of the user profile.')
     .action(async (options: RemoveCommandOptions) => {
       validateRemoveOptions(options);
 
       const project = options.project ?? false;
-      const paths = getCopilotDiscoveryPaths(project, context);
-
-      await rm(paths.skillFile, { force: true });
-      await removeDirectoryIfEmpty(paths.skillDirectory);
-      await rm(paths.instructionFile, { force: true });
-
       const scope = project ? 'project' : 'global';
-      context.writeOut(`Removed Copilot skill (${scope}): ${paths.skillFile}\n`);
-      context.writeOut(`Removed Copilot instruction (${scope}): ${paths.instructionFile}\n`);
+
+      for (const agent of getSelectedDiscoveryAgents(options)) {
+        const paths = getAgentDiscoveryPaths(agent, project, context);
+
+        await rm(paths.skillFile, { force: true });
+        await removeDirectoryIfEmpty(paths.skillDirectory);
+
+        const instructionFiles =
+          paths.instruction.kind === 'file' ? [paths.instruction.file] : paths.instruction.files;
+        if (paths.instruction.kind === 'file') {
+          await rm(paths.instruction.file, { force: true });
+        } else {
+          for (const instructionFile of paths.instruction.files) {
+            await removeManagedSection(instructionFile);
+          }
+        }
+
+        context.writeOut(`Removed ${paths.displayName} skill (${scope}): ${paths.skillFile}\n`);
+        for (const instructionFile of instructionFiles) {
+          context.writeOut(
+            `Removed ${paths.displayName} instruction (${scope}): ${instructionFile}\n`,
+          );
+        }
+      }
     });
 }
 
 function validateRemoveOptions(options: RemoveCommandOptions): asserts options is RemoveCommandOptions & {
   cli: true;
-  copilot: true;
 } {
   if (!options.cli) {
     throw new UsageError('--cli is required. Run "mslearn remove --cli --copilot".');
   }
 
-  if (!options.copilot) {
-    throw new UsageError('--copilot is required. Run "mslearn remove --cli --copilot".');
+  if (getSelectedDiscoveryAgents(options).length === 0) {
+    throw new UsageError('An agent target is required: --copilot, --claude, or --codex.');
   }
 }
 

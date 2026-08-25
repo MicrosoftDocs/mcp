@@ -102,31 +102,42 @@ npm install -g @microsoft/learn-cli
 mslearn search "azure functions timeout"
 ```
 
-Installing the npm package alone does not install agent discovery. To teach GitHub Copilot when and
-how to invoke the standalone CLI, install the CLI-first skill and always-loaded instruction:
+Installing the npm package alone does not install agent discovery. The CLI can install a CLI-first
+skill and always-loaded instruction for the same ecosystems supported by this repository's plugins:
+GitHub Copilot, Claude Code, and Codex.
 
 ```sh
 # User profile (default)
 mslearn setup --cli --copilot
+mslearn setup --cli --claude
+mslearn setup --cli --codex
 
 # Current repository
 mslearn setup --cli --copilot --project
+mslearn setup --cli --claude --project
+mslearn setup --cli --codex --project
+
+# Multiple agents
+mslearn setup --cli --copilot --claude --codex
 ```
 
-Remove only the managed discovery files with:
+Remove only managed discovery content with:
 
 ```sh
 mslearn remove --cli --copilot
-mslearn remove --cli --copilot --project
+mslearn remove --cli --claude --codex --project
 ```
 
-| Scope | Skill | Always-loaded instruction |
-|-------|-------|---------------------------|
-| User profile | `~/.copilot/skills/microsoft-learn-cli/SKILL.md` | `~/.copilot/instructions/microsoft-learn-cli.instructions.md` |
-| Current repository | `.github/skills/microsoft-learn-cli/SKILL.md` | `.github/instructions/microsoft-learn-cli.instructions.md` |
+| Agent | User scope | Project scope |
+|-------|------------|---------------|
+| GitHub Copilot | `~/.copilot/skills/` and `~/.copilot/instructions/` | `.github/skills/` and `.github/instructions/` |
+| Claude Code | `~/.claude/skills/` and `~/.claude/rules/` | `.claude/skills/` and `.claude/rules/` |
+| Codex | `~/.agents/skills/` and `~/.codex/AGENTS.md` | `.agents/skills/` and `AGENTS.md` |
 
-This standalone discovery flow is GitHub Copilot-only in v1. It does not auto-detect agents,
-configure MCP, or install Claude/Codex discovery.
+At least one explicit target (`--copilot`, `--claude`, or `--codex`) is required. This workflow does
+not auto-detect agents, configure MCP, or install agents outside the plugin ecosystems such as
+Cursor. Codex updates and removes only a marked section in the active `AGENTS.md` or
+`AGENTS.override.md`, preserving unrelated instructions.
 
 Pass `--json` to get structured JSON output, useful for programmatic processing:
 
@@ -152,8 +163,8 @@ Choose the integration that matches how you want the agent to retrieve Microsoft
 
 | Mode | Installation | Agent behavior |
 |------|--------------|----------------|
-| Standalone CLI-first | Install/run `@microsoft/learn-cli`, then run `mslearn setup --cli --copilot` | GitHub Copilot invokes `npx @microsoft/learn-cli@latest`; MCP is not configured |
-| Repository plugin, MCP-first | Run `/plugin install microsoftdocs/mcp` in GitHub Copilot CLI | The plugin supplies the Learn MCP endpoint and MCP-oriented skills |
+| Standalone CLI-first | Install/run `@microsoft/learn-cli`, then run `mslearn setup --cli <agent-target>` | The selected agent invokes `npx @microsoft/learn-cli@latest`; MCP is not configured |
+| Repository plugin, MCP-first | Install the repository plugin for GitHub Copilot, Claude Code, or Codex | The plugin supplies the Learn MCP endpoint and MCP-oriented skills |
 
 The repository plugin also supports Claude Code. Run the following command and restart Claude Code:
 ```
