@@ -1,3 +1,7 @@
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
 import { describe, expect, it, vi } from 'vitest';
 
 import { runCli } from '../../src/index.js';
@@ -44,6 +48,42 @@ function createTestContext(client: LearnCliClientLike): {
   };
 }
 
+async function createFilesystemTestContext(): Promise<{
+  context: Partial<CliContext>;
+  stdout: string[];
+  stderr: string[];
+  cwd: string;
+  homeDir: string;
+  cleanup: () => Promise<void>;
+}> {
+  const root = await mkdtemp(join(tmpdir(), 'mslearn-cli-test-'));
+  const cwd = join(root, 'project');
+  const homeDir = join(root, 'home');
+  await Promise.all([mkdir(cwd, { recursive: true }), mkdir(homeDir, { recursive: true })]);
+
+  const testContext = createTestContext(createMockClient());
+  return {
+    ...testContext,
+    cwd,
+    homeDir,
+    context: {
+      ...testContext.context,
+      cwd,
+      homeDir,
+    },
+    cleanup: () => rm(root, { recursive: true, force: true }),
+  };
+}
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 describe('runCli', () => {
   it('keeps the internal endpoint override out of public help output', async () => {
     const client = createMockClient();
@@ -53,6 +93,20 @@ describe('runCli', () => {
 
     expect(exitCode).toBe(0);
     expect(stdout.join('')).not.toContain('--endpoint <url>');
+  });
+
+  it('lists setup and remove discovery commands in public help', async () => {
+    const client = createMockClient();
+    const { context, stdout } = createTestContext(client);
+
+    const exitCode = await runCli(['node', 'mslearn', '--help'], context);
+
+    expect(exitCode).toBe(0);
+    const output = stdout.join('');
+    expect(output).toContain('setup');
+    expect(output).toContain('Install GitHub Copilot discovery');
+    expect(output).toContain('remove');
+    expect(output).toContain('Remove GitHub Copilot discovery');
   });
 
   it('formats search results with one result per block', async () => {
@@ -153,5 +207,226 @@ describe('runCli', () => {
 
     expect(exitCode).toBe(2);
     expect(stderr.join('')).toContain('missing required argument');
+  });
+
+  it.each(['setup', 'remove'])('requires --cli for %s', async (command) => {
+    const { context, stderr } = createTestContext(createMockClient());
+
+    const exitCode = await runCli(['node', 'mslearn', command, '--copilot'], context);
+
+    expect(exitCode).toBe(2);
+    expect(stderr.join('')).toContain('--cli is required');
+  });
+
+  it.each(['setup', 'remove'])('requires --copilot for %s', async (command) => {
+    const { context, stderr } = createTestContext(createMockClient());
+
+    const exitCode = await runCli(['node', 'mslearn', command, '--cli'], context);
+
+    expect(exitCode).toBe(2);
+    expect(stderr.join('')).toContain('--copilot is required');
+  });
+
+  it.each([
+    {
+      name: 'global',
+      args: [] as string[],
+      skill: (cwd: string, homeDir: string) =>
+        join(homeDir, '.copilot', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
+      instruction: (cwd: string, homeDir: string) =>
+        join(homeDir, '.copilot', 'instructions', 'microsoft-learn-cli.instructions.md'),
+    },
+    {
+      name: 'project',
+      args: ['--project'],
+      skill: (cwd: string) => join(cwd, '.github', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
+      instruction: (cwd: string) =>
+        join(cwd, '.github', 'instructions', 'microsoft-learn-cli.instructions.md'),
+    },
+  ])('installs CLI-first Copilot discovery at $name scope', async ({ args, skill, instruction }) => {
+    const test = await createFilesystemTestContext();
+
+    try {
+      const exitCode = await runCli(['node', 'mslearn', 'setup', '--cli', '--copilot', ...args], test.context);
+      const skillPath = skill(test.cwd, test.homeDir);
+      const instructionPath = instruction(test.cwd, test.homeDir);
+
+      expect(exitCode).toBe(0);
+      expect(test.stdout.join('')).toContain(skillPath);
+      expect(test.stdout.join('')).toContain(instructionPath);
+
+      const skillContent = await readFile(skillPath, 'utf8');
+      const instructionContent = await readFile(instructionPath, 'utf8');
+      expect(skillContent).toContain('---');
+      expect(skillContent).toContain('search');
+      expect(skillContent).toContain('fetch');
+      expect(skillContent).toContain('code-search');
+      expect(instructionContent).toContain('microsoft-learn-cli');
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('refreshes managed content when setup is repeated', async () => {
+    const test = await createFilesystemTestContext();
+    const skillPath = join(test.cwd, '.github', 'skills', 'microsoft-learn-cli', 'SKILL.md');
+    const instructionPath = join(
+      test.cwd,
+      '.github',
+      'instructions',
+      'microsoft-learn-cli.instructions.md',
+    );
+
+    try {
+      const args = ['node', 'mslearn', 'setup', '--cli', '--copilot', '--project'];
+      expect(await runCli(args, test.context)).toBe(0);
+      await Promise.all([
+        writeFile(skillPath, 'stale skill', 'utf8'),
+        writeFile(instructionPath, 'stale instruction', 'utf8'),
+      ]);
+
+      expect(await runCli(args, test.context)).toBe(0);
+
+      const bundledSkill = await readFile(new URL('../../assets/microsoft-learn-cli/SKILL.md', import.meta.url), 'utf8');
+      const bundledInstruction = await readFile(
+        new URL('../../assets/microsoft-learn-cli/INSTRUCTIONS.md', import.meta.url),
+        'utf8',
+      );
+      expect(await readFile(skillPath, 'utf8')).toBe(bundledSkill);
+      expect(await readFile(instructionPath, 'utf8')).toBe(bundledInstruction);
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it.each([
+    {
+      name: 'global',
+      args: [] as string[],
+      skill: (cwd: string, homeDir: string) =>
+        join(homeDir, '.copilot', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
+      instruction: (cwd: string, homeDir: string) =>
+        join(homeDir, '.copilot', 'instructions', 'microsoft-learn-cli.instructions.md'),
+    },
+    {
+      name: 'project',
+      args: ['--project'],
+      skill: (cwd: string) => join(cwd, '.github', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
+      instruction: (cwd: string) =>
+        join(cwd, '.github', 'instructions', 'microsoft-learn-cli.instructions.md'),
+    },
+  ])('removes managed Copilot discovery at $name scope idempotently', async ({ args, skill, instruction }) => {
+    const test = await createFilesystemTestContext();
+    const setupArgs = ['node', 'mslearn', 'setup', '--cli', '--copilot', ...args];
+    const removeArgs = ['node', 'mslearn', 'remove', '--cli', '--copilot', ...args];
+    const skillPath = skill(test.cwd, test.homeDir);
+    const instructionPath = instruction(test.cwd, test.homeDir);
+
+    try {
+      expect(await runCli(setupArgs, test.context)).toBe(0);
+      expect(await runCli(removeArgs, test.context)).toBe(0);
+      expect(await fileExists(skillPath)).toBe(false);
+      expect(await fileExists(instructionPath)).toBe(false);
+      expect(await runCli(removeArgs, test.context)).toBe(0);
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it.each([
+    {
+      name: 'global',
+      args: [] as string[],
+      root: (cwd: string, homeDir: string) => join(homeDir, '.copilot'),
+    },
+    {
+      name: 'project',
+      args: ['--project'],
+      root: (cwd: string) => join(cwd, '.github'),
+    },
+  ])('preserves unrelated files during $name removal', async ({ args, root }) => {
+    const test = await createFilesystemTestContext();
+    const discoveryRoot = root(test.cwd, test.homeDir);
+    const skillDirectory = join(discoveryRoot, 'skills', 'microsoft-learn-cli');
+    const instructionsDirectory = join(discoveryRoot, 'instructions');
+    const unrelatedFiles = [
+      join(discoveryRoot, 'keep.txt'),
+      join(skillDirectory, 'NOTES.md'),
+      join(instructionsDirectory, 'keep.instructions.md'),
+    ];
+
+    try {
+      expect(
+        await runCli(['node', 'mslearn', 'setup', '--cli', '--copilot', ...args], test.context),
+      ).toBe(0);
+      await Promise.all(unrelatedFiles.map((path) => writeFile(path, 'keep', 'utf8')));
+
+      expect(
+        await runCli(['node', 'mslearn', 'remove', '--cli', '--copilot', ...args], test.context),
+      ).toBe(0);
+
+      for (const path of unrelatedFiles) {
+        expect(await readFile(path, 'utf8')).toBe('keep');
+      }
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('isolates global and project removal scopes', async () => {
+    const test = await createFilesystemTestContext();
+    const globalSkill = join(
+      test.homeDir,
+      '.copilot',
+      'skills',
+      'microsoft-learn-cli',
+      'SKILL.md',
+    );
+    const projectSkill = join(
+      test.cwd,
+      '.github',
+      'skills',
+      'microsoft-learn-cli',
+      'SKILL.md',
+    );
+
+    try {
+      expect(await runCli(['node', 'mslearn', 'setup', '--cli', '--copilot'], test.context)).toBe(0);
+      expect(
+        await runCli(
+          ['node', 'mslearn', 'setup', '--cli', '--copilot', '--project'],
+          test.context,
+        ),
+      ).toBe(0);
+
+      expect(
+        await runCli(
+          ['node', 'mslearn', 'remove', '--cli', '--copilot', '--project'],
+          test.context,
+        ),
+      ).toBe(0);
+      expect(await fileExists(globalSkill)).toBe(true);
+      expect(await fileExists(projectSkill)).toBe(false);
+
+      expect(
+        await runCli(
+          ['node', 'mslearn', 'setup', '--cli', '--copilot', '--project'],
+          test.context,
+        ),
+      ).toBe(0);
+      expect(await runCli(['node', 'mslearn', 'remove', '--cli', '--copilot'], test.context)).toBe(0);
+      expect(await fileExists(globalSkill)).toBe(false);
+      expect(await fileExists(projectSkill)).toBe(true);
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('includes discovery assets in the npm package allowlist', async () => {
+    const packageJson = JSON.parse(
+      await readFile(new URL('../../package.json', import.meta.url), 'utf8'),
+    ) as { files?: string[] };
+
+    expect(packageJson.files).toContain('assets');
   });
 });

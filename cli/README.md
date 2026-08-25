@@ -33,6 +33,49 @@ npm install -g @microsoft/learn-cli
 mslearn search "azure functions timeout"
 ```
 
+Installing the npm package alone does not install agent discovery.
+
+## GitHub Copilot discovery
+
+The standalone CLI can install a CLI-first skill plus an always-loaded GitHub Copilot instruction.
+The instruction routes Microsoft technology questions to the skill, and the skill teaches Copilot
+to invoke `npx @microsoft/learn-cli@latest`.
+
+Install discovery for the current user:
+
+```bash
+mslearn setup --cli --copilot
+```
+
+Or install it only in the current repository:
+
+```bash
+mslearn setup --cli --copilot --project
+```
+
+Remove the managed files without changing unrelated Copilot configuration:
+
+```bash
+mslearn remove --cli --copilot
+mslearn remove --cli --copilot --project
+```
+
+| Scope | Skill | Always-loaded instruction |
+|-------|-------|---------------------------|
+| User profile | `~/.copilot/skills/microsoft-learn-cli/SKILL.md` | `~/.copilot/instructions/microsoft-learn-cli.instructions.md` |
+| Current repository | `.github/skills/microsoft-learn-cli/SKILL.md` | `.github/instructions/microsoft-learn-cli.instructions.md` |
+
+Both `--cli` and `--copilot` are required. The CLI does not auto-detect agents or configure MCP,
+and v1 does not install discovery for Claude or Codex. Re-running setup refreshes the two managed
+files; re-running removal succeeds when they are already absent.
+
+### CLI-first versus MCP-first
+
+| Mode | Installation | Agent behavior |
+|------|--------------|----------------|
+| Standalone CLI-first | Install/run this npm package, then use `mslearn setup --cli --copilot` | GitHub Copilot invokes the standalone CLI through `npx`; no MCP configuration is added |
+| Repository plugin, MCP-first | In GitHub Copilot CLI, run `/plugin install microsoftdocs/mcp` | The plugin supplies the Microsoft Learn MCP endpoint and MCP-oriented skills |
+
 ## Commands
 
 ```bash
@@ -44,6 +87,10 @@ mslearn code-search "cosmos db change feed processor"
 mslearn code-search "cosmos db change feed processor" --language csharp
 mslearn doctor
 mslearn doctor --format json
+mslearn setup --cli --copilot
+mslearn setup --cli --copilot --project
+mslearn remove --cli --copilot
+mslearn remove --cli --copilot --project
 ```
 
 Available commands:
@@ -54,6 +101,8 @@ Available commands:
 - `fetch <url> --max-chars <number>` truncates output.
 - `code-search <query> --language <name>` searches official code samples.
 - `doctor [--format text|json]` checks runtime and connectivity.
+- `setup --cli --copilot [--project]` installs GitHub Copilot discovery.
+- `remove --cli --copilot [--project]` removes only the managed discovery files.
 
 The `search` and `code-search` commands output human-readable formatted text by
 default. Pass `--json` to get the raw JSON response, which is useful for piping
@@ -82,7 +131,7 @@ To build and test from source:
 ```bash
 cd cli
 npm install
-npm run build
-npm test
+npm.cmd run build
+npm.cmd test
 node dist/index.js --help
 ```

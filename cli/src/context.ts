@@ -1,6 +1,10 @@
+import { homedir } from 'node:os';
+
 import { createLearnCliClient, type LearnCliClientLike, type LearnClientOptions } from './mcp/client.js';
 
 export interface CliContext {
+  cwd: string;
+  homeDir: string;
   env: NodeJS.ProcessEnv;
   version: string;
   writeOut: (value: string) => void;
@@ -10,6 +14,8 @@ export interface CliContext {
 
 export function createDefaultContext(version: string): CliContext {
   return {
+    cwd: process.cwd(),
+    homeDir: homedir(),
     env: process.env,
     version,
     writeOut: (value) => {

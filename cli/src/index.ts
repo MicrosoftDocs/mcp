@@ -8,7 +8,9 @@ import { pathToFileURL } from 'node:url';
 import { registerCodeSearchCommand } from './commands/code-search.js';
 import { registerDoctorCommand } from './commands/doctor.js';
 import { registerFetchCommand } from './commands/fetch.js';
+import { registerRemoveCommand } from './commands/remove.js';
 import { registerSearchCommand } from './commands/search.js';
+import { registerSetupCommand } from './commands/setup.js';
 import { createDefaultContext, type CliContext } from './context.js';
 import { CliError } from './utils/errors.js';
 
@@ -36,6 +38,8 @@ export function createProgram(context: CliContext): Command {
   registerFetchCommand(program, context);
   registerCodeSearchCommand(program, context);
   registerDoctorCommand(program, context);
+  registerSetupCommand(program, context);
+  registerRemoveCommand(program, context);
 
   return program;
 }

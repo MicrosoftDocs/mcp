@@ -102,6 +102,32 @@ npm install -g @microsoft/learn-cli
 mslearn search "azure functions timeout"
 ```
 
+Installing the npm package alone does not install agent discovery. To teach GitHub Copilot when and
+how to invoke the standalone CLI, install the CLI-first skill and always-loaded instruction:
+
+```sh
+# User profile (default)
+mslearn setup --cli --copilot
+
+# Current repository
+mslearn setup --cli --copilot --project
+```
+
+Remove only the managed discovery files with:
+
+```sh
+mslearn remove --cli --copilot
+mslearn remove --cli --copilot --project
+```
+
+| Scope | Skill | Always-loaded instruction |
+|-------|-------|---------------------------|
+| User profile | `~/.copilot/skills/microsoft-learn-cli/SKILL.md` | `~/.copilot/instructions/microsoft-learn-cli.instructions.md` |
+| Current repository | `.github/skills/microsoft-learn-cli/SKILL.md` | `.github/instructions/microsoft-learn-cli.instructions.md` |
+
+This standalone discovery flow is GitHub Copilot-only in v1. It does not auto-detect agents,
+configure MCP, or install Claude/Codex discovery.
+
 Pass `--json` to get structured JSON output, useful for programmatic processing:
 
 ```sh
@@ -122,12 +148,19 @@ See [`cli/README.md`](cli/README.md) for the full command reference.
 
 ### Quick Setup
 
-These agent skills are packed in a `microsoft-docs` plugin together with the Learn MCP server itself. If you use Claude Code, run the following command and restart Claude Code:
+Choose the integration that matches how you want the agent to retrieve Microsoft Learn content:
+
+| Mode | Installation | Agent behavior |
+|------|--------------|----------------|
+| Standalone CLI-first | Install/run `@microsoft/learn-cli`, then run `mslearn setup --cli --copilot` | GitHub Copilot invokes `npx @microsoft/learn-cli@latest`; MCP is not configured |
+| Repository plugin, MCP-first | Run `/plugin install microsoftdocs/mcp` in GitHub Copilot CLI | The plugin supplies the Learn MCP endpoint and MCP-oriented skills |
+
+The repository plugin also supports Claude Code. Run the following command and restart Claude Code:
 ```
 /plugin install microsoft-docs@claude-plugins-official
 ```
 
-Or if you use GitHub Copilot CLI, run this command:
+For the MCP-first GitHub Copilot CLI plugin, run:
 ```
 /plugin install microsoftdocs/mcp
 ```
