@@ -133,6 +133,7 @@ const discoveryAgentCases: DiscoveryAgentCase[] = [
 const discoveryScopeCases = discoveryAgentCases.flatMap((agent) => [
   {
     name: `${agent.name} global`,
+    displayName: agent.name,
     flag: agent.flag,
     args: [] as string[],
     skill: agent.globalSkill,
@@ -140,6 +141,7 @@ const discoveryScopeCases = discoveryAgentCases.flatMap((agent) => [
   },
   {
     name: `${agent.name} project`,
+    displayName: agent.name,
     flag: agent.flag,
     args: ['--project'],
     skill: agent.projectSkill,
@@ -295,6 +297,7 @@ describe('runCli', () => {
     args,
     skill,
     instruction,
+    displayName,
   }) => {
     const test = await createFilesystemTestContext();
 
@@ -307,8 +310,12 @@ describe('runCli', () => {
       const instructionPath = instruction(test.cwd, test.homeDir);
 
       expect(exitCode).toBe(0);
-      expect(test.stdout.join('')).toContain(skillPath);
-      expect(test.stdout.join('')).toContain(instructionPath);
+      const output = test.stdout.join('');
+      expect(output).toContain(`  ${displayName}`);
+      expect(output).toContain('    + Skill installed');
+      expect(output).toContain('    + Rule installed');
+      expect(output).toContain(skillPath);
+      expect(output).toContain(instructionPath);
 
       const skillContent = await readFile(skillPath, 'utf8');
       const instructionContent = await readFile(instructionPath, 'utf8');
@@ -373,6 +380,7 @@ describe('runCli', () => {
       ]);
 
       expect(await runCli(args, test.context)).toBe(0);
+      expect(test.stdout.join('')).toContain('    + Rule updated');
 
       const bundledSkill = await readFile(new URL('../../assets/microsoft-learn-cli/SKILL.md', import.meta.url), 'utf8');
       const bundledInstruction = await readFile(
@@ -481,6 +489,7 @@ describe('runCli', () => {
     args,
     skill,
     instruction,
+    displayName,
   }) => {
     const test = await createFilesystemTestContext();
     const setupArgs = ['node', 'mslearn', 'setup', '--cli', flag, ...args];
@@ -493,7 +502,13 @@ describe('runCli', () => {
       expect(await runCli(removeArgs, test.context)).toBe(0);
       expect(await fileExists(skillPath)).toBe(false);
       expect(await fileExists(instructionPath)).toBe(false);
+      const output = test.stdout.join('');
+      expect(output).toContain(`  ${displayName}`);
+      expect(output).toContain('    - Skill removed');
+      expect(output).toContain('    - Rule removed');
       expect(await runCli(removeArgs, test.context)).toBe(0);
+      expect(test.stdout.join('')).toContain('    ~ Skill not found');
+      expect(test.stdout.join('')).toContain('    ~ Rule not found');
     } finally {
       await test.cleanup();
     }

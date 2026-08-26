@@ -30,30 +30,48 @@ export function registerRemoveCommand(program: Command, context: CliContext): vo
 
       const project = options.project ?? false;
       const scope = project ? 'project' : 'global';
+      context.writeOut('\n');
 
       for (const agent of getSelectedDiscoveryAgents(options)) {
         const paths = getAgentDiscoveryPaths(agent, project, context);
 
-        await rm(paths.skillFile, { force: true });
+        const skillStatus = await removeFileIfPresent(paths.skillFile);
         await removeDirectoryIfEmpty(paths.skillDirectory);
 
-        const instructionFiles =
-          paths.instruction.kind === 'file' ? [paths.instruction.file] : paths.instruction.files;
+        const ruleResults: Array<{ path: string; status: 'removed' | 'not found' }> = [];
         if (paths.instruction.kind === 'file') {
-          await rm(paths.instruction.file, { force: true });
+          ruleResults.push({
+            path: paths.instruction.file,
+            status: await removeFileIfPresent(paths.instruction.file),
+          });
         } else {
           for (const instructionFile of paths.instruction.files) {
-            await removeManagedSection(instructionFile);
+            ruleResults.push({
+              path: instructionFile,
+              status: await removeManagedSection(instructionFile),
+            });
           }
         }
 
-        context.writeOut(`Removed ${paths.displayName} skill (${scope}): ${paths.skillFile}\n`);
-        for (const instructionFile of instructionFiles) {
-          context.writeOut(
-            `Removed ${paths.displayName} instruction (${scope}): ${instructionFile}\n`,
-          );
+        context.writeOut(`  ${paths.displayName} (${scope})\n`);
+        context.writeOut(`    ${skillStatus === 'removed' ? '-' : '~'} Skill ${skillStatus}\n`);
+        context.writeOut(`      ${paths.skillFile}\n`);
+
+        const removedRules = ruleResults.filter((result) => result.status === 'removed');
+        if (removedRules.length > 0) {
+          for (const result of removedRules) {
+            context.writeOut('    - Rule removed\n');
+            context.writeOut(`      ${result.path}\n`);
+          }
+        } else {
+          context.writeOut('    ~ Rule not found\n');
+          for (const result of ruleResults) {
+            context.writeOut(`      ${result.path}\n`);
+          }
         }
       }
+
+      context.writeOut('\n');
     });
 }
 
@@ -85,4 +103,16 @@ async function removeDirectoryIfEmpty(path: string): Promise<void> {
 
 function isFileSystemError(error: unknown, code: string): error is NodeJS.ErrnoException {
   return error instanceof Error && 'code' in error && error.code === code;
+}
+
+async function removeFileIfPresent(path: string): Promise<'removed' | 'not found'> {
+  try {
+    await rm(path);
+    return 'removed';
+  } catch (error) {
+    if (isFileSystemError(error, 'ENOENT')) {
+      return 'not found';
+    }
+    throw error;
+  }
 }

@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
 import { Command } from 'commander';
@@ -38,6 +38,7 @@ export function registerSetupCommand(program: Command, context: CliContext): voi
       const project = options.project ?? false;
       const scope = project ? 'project' : 'global';
       const agents = getSelectedDiscoveryAgents(options);
+      context.writeOut('\n');
 
       for (const agent of agents) {
         const paths = getAgentDiscoveryPaths(agent, project, context);
@@ -52,8 +53,10 @@ export function registerSetupCommand(program: Command, context: CliContext): voi
         await writeFile(paths.skillFile, skillContent, 'utf8');
 
         let instructionFile: string;
+        let ruleStatus: 'installed' | 'updated';
         if (paths.instruction.kind === 'file') {
           instructionFile = paths.instruction.file;
+          ruleStatus = (await fileExists(instructionFile)) ? 'updated' : 'installed';
           await mkdir(dirname(instructionFile), { recursive: true });
           await writeFile(instructionFile, instructionContent, 'utf8');
         } else {
@@ -61,7 +64,7 @@ export function registerSetupCommand(program: Command, context: CliContext): voi
             paths.instruction.files,
             paths.instruction.defaultFile,
           );
-          await upsertManagedSection(instructionFile, instructionContent);
+          ruleStatus = await upsertManagedSection(instructionFile, instructionContent);
           for (const alternateFile of paths.instruction.files) {
             if (alternateFile !== instructionFile) {
               await removeManagedSection(alternateFile);
@@ -69,11 +72,14 @@ export function registerSetupCommand(program: Command, context: CliContext): voi
           }
         }
 
-        context.writeOut(`Installed ${paths.displayName} skill (${scope}): ${paths.skillFile}\n`);
-        context.writeOut(
-          `Installed ${paths.displayName} instruction (${scope}): ${instructionFile}\n`,
-        );
+        context.writeOut(`  ${paths.displayName} (${scope})\n`);
+        context.writeOut('    + Skill installed\n');
+        context.writeOut(`      ${paths.skillFile}\n`);
+        context.writeOut(`    + Rule ${ruleStatus}\n`);
+        context.writeOut(`      ${instructionFile}\n`);
       }
+
+      context.writeOut('\n');
     });
 }
 
@@ -87,4 +93,20 @@ function validateSetupOptions(options: SetupCommandOptions): asserts options is 
   if (getSelectedDiscoveryAgents(options).length === 0) {
     throw new UsageError('An agent target is required: --copilot, --claude, or --codex.');
   }
+}
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch (error) {
+    if (isFileSystemError(error, 'ENOENT')) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+function isFileSystemError(error: unknown, code: string): error is NodeJS.ErrnoException {
+  return error instanceof Error && 'code' in error && error.code === code;
 }

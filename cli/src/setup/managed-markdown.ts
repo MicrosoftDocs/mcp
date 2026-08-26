@@ -11,6 +11,9 @@ interface ManagedSectionRange {
   end: number;
 }
 
+export type ManagedSectionStatus = 'installed' | 'updated';
+export type ManagedSectionRemovalStatus = 'removed' | 'not found';
+
 export async function selectFirstNonEmptyFile(files: string[], defaultFile: string): Promise<string> {
   for (const file of files) {
     const content = await readOptionalFile(file);
@@ -22,7 +25,10 @@ export async function selectFirstNonEmptyFile(files: string[], defaultFile: stri
   return defaultFile;
 }
 
-export async function upsertManagedSection(file: string, content: string): Promise<void> {
+export async function upsertManagedSection(
+  file: string,
+  content: string,
+): Promise<ManagedSectionStatus> {
   const existing = (await readOptionalFile(file)) ?? '';
   const section = `${MANAGED_SECTION_START}\n${content.trim()}\n${MANAGED_SECTION_END}`;
   const range = findManagedSection(existing, file);
@@ -32,17 +38,18 @@ export async function upsertManagedSection(file: string, content: string): Promi
 
   await mkdir(dirname(file), { recursive: true });
   await writeFile(file, nextContent, 'utf8');
+  return range ? 'updated' : 'installed';
 }
 
-export async function removeManagedSection(file: string): Promise<void> {
+export async function removeManagedSection(file: string): Promise<ManagedSectionRemovalStatus> {
   const existing = await readOptionalFile(file);
   if (existing === undefined) {
-    return;
+    return 'not found';
   }
 
   const range = findManagedSection(existing, file);
   if (!range) {
-    return;
+    return 'not found';
   }
 
   const nextContent = `${existing.slice(0, range.start)}${existing.slice(range.end)}`;
@@ -51,6 +58,7 @@ export async function removeManagedSection(file: string): Promise<void> {
   } else {
     await rm(file, { force: true });
   }
+  return 'removed';
 }
 
 function appendManagedSection(existing: string, section: string): string {
