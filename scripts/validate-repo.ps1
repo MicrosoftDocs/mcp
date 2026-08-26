@@ -376,8 +376,6 @@ if (-not (Test-Path $cliDir)) {
         "src/mcp/tool-discovery.ts",
         "assets/microsoft-learn-cli/SKILL.md",
         "assets/microsoft-learn-cli/INSTRUCTIONS.md",
-        "assets/microsoft-learn-cli/CLAUDE.md",
-        "assets/microsoft-learn-cli/CODEX.md",
         "test/unit/cli.test.ts"
     )
 

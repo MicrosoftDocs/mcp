@@ -317,6 +317,11 @@ describe('runCli', () => {
       expect(skillContent).toContain('fetch');
       expect(skillContent).toContain('code-search');
       expect(instructionContent).toContain('microsoft-learn-cli');
+      if (flag === '--copilot') {
+        expect(instructionContent).toContain('applyTo: "**"');
+      } else {
+        expect(instructionContent).not.toContain('applyTo:');
+      }
     } finally {
       await test.cleanup();
     }
@@ -375,7 +380,9 @@ describe('runCli', () => {
         'utf8',
       );
       expect(await readFile(skillPath, 'utf8')).toBe(bundledSkill);
-      expect(await readFile(instructionPath, 'utf8')).toBe(bundledInstruction);
+      expect(await readFile(instructionPath, 'utf8')).toBe(
+        `---\napplyTo: "**"\n---\n\n${bundledInstruction}`,
+      );
     } finally {
       await test.cleanup();
     }

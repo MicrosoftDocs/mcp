@@ -38,6 +38,12 @@ export interface AgentDiscoveryAssets {
   instructionFile: string;
 }
 
+const COPILOT_INSTRUCTION_FRONTMATTER = `---
+applyTo: "**"
+---
+
+`;
+
 export function getSelectedDiscoveryAgents(options: DiscoveryAgentOptions): DiscoveryAgent[] {
   return DISCOVERY_AGENTS.filter((agent) => options[agent] === true);
 }
@@ -94,19 +100,17 @@ export function getAgentDiscoveryPaths(
   };
 }
 
-export function getAgentDiscoveryAssets(agent: DiscoveryAgent): AgentDiscoveryAssets {
-  const instructionAsset = {
-    copilot: 'INSTRUCTIONS.md',
-    claude: 'CLAUDE.md',
-    codex: 'CODEX.md',
-  } satisfies Record<DiscoveryAgent, string>;
-
+export function getAgentDiscoveryAssets(): AgentDiscoveryAssets {
   return {
     skillFile: fileURLToPath(new URL('../../assets/microsoft-learn-cli/SKILL.md', import.meta.url)),
     instructionFile: fileURLToPath(
-      new URL(`../../assets/microsoft-learn-cli/${instructionAsset[agent]}`, import.meta.url),
+      new URL('../../assets/microsoft-learn-cli/INSTRUCTIONS.md', import.meta.url),
     ),
   };
+}
+
+export function formatAgentInstruction(agent: DiscoveryAgent, content: string): string {
+  return agent === 'copilot' ? `${COPILOT_INSTRUCTION_FRONTMATTER}${content}` : content;
 }
 
 function getCodexHome(context: Pick<CliContext, 'cwd' | 'homeDir' | 'env'>): string {

@@ -5,6 +5,7 @@ import { Command } from 'commander';
 
 import type { CliContext } from '../context.js';
 import {
+  formatAgentInstruction,
   getAgentDiscoveryAssets,
   getAgentDiscoveryPaths,
   getSelectedDiscoveryAgents,
@@ -40,11 +41,12 @@ export function registerSetupCommand(program: Command, context: CliContext): voi
 
       for (const agent of agents) {
         const paths = getAgentDiscoveryPaths(agent, project, context);
-        const assets = getAgentDiscoveryAssets(agent);
-        const [skillContent, instructionContent] = await Promise.all([
+        const assets = getAgentDiscoveryAssets();
+        const [skillContent, baseInstructionContent] = await Promise.all([
           readFile(assets.skillFile, 'utf8'),
           readFile(assets.instructionFile, 'utf8'),
         ]);
+        const instructionContent = formatAgentInstruction(agent, baseInstructionContent);
 
         await mkdir(paths.skillDirectory, { recursive: true });
         await writeFile(paths.skillFile, skillContent, 'utf8');
