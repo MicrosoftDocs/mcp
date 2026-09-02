@@ -9,6 +9,6 @@
   "repository": "https://github.com/microsoftdocs/mcp",
   "license": "MIT",
   "keywords": ["microsoft", "docs", "azure", ".net", "windows", "api", "documentation", "rag", "dynamics", "powerbi", "office"],
-  "skills": ["plugins/microsoft-docs/skills/"],
-  "mcpServers": "plugins/microsoft-docs/.mcp.json"
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
 }

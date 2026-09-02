@@ -3,12 +3,16 @@
   "owner": {
     "name": "Microsoft"
   },
+  "metadata": {
+    "description": "Microsoft Learn documentation plugins for coding agents",
+    "version": "0.4.0"
+  },
   "plugins": [
     {
       "name": "microsoft-docs",
-      "source": "./plugins/microsoft-docs",
       "description": "Access official Microsoft documentation, API references, and code samples for Azure, .NET, Windows, and more.",
-      "version": "0.4.0"
+      "version": "0.4.0",
+      "source": "./plugins/microsoft-docs"
     }
   ]
 }

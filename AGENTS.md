@@ -1,24 +1,25 @@
 # AGENTS.md
 
-This repo is the community-facing repo for **Microsoft Learn MCP Server** — a remote MCP endpoint (`https://learn.microsoft.com/api/mcp`) that gives AI agents access to official Microsoft documentation. The repo also contains a CLI (`cli/`), agent skills (`skills/`), and plugin manifests for three ecosystems.
+This repo is the community-facing repo for **Microsoft Learn MCP Server** — a remote MCP endpoint (`https://learn.microsoft.com/api/mcp`) that gives AI agents access to official Microsoft documentation. The repo also contains a CLI (`cli/`), agent skills, and plugin manifests for three ecosystems.
 
 ## Plugin ecosystems
 
-The repo publishes plugin metadata for three ecosystems. `.claude-plugin/plugin.json` is the **source of truth** for shared plugin fields (name, description, version, author, etc.).
+The repo publishes plugin metadata for three ecosystems. The shared plugin package lives at `plugins/microsoft-docs/`; root-level files are marketplace catalogs or compatibility shims.
 
 **Shared assets** used across ecosystems:
-- `skills/` — agent skill packages (each subfolder has a `SKILL.md`)
-- `.mcp.json` — MCP server endpoint config
+- `plugins/microsoft-docs/skills/` — agent skill packages (each subfolder has a `SKILL.md`)
+- `plugins/microsoft-docs/.mcp.json` — MCP server endpoint config for Claude Code and GitHub Copilot CLI
+- `plugins/microsoft-docs/.codex.mcp.json` — Codex MCP server endpoint config, using Codex's documented direct server map shape
 
-**Claude** — `.claude-plugin/plugin.json` (source of truth) + `.claude-plugin/marketplace.json`
+**Claude** — `.claude-plugin/marketplace.json` points to `plugins/microsoft-docs/`; `plugins/microsoft-docs/.claude-plugin/plugin.json` defines the Claude package.
 
-**GitHub Copilot** — `.github/plugin/plugin.json` — must be an **exact copy** of `.claude-plugin/plugin.json`.
+**GitHub Copilot** — `.github/plugin/marketplace.json` points to `plugins/microsoft-docs/`; `plugins/microsoft-docs/plugin.json` defines the marketplace package; `.github/plugin/plugin.json` is a direct-install shim for `/plugin install microsoftdocs/mcp` and points to the shared package assets.
 
-**Codex** — `.codex-plugin/plugin.json` + `.agents/plugins/marketplace.json`. The plugin.json shares fields with Claude but adds Codex-only fields (`skills`, `mcpServers`, `interface`, `license`) that wire it to the shared assets. Keep asset paths relative to repo root (`./skills/`, `./.mcp.json`) — never use `..` paths. The marketplace file must point at `./`.
+**Codex** — `.agents/plugins/marketplace.json` points to `plugins/microsoft-docs/`; `plugins/microsoft-docs/.codex-plugin/plugin.json` defines the Codex package. Codex marketplace entries must point to a plugin subfolder such as `./plugins/microsoft-docs`; do not use `./`.
 
 ## Sync rules
 
-When editing shared plugin metadata, edit `.claude-plugin/plugin.json` first, then copy it verbatim to `.github/plugin/plugin.json` and update shared fields in `.codex-plugin/plugin.json` to match.
+When editing shared plugin metadata, keep identity fields aligned across all plugin manifests: `plugins/microsoft-docs/plugin.json`, `plugins/microsoft-docs/.claude-plugin/plugin.json`, `plugins/microsoft-docs/.codex-plugin/plugin.json`, and `.github/plugin/plugin.json`. The direct-install shim has repo-root-relative asset paths, so it must not be an exact copy of the package manifests.
 
 ## CLI
 
@@ -38,5 +39,5 @@ It enforces sync rules, skill structure, file existence, and marketplace wiring.
 
 - `README.md` is the primary user-facing document. Update it in the same change whenever install steps, plugin layout, skills, or CLI behavior change.
 - Make the smallest synchronized set of edits that keeps all three ecosystems coherent.
-- Do not reintroduce a nested `plugins/microsoft-docs` copy for Codex packaging.
+- Keep plugin runtime assets under `plugins/microsoft-docs/`; root-level plugin files are marketplace catalogs or compatibility shims only.
 - Prefer fixing drift immediately over documenting known inconsistency.

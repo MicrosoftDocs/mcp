@@ -1,14 +1,14 @@
 {
-  "name": "microsoftdocs-local",
+  "name": "microsoft-docs-marketplace",
   "interface": {
-    "displayName": "Microsoft Docs Local Plugins Marketplace"
+    "displayName": "Microsoft Docs"
   },
   "plugins": [
     {
       "name": "microsoft-docs",
       "source": {
         "source": "local",
-        "path": "./"
+        "path": "./plugins/microsoft-docs"
       },
       "policy": {
         "installation": "AVAILABLE",

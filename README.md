@@ -116,27 +116,44 @@ See [`cli/README.md`](cli/README.md) for the full command reference.
 
 | Skill | Purpose | Best For |
 |-------|---------|----------|
-| [`microsoft-docs`](skills/microsoft-docs/SKILL.md) | Understanding concepts, tutorials, architecture, limits | "How does X work?", learning, configuration guides |
-| [`microsoft-code-reference`](skills/microsoft-code-reference/SKILL.md) | API lookups, code samples, verification, error fixing | Implementing code, finding correct methods, troubleshooting |
-| [`microsoft-skill-creator`](skills/microsoft-skill-creator/SKILL.md) | Meta-skill that generates custom agent skills for any Microsoft technology | Creating a skill to teach agents about a new Azure library, .NET feature, or other Microsoft tech |
+| [`microsoft-docs`](plugins/microsoft-docs/skills/microsoft-docs/SKILL.md) | Understanding concepts, tutorials, architecture, limits | "How does X work?", learning, configuration guides |
+| [`microsoft-code-reference`](plugins/microsoft-docs/skills/microsoft-code-reference/SKILL.md) | API lookups, code samples, verification, error fixing | Implementing code, finding correct methods, troubleshooting |
+| [`microsoft-skill-creator`](plugins/microsoft-docs/skills/microsoft-skill-creator/SKILL.md) | Meta-skill that generates custom agent skills for any Microsoft technology | Creating a skill to teach agents about a new Azure library, .NET feature, or other Microsoft tech |
 
 ### Quick Setup
 
-These agent skills are packed in a `microsoft-docs` plugin together with the Learn MCP server itself. If you use Claude Code, run the following command and restart Claude Code:
+These agent skills are packed in a `microsoft-docs` plugin together with the Learn MCP server itself.
+
+If you use GitHub Copilot CLI, run:
+```
+/plugin install microsoftdocs/mcp
+```
+
+If you use Claude Code, add this repository as a marketplace and install the plugin:
+```
+/plugin marketplace add microsoftdocs/mcp
+/plugin install microsoft-docs@microsoft-docs-marketplace
+```
+
+If you use Codex CLI, add this repository as a marketplace, then install `microsoft-docs` from the Microsoft Docs marketplace in the plugin directory:
+```
+codex plugin marketplace add microsoftdocs/mcp
+codex plugin install microsoft-docs@microsoft-docs-marketplace
+```
+
+The plugin package lives under `plugins/microsoft-docs/` so all three coding agents can share the same skills and MCP configuration.
+
+Claude Code users can also install from the official Claude marketplace:
 ```
 /plugin install microsoft-docs@claude-plugins-official
 ```
 
-Or if you use GitHub Copilot CLI, run this command:
-```
-/plugin install microsoftdocs/mcp
-```
 Otherwise:
 1. **Install the MCP Server first** — See [Installation](#-installation--getting-started) below
 2. **Copy the skill folders** to your project's `.github/skills/` or `.claude/skills/` directory:
-   - [`microsoft-docs`](skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
-   - [`microsoft-code-reference`](skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
-   - [`microsoft-skill-creator`](skills/microsoft-skill-creator/) — meta-skill for generating custom skills about Microsoft technologies
+   - [`microsoft-docs`](plugins/microsoft-docs/skills/microsoft-docs/) — for concepts, tutorials, and factual lookups
+   - [`microsoft-code-reference`](plugins/microsoft-docs/skills/microsoft-code-reference/) — for API lookups, code samples, and troubleshooting
+   - [`microsoft-skill-creator`](plugins/microsoft-docs/skills/microsoft-skill-creator/) — meta-skill for generating custom skills about Microsoft technologies
 
 ### Supported Agents
 
@@ -164,10 +181,10 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=microsoft-learn&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Flearn.microsoft.com%2Fapi%2Fmcp%22%7D) <br/> or search "@mcp learn" in Extensions to show "Microsoft Learn" MCP | [VS Code MCP Official Guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) |
 | **GitHub Copilot CLI** | `/plugin install microsoftdocs/mcp` | |
 | **Claude Desktop** | Follow "Add custom connector" instructions in official guide. | [Claude Desktop Remote MCP Guide](https://modelcontextprotocol.io/docs/develop/connect-remote-servers) |
-| **Claude Code** | `/plugin install microsoft-docs@claude-plugins-official` (includes MCP server + skills) | [Claude Code Remote MCP Guide](https://code.claude.com/docs/en/mcp) |
+| **Claude Code** | `/plugin marketplace add microsoftdocs/mcp` then `/plugin install microsoft-docs@microsoft-docs-marketplace` (includes MCP server + skills) | [Claude Code Remote MCP Guide](https://code.claude.com/docs/en/mcp) |
 | **Visual Studio** | Upgrade to latest VS 2022 or 2026, "Microsoft Learn" MCP is already built-in | [Visual Studio MCP Official Guide](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=vs-2022) |
 | **Cursor IDE** | [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=microsoft-learn&config=eyJuYW1lIjoibWljcm9zb2Z0LWxlYXJuIiwidHlwZSI6Imh0dHAiLCJ1cmwiOiJodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vYXBpL21jcCJ9) | [Cursor MCP Official Guide](https://docs.cursor.com/context/model-context-protocol) |
-| **Codex** | `codex mcp add "microsoft-learn" --url "https://learn.microsoft.com/api/mcp"`| [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers) |
+| **Codex** | `codex plugin marketplace add microsoftdocs/mcp`, then install `microsoft-docs` from the Microsoft Docs marketplace. For MCP-only setup, use `codex mcp add "microsoft-learn" --url "https://learn.microsoft.com/api/mcp"` | [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers) |
 | **Roo Code** | Open [Roo Code Marketplace](https://docs.roocode.com/features/marketplace), search for `Microsoft Learn`, and click `Install` | [Roo Code MCP Official Guide](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
 | **Cline** | Manual configuration required<br/>Use `"type": "streamableHttp"` | [Cline MCP Official Guide](https://docs.cline.bot/mcp/connecting-to-a-remote-server) |
 | **Gemini CLI** | Manual configuration required<br/> <details><summary>View Config</summary>**Note**: Add an `mcpServer` object to `.gemini/settings.json` file<br/><pre>{<br/>  "Microsoft Learn MCP Server": {<br/>     "httpUrl": "https://learn.microsoft.com/api/mcp" <br/>   }<br/>}</pre></details>  | [How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)|

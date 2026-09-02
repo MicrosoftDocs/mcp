@@ -1,7 +1,7 @@
 {
   "name": "microsoft-docs",
   "description": "Access official Microsoft documentation, API references, and code samples for Azure, .NET, Windows, and more.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": {
     "name": "Microsoft"
   },
@@ -10,7 +10,7 @@
   "license": "MIT",
   "keywords": ["microsoft", "docs", "azure", ".net", "windows", "api", "documentation", "rag", "dynamics", "powerbi", "office"],
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
+  "mcpServers": "./.codex.mcp.json",
   "interface": {
     "displayName": "Microsoft Docs",
     "shortDescription": "Search official Microsoft docs and code samples.",

@@ -1,50 +1,45 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Validates the repository structure for the Claude plugin, the repo-local Codex plugin, agent skills, MCP config, and CLI.
+    Validates the repository structure for the Microsoft Docs plugin package.
 
 .DESCRIPTION
-    This script validates that all required files and folders exist for:
-    
-    1. Claude Plugin (.claude-plugin/)
-       - marketplace.json  : Plugin metadata for Claude marketplace
-       - plugin.json       : Plugin configuration and capabilities
-
-    1b. Codex Plugin (repo-local)
-        - .agents/plugins/marketplace.json : Local marketplace entry that makes the plugin appear in `codex /plugins`
-        - .codex-plugin/plugin.json        : Plugin manifest for the repo-root OpenAI Codex plugin
-    
-    2. Agent Skills (skills/)
-       - Each subfolder must contain a SKILL.md file describing the skill
-       - Skills help AI agents use MCP tools more effectively
-     
-    3. MCP Configuration (.mcp.json)
-       - Root-level MCP server configuration
-
-    4. CLI (cli/)
-       - TypeScript source, tests, and package metadata for the in-repo Learn CLI
-
-    Run this script to verify your changes before submitting a PR.
-
-.EXAMPLE
-    ./scripts/validate-repo.ps1
+    The repo exposes one shared plugin package under plugins/microsoft-docs/
+    and root-level marketplace/shim files for Codex, Claude Code, and GitHub
+    Copilot CLI.
 #>
 
 $ErrorActionPreference = "Stop"
-$script:hasErrors = $false
+$script:HasErrors = $false
 $repoRoot = Split-Path -Parent $PSScriptRoot
 
+$pluginName = "microsoft-docs"
+$pluginDir = Join-Path (Join-Path $repoRoot "plugins") "microsoft-docs"
+$skillsDir = Join-Path $pluginDir "skills"
+$mcpJson = Join-Path $pluginDir ".mcp.json"
+$codexMcpJson = Join-Path $pluginDir ".codex.mcp.json"
+
+$codexMarketplaceJson = Join-Path (Join-Path (Join-Path $repoRoot ".agents") "plugins") "marketplace.json"
+$claudeMarketplaceJson = Join-Path (Join-Path $repoRoot ".claude-plugin") "marketplace.json"
+$copilotMarketplaceJson = Join-Path (Join-Path (Join-Path $repoRoot ".github") "plugin") "marketplace.json"
+$copilotShimJson = Join-Path (Join-Path (Join-Path $repoRoot ".github") "plugin") "plugin.json"
+
+$copilotPackageJson = Join-Path $pluginDir "plugin.json"
+$claudePackageJson = Join-Path (Join-Path $pluginDir ".claude-plugin") "plugin.json"
+$codexPackageJson = Join-Path (Join-Path $pluginDir ".codex-plugin") "plugin.json"
+
 function Write-ValidationError($message) {
-    Write-Host "❌ ERROR: $message" -ForegroundColor Red
-    $script:hasErrors = $true
+    Write-Host "[ERROR] $message" -ForegroundColor Red
+    $script:HasErrors = $true
 }
 
 function Write-ValidationSuccess($message) {
-    Write-Host "✅ $message" -ForegroundColor Green
+    Write-Host "[OK] $message" -ForegroundColor Green
 }
 
 function Write-ValidationHeader($message) {
-    Write-Host "`n📋 $message" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host $message -ForegroundColor Cyan
     Write-Host ("-" * 50) -ForegroundColor Gray
 }
 
@@ -57,307 +52,198 @@ function Test-ValidJson($path) {
     }
 }
 
-# ============================================================================
-# Validation 1: Claude Plugin Files
-# The .claude-plugin folder contains configuration for Claude marketplace
-# ============================================================================
-Write-ValidationHeader "Validating Claude Plugin (.claude-plugin/)"
+function Get-Json($path) {
+    return Get-Content $path -Raw | ConvertFrom-Json
+}
 
-$claudePluginFiles = @(
-    "marketplace.json",  # Plugin metadata (name, description, author, etc.)
-    "plugin.json"        # Plugin capabilities and MCP server reference
+function Test-RequiredFile($path, $label) {
+    if (Test-Path $path) {
+        Write-ValidationSuccess "Found: $label"
+        if ($path.EndsWith(".json")) {
+            if (Test-ValidJson $path) {
+                Write-ValidationSuccess "Valid JSON: $label"
+            } else {
+                Write-ValidationError "Invalid JSON: $label"
+            }
+        }
+    } else {
+        Write-ValidationError "Missing: $label"
+    }
+}
+
+function Test-Equal($actual, $expected, $message) {
+    if ("$actual" -eq "$expected") {
+        Write-ValidationSuccess $message
+    } else {
+        Write-ValidationError "$message Expected '$expected', got '$actual'."
+    }
+}
+
+function Test-StringArrayEqual($actual, $expected, $message) {
+    $actualJoined = (@($actual) | Sort-Object) -join ","
+    $expectedJoined = (@($expected) | Sort-Object) -join ","
+    if ($actualJoined -eq $expectedJoined) {
+        Write-ValidationSuccess $message
+    } else {
+        Write-ValidationError "$message Expected '$expectedJoined', got '$actualJoined'."
+    }
+}
+
+function Test-SharedIdentity($actualObj, $expectedObj, $label) {
+    $fields = @("name", "description", "version", "homepage", "repository", "license")
+    foreach ($field in $fields) {
+        Test-Equal $actualObj.$field $expectedObj.$field "$label field '$field' matches package manifest"
+    }
+
+    Test-Equal $actualObj.author.name $expectedObj.author.name "$label field 'author.name' matches package manifest"
+    Test-StringArrayEqual $actualObj.keywords $expectedObj.keywords "$label field 'keywords' matches package manifest"
+}
+
+Write-ValidationHeader "Validating required plugin files"
+
+$requiredFiles = @(
+    @{ Path = $codexMarketplaceJson; Label = ".agents/plugins/marketplace.json" },
+    @{ Path = $claudeMarketplaceJson; Label = ".claude-plugin/marketplace.json" },
+    @{ Path = $copilotMarketplaceJson; Label = ".github/plugin/marketplace.json" },
+    @{ Path = $copilotShimJson; Label = ".github/plugin/plugin.json" },
+    @{ Path = $copilotPackageJson; Label = "plugins/microsoft-docs/plugin.json" },
+    @{ Path = $claudePackageJson; Label = "plugins/microsoft-docs/.claude-plugin/plugin.json" },
+    @{ Path = $codexPackageJson; Label = "plugins/microsoft-docs/.codex-plugin/plugin.json" },
+    @{ Path = $mcpJson; Label = "plugins/microsoft-docs/.mcp.json" },
+    @{ Path = $codexMcpJson; Label = "plugins/microsoft-docs/.codex.mcp.json" }
 )
 
-foreach ($file in $claudePluginFiles) {
-    $path = Join-Path $repoRoot ".claude-plugin" $file
-    if (Test-Path $path) {
-        Write-ValidationSuccess "Found: .claude-plugin/$file"
-        if (Test-ValidJson $path) {
-            Write-ValidationSuccess "Valid JSON: .claude-plugin/$file"
-        } else {
-            Write-ValidationError "Invalid JSON: .claude-plugin/$file"
-        }
+foreach ($file in $requiredFiles) {
+    Test-RequiredFile $file.Path $file.Label
+}
+
+$unexpectedRootPluginFiles = @(
+    @{ Path = Join-Path (Join-Path $repoRoot ".claude-plugin") "plugin.json"; Label = ".claude-plugin/plugin.json" },
+    @{ Path = Join-Path (Join-Path $repoRoot ".codex-plugin") "plugin.json"; Label = ".codex-plugin/plugin.json" },
+    @{ Path = Join-Path $repoRoot ".mcp.json"; Label = ".mcp.json" },
+    @{ Path = Join-Path $repoRoot "skills"; Label = "skills/" }
+)
+
+foreach ($item in $unexpectedRootPluginFiles) {
+    if (Test-Path $item.Path) {
+        Write-ValidationError "Unexpected root plugin artifact remains: $($item.Label)"
     } else {
-        Write-ValidationError "Missing: .claude-plugin/$file"
+        Write-ValidationSuccess "No root plugin artifact: $($item.Label)"
     }
 }
 
-# ============================================================================
-# Validation 1b: Plugin JSON Sync
-# .claude-plugin/plugin.json and .github/plugin/plugin.json must stay in sync.
-# .claude-plugin/plugin.json is the source of truth; .github/plugin/plugin.json
-# is consumed by GitHub and must mirror it exactly.
-# ============================================================================
-Write-ValidationHeader "Validating plugin.json sync"
+Write-ValidationHeader "Validating marketplace wiring"
 
-$claudePluginJson = Join-Path $repoRoot ".claude-plugin" "plugin.json"
-$githubPluginJson = Join-Path $repoRoot ".github" "plugin" "plugin.json"
+if ((Test-ValidJson $codexMarketplaceJson) -and (Test-ValidJson $claudeMarketplaceJson) -and (Test-ValidJson $copilotMarketplaceJson)) {
+    $codexMarketplace = Get-Json $codexMarketplaceJson
+    $claudeMarketplace = Get-Json $claudeMarketplaceJson
+    $copilotMarketplace = Get-Json $copilotMarketplaceJson
 
-if ((Test-Path $claudePluginJson) -and (Test-Path $githubPluginJson)) {
-    $claudeContent = Get-Content $claudePluginJson -Raw
-    $githubContent = Get-Content $githubPluginJson -Raw
-    if ($claudeContent -eq $githubContent) {
-        Write-ValidationSuccess "plugin.json files are in sync (.claude-plugin/ and .github/plugin/)"
+    Test-Equal $codexMarketplace.name "microsoft-docs-marketplace" "Codex marketplace name is aligned"
+    Test-Equal $codexMarketplace.interface.displayName "Microsoft Docs" "Codex marketplace display name is set"
+
+    $codexEntry = $codexMarketplace.plugins | Where-Object { $_.name -eq $pluginName } | Select-Object -First 1
+    if ($null -eq $codexEntry) {
+        Write-ValidationError "Missing Codex marketplace entry '$pluginName'"
     } else {
-        Write-ValidationError "plugin.json drift detected: .claude-plugin/plugin.json and .github/plugin/plugin.json differ. Update both files or copy from the source of truth (.claude-plugin/plugin.json)."
-    }
-} elseif (-not (Test-Path $githubPluginJson)) {
-    Write-ValidationError "Missing: .github/plugin/plugin.json"
-} else {
-    # .claude-plugin/plugin.json missing is already reported in Validation 1
-}
-
-# ============================================================================
-# Validation 1c: Codex Plugin Files
-# Codex uses a repo-local marketplace entry that points at the repository root,
-# where `.codex-plugin/plugin.json` defines the plugin shown in `codex /plugins`.
-# ============================================================================
-Write-ValidationHeader "Validating Codex Plugin (repo-local marketplace)"
-
-$codexPluginName = "microsoft-docs"
-$codexMarketplaceJson = Join-Path $repoRoot ".agents" "plugins" "marketplace.json"
-$codexPluginDir = $repoRoot
-$codexPluginJson = Join-Path $codexPluginDir ".codex-plugin" "plugin.json"
-
-if (Test-Path $codexMarketplaceJson) {
-    Write-ValidationSuccess "Found: .agents/plugins/marketplace.json"
-    if (Test-ValidJson $codexMarketplaceJson) {
-        Write-ValidationSuccess "Valid JSON: .agents/plugins/marketplace.json"
-    } else {
-        Write-ValidationError "Invalid JSON: .agents/plugins/marketplace.json"
-    }
-} else {
-    Write-ValidationError "Missing: .agents/plugins/marketplace.json"
-}
-
-if (Test-Path $codexPluginJson) {
-    Write-ValidationSuccess "Found: .codex-plugin/plugin.json"
-    if (Test-ValidJson $codexPluginJson) {
-        Write-ValidationSuccess "Valid JSON: .codex-plugin/plugin.json"
-    } else {
-        Write-ValidationError "Invalid JSON: .codex-plugin/plugin.json"
-    }
-} else {
-    Write-ValidationError "Missing: .codex-plugin/plugin.json"
-}
-
-# ============================================================================
-# Validation 1d: Codex Marketplace Wiring
-# The local marketplace entry must point to the repository root plugin and
-# include the policy fields required for Codex to show the plugin in /plugins.
-# ============================================================================
-Write-ValidationHeader "Validating Codex marketplace wiring"
-
-if ((Test-Path $codexMarketplaceJson) -and (Test-ValidJson $codexMarketplaceJson)) {
-    $marketplaceObj = Get-Content $codexMarketplaceJson -Raw | ConvertFrom-Json
-    $marketplaceEntry = $marketplaceObj.plugins | Where-Object { $_.name -eq $codexPluginName } | Select-Object -First 1
-
-    if ([string]::IsNullOrWhiteSpace($marketplaceObj.name) -or $marketplaceObj.name.StartsWith("[TODO:")) {
-        Write-ValidationError "Codex marketplace root 'name' must be set to a real value."
-    } else {
-        Write-ValidationSuccess "Codex marketplace root name is set"
+        Test-Equal $codexEntry.source.source "local" "Codex marketplace entry uses local source"
+        Test-Equal $codexEntry.source.path "./plugins/microsoft-docs" "Codex marketplace entry points to plugin subfolder"
+        Test-Equal $codexEntry.policy.installation "AVAILABLE" "Codex marketplace policy.installation is set"
+        Test-Equal $codexEntry.policy.authentication "ON_INSTALL" "Codex marketplace policy.authentication is set"
+        Test-Equal $codexEntry.category "Productivity" "Codex marketplace category is set"
     }
 
-    if ([string]::IsNullOrWhiteSpace($marketplaceObj.interface.displayName) -or $marketplaceObj.interface.displayName.StartsWith("[TODO:")) {
-        Write-ValidationError "Codex marketplace interface.displayName must be set to a real value."
+    $claudeEntry = $claudeMarketplace.plugins | Where-Object { $_.name -eq $pluginName } | Select-Object -First 1
+    if ($null -eq $claudeEntry) {
+        Write-ValidationError "Missing Claude marketplace entry '$pluginName'"
     } else {
-        Write-ValidationSuccess "Codex marketplace display name is set"
+        Test-Equal $claudeEntry.source "./plugins/microsoft-docs" "Claude marketplace entry points to plugin subfolder"
     }
 
-    if ($null -eq $marketplaceEntry) {
-        Write-ValidationError "Missing plugin entry '$codexPluginName' in .agents/plugins/marketplace.json"
+    $copilotEntry = $copilotMarketplace.plugins | Where-Object { $_.name -eq $pluginName } | Select-Object -First 1
+    if ($null -eq $copilotEntry) {
+        Write-ValidationError "Missing Copilot marketplace entry '$pluginName'"
     } else {
-        Write-ValidationSuccess "Found marketplace entry for '$codexPluginName'"
-
-        if ($marketplaceEntry.source.source -ne "local") {
-            Write-ValidationError "Codex marketplace entry '$codexPluginName' must use source.source = 'local'."
-        } else {
-            Write-ValidationSuccess "Codex marketplace entry uses local source"
-        }
-
-        $expectedPluginPath = "./"
-        if ($marketplaceEntry.source.path -ne $expectedPluginPath) {
-            Write-ValidationError "Codex marketplace entry '$codexPluginName' must use source.path = '$expectedPluginPath'."
-        } else {
-            Write-ValidationSuccess "Codex marketplace entry points to $expectedPluginPath"
-        }
-
-        if ([string]::IsNullOrWhiteSpace($marketplaceEntry.policy.installation)) {
-            Write-ValidationError "Codex marketplace entry '$codexPluginName' is missing policy.installation."
-        } else {
-            Write-ValidationSuccess "Codex marketplace entry includes policy.installation"
-        }
-
-        if ([string]::IsNullOrWhiteSpace($marketplaceEntry.policy.authentication)) {
-            Write-ValidationError "Codex marketplace entry '$codexPluginName' is missing policy.authentication."
-        } else {
-            Write-ValidationSuccess "Codex marketplace entry includes policy.authentication"
-        }
-
-        if ([string]::IsNullOrWhiteSpace($marketplaceEntry.category)) {
-            Write-ValidationError "Codex marketplace entry '$codexPluginName' is missing category."
-        } else {
-            Write-ValidationSuccess "Codex marketplace entry includes category"
-        }
+        Test-Equal $copilotEntry.source "./plugins/microsoft-docs" "Copilot marketplace entry points to plugin subfolder"
     }
 }
 
-# ============================================================================
-# Validation 1e: Codex Plugin JSON Sync
-# The shared fields in the repo-root Codex plugin.json must match the source of
-# truth (.claude-plugin/plugin.json). The Codex file may have additional fields
-# (skills, mcpServers, interface) that are not present in the Claude file.
-# ============================================================================
-Write-ValidationHeader "Validating Codex plugin.json sync"
+Write-ValidationHeader "Validating plugin manifests"
 
-if ((Test-Path $claudePluginJson) -and (Test-ValidJson $claudePluginJson) -and (Test-Path $codexPluginJson) -and (Test-ValidJson $codexPluginJson)) {
-    $claudeObj = Get-Content $claudePluginJson -Raw | ConvertFrom-Json
-    $codexObj  = Get-Content $codexPluginJson  -Raw | ConvertFrom-Json
+if ((Test-ValidJson $copilotPackageJson) -and (Test-ValidJson $claudePackageJson) -and (Test-ValidJson $codexPackageJson) -and (Test-ValidJson $copilotShimJson)) {
+    $copilotPackage = Get-Json $copilotPackageJson
+    $claudePackage = Get-Json $claudePackageJson
+    $codexPackage = Get-Json $codexPackageJson
+    $copilotShim = Get-Json $copilotShimJson
 
-    $sharedKeys = @("name", "description", "version", "homepage", "repository")
-    $syncOk = $true
+    Test-SharedIdentity $claudePackage $copilotPackage "Claude package manifest"
+    Test-SharedIdentity $codexPackage $copilotPackage "Codex package manifest"
+    Test-SharedIdentity $copilotShim $copilotPackage "Copilot direct-install shim"
 
-    foreach ($key in $sharedKeys) {
-        $claudeVal = $claudeObj.$key
-        $codexVal  = $codexObj.$key
-        if ("$claudeVal" -ne "$codexVal") {
-            Write-ValidationError "Codex plugin.json field '$key' differs from source of truth (.claude-plugin/plugin.json). Expected '$claudeVal', got '$codexVal'."
-            $syncOk = $false
-        }
-    }
+    Test-StringArrayEqual $copilotPackage.skills @("skills/") "Copilot package skills path is plugin-root relative"
+    Test-Equal $copilotPackage.mcpServers ".mcp.json" "Copilot package MCP path is plugin-root relative"
 
-    if ($claudeObj.author.name -ne $codexObj.author.name) {
-        Write-ValidationError "Codex plugin.json field 'author.name' differs from source of truth. Expected '$($claudeObj.author.name)', got '$($codexObj.author.name)'."
-        $syncOk = $false
-    }
+    Test-Equal $claudePackage.skills "./skills/" "Claude package skills path is plugin-root relative"
+    Test-Equal $claudePackage.mcpServers "./.mcp.json" "Claude package MCP path is plugin-root relative"
 
-    $claudeKw = ($claudeObj.keywords | Sort-Object) -join ","
-    $codexKw  = ($codexObj.keywords  | Sort-Object) -join ","
-    if ($claudeKw -ne $codexKw) {
-        Write-ValidationError "Codex plugin.json 'keywords' differ from source of truth (.claude-plugin/plugin.json)."
-        $syncOk = $false
-    }
+    Test-Equal $codexPackage.skills "./skills/" "Codex package skills path is plugin-root relative"
+    Test-Equal $codexPackage.mcpServers "./.codex.mcp.json" "Codex package MCP path is plugin-root relative"
 
-    $codexPluginRoot = $codexPluginDir
-    $skillsPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.skills))).TrimEnd('\', '/')
-    $mcpServersPath = ([System.IO.Path]::GetFullPath((Join-Path $codexPluginRoot $codexObj.mcpServers))).TrimEnd('\', '/')
-    $repoMcpJsonPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot ".mcp.json"))).TrimEnd('\', '/')
-    $repoSkillsPath = ([System.IO.Path]::GetFullPath((Join-Path $repoRoot "skills"))).TrimEnd('\', '/')
-
-    if ($codexObj.skills -ne "./skills/") {
-        Write-ValidationError "Codex plugin.json field 'skills' must be './skills/'."
-        $syncOk = $false
-    } elseif (-not (Test-Path $skillsPath)) {
-        Write-ValidationError "Codex plugin.json 'skills' path does not resolve to an existing directory: $skillsPath"
-        $syncOk = $false
-    } elseif ($skillsPath -ne $repoSkillsPath) {
-        Write-ValidationError "Codex plugin.json 'skills' path must resolve to the repo root skills directory: $repoSkillsPath"
-        $syncOk = $false
-    } else {
-        Write-ValidationSuccess "Codex plugin.json skills path resolves to repo root skills/"
-    }
-
-    if ($codexObj.mcpServers -ne "./.mcp.json") {
-        Write-ValidationError "Codex plugin.json field 'mcpServers' must be './.mcp.json'."
-        $syncOk = $false
-    } elseif (-not (Test-Path $mcpServersPath)) {
-        Write-ValidationError "Codex plugin.json 'mcpServers' path does not resolve to an existing file: $mcpServersPath"
-        $syncOk = $false
-    } elseif ($mcpServersPath -ne $repoMcpJsonPath) {
-        Write-ValidationError "Codex plugin.json 'mcpServers' path must resolve to repo root .mcp.json: $repoMcpJsonPath"
-        $syncOk = $false
-    } else {
-        Write-ValidationSuccess "Codex plugin.json MCP server path resolves to repo root .mcp.json"
-    }
-
-    if ($codexObj.name -ne $codexPluginName) {
-        Write-ValidationError "Codex plugin.json name must be '$codexPluginName'."
-        $syncOk = $false
-    }
-
-    if ($syncOk) {
-        Write-ValidationSuccess "Codex plugin.json is in sync with source of truth and wired to repo-root assets"
-    }
-} elseif (-not (Test-Path $codexPluginJson)) {
-    # Already reported above
-} else {
-    # .claude-plugin/plugin.json missing is already reported in Validation 1
+    Test-StringArrayEqual $copilotShim.skills @("plugins/microsoft-docs/skills/") "Copilot shim skills path is repo-root relative"
+    Test-Equal $copilotShim.mcpServers "plugins/microsoft-docs/.mcp.json" "Copilot shim MCP path is repo-root relative"
 }
 
-# ============================================================================
-# Validation 2: Agent Skills Structure
-# Each skill folder under /skills must have a SKILL.md describing the skill
-# ============================================================================
-Write-ValidationHeader "Validating Agent Skills (skills/)"
+Write-ValidationHeader "Validating skills and MCP config"
 
-$skillsDir = Join-Path $repoRoot "skills"
-
-if (-not (Test-Path $skillsDir)) {
-    Write-ValidationError "Missing: skills/ directory"
-} else {
+if (Test-Path $skillsDir) {
+    Write-ValidationSuccess "Found: plugins/microsoft-docs/skills/"
     $skillFolders = Get-ChildItem -Path $skillsDir -Directory
-    
     if ($skillFolders.Count -eq 0) {
-        Write-ValidationError "No skill folders found in skills/"
+        Write-ValidationError "No skill folders found in plugins/microsoft-docs/skills/"
     } else {
         foreach ($folder in $skillFolders) {
             $skillMd = Join-Path $folder.FullName "SKILL.md"
             if (Test-Path $skillMd) {
-                Write-ValidationSuccess "Found: skills/$($folder.Name)/SKILL.md"
+                Write-ValidationSuccess "Found: plugins/microsoft-docs/skills/$($folder.Name)/SKILL.md"
             } else {
-                Write-ValidationError "Missing: skills/$($folder.Name)/SKILL.md - Each skill folder must have a SKILL.md file"
+                Write-ValidationError "Missing: plugins/microsoft-docs/skills/$($folder.Name)/SKILL.md"
             }
         }
     }
-}
-
-# ============================================================================
-# Validation 3: MCP Configuration
-# The .mcp.json file at repo root defines MCP server settings
-# ============================================================================
-Write-ValidationHeader "Validating MCP Configuration (.mcp.json)"
-
-$mcpJsonPath = Join-Path $repoRoot ".mcp.json"
-if (Test-Path $mcpJsonPath) {
-    Write-ValidationSuccess "Found: .mcp.json"
-    if (Test-ValidJson $mcpJsonPath) {
-        Write-ValidationSuccess "Valid JSON: .mcp.json"
-    } else {
-        Write-ValidationError "Invalid JSON: .mcp.json"
-    }
 } else {
-    Write-ValidationError "Missing: .mcp.json at repository root"
+    Write-ValidationError "Missing: plugins/microsoft-docs/skills/"
 }
 
-# ============================================================================
-# Validation 4: CLI Structure
-# The cli folder contains the open source CLI implementation
-# ============================================================================
-Write-ValidationHeader "Validating CLI (cli/)"
+if (Test-ValidJson $mcpJson) {
+    $mcpObj = Get-Json $mcpJson
+    if ($null -eq $mcpObj.mcpServers."microsoft-learn") {
+        Write-ValidationError "Claude/Copilot .mcp.json is missing mcpServers.microsoft-learn."
+    } else {
+        Test-Equal $mcpObj.mcpServers."microsoft-learn".url "https://learn.microsoft.com/api/mcp" "Claude/Copilot MCP server URL is set"
+    }
+}
+
+if (Test-ValidJson $codexMcpJson) {
+    $codexMcpObj = Get-Json $codexMcpJson
+    if ($null -ne $codexMcpObj.mcpServers) {
+        Write-ValidationError "Codex .codex.mcp.json should use a direct server map, not a camelCase mcpServers wrapper."
+    } elseif ($null -eq $codexMcpObj."microsoft-learn") {
+        Write-ValidationError "Codex .codex.mcp.json is missing the microsoft-learn server entry."
+    } else {
+        Test-Equal $codexMcpObj."microsoft-learn".url "https://learn.microsoft.com/api/mcp" "Codex MCP server URL is set"
+    }
+}
+
+Write-ValidationHeader "Validating CLI"
 
 $cliDir = Join-Path $repoRoot "cli"
 if (-not (Test-Path $cliDir)) {
-    Write-ValidationError "Missing: cli/ directory"
+    Write-ValidationError "Missing: cli/"
 } else {
-    Write-ValidationSuccess "Found: cli/ directory"
-
-    $cliJsonFiles = @(
-        "package.json",
-        "tsconfig.json"
-    )
-
-    foreach ($file in $cliJsonFiles) {
+    Write-ValidationSuccess "Found: cli/"
+    foreach ($file in @("package.json", "tsconfig.json")) {
         $path = Join-Path $cliDir $file
-        if (Test-Path $path) {
-            Write-ValidationSuccess "Found: cli/$file"
-            if (Test-ValidJson $path) {
-                Write-ValidationSuccess "Valid JSON: cli/$file"
-            } else {
-                Write-ValidationError "Invalid JSON: cli/$file"
-            }
-        } else {
-            Write-ValidationError "Missing: cli/$file"
-        }
+        Test-RequiredFile $path "cli/$file"
     }
 
     $cliRequiredFiles = @(
@@ -382,14 +268,12 @@ if (-not (Test-Path $cliDir)) {
     }
 }
 
-# ============================================================================
-# Summary
-# ============================================================================
-Write-Host "`n" ("-" * 50) -ForegroundColor Gray
-if ($script:hasErrors) {
-    Write-Host "❌ Validation FAILED - Please fix the errors above" -ForegroundColor Red
+Write-Host ""
+Write-Host ("-" * 50) -ForegroundColor Gray
+if ($script:HasErrors) {
+    Write-Host "Validation FAILED" -ForegroundColor Red
     exit 1
-} else {
-    Write-Host "✅ All validations PASSED" -ForegroundColor Green
-    exit 0
 }
+
+Write-Host "All validations PASSED" -ForegroundColor Green
+exit 0
