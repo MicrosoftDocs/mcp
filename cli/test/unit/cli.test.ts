@@ -429,6 +429,39 @@ describe('runCli', () => {
     }
   });
 
+  it('matches a Codex managed end marker only after its start marker', async () => {
+    const test = await createFilesystemTestContext();
+    const agentsFile = join(test.cwd, 'AGENTS.md');
+    const orphanEndMarker = '<!-- mslearn:microsoft-learn-cli:end -->';
+    const existingSection = [
+      orphanEndMarker,
+      '# Existing instructions',
+      '<!-- mslearn:microsoft-learn-cli:start -->',
+      'stale content',
+      orphanEndMarker,
+      '',
+    ].join('\n');
+
+    try {
+      await writeFile(agentsFile, existingSection, 'utf8');
+
+      expect(
+        await runCli(
+          ['node', 'mslearn', 'setup', '--cli', '--codex', '--project'],
+          test.context,
+        ),
+      ).toBe(0);
+
+      const installedContent = await readFile(agentsFile, 'utf8');
+      expect(installedContent.startsWith(`${orphanEndMarker}\n# Existing instructions\n`)).toBe(true);
+      expect(installedContent).not.toContain('stale content');
+      expect(installedContent.match(/mslearn:microsoft-learn-cli:start/g)).toHaveLength(1);
+      expect(installedContent.match(/mslearn:microsoft-learn-cli:end/g)).toHaveLength(2);
+    } finally {
+      await test.cleanup();
+    }
+  });
+
   it('uses an existing non-empty Codex AGENTS.override.md without changing AGENTS.md', async () => {
     const test = await createFilesystemTestContext();
     const agentsFile = join(test.cwd, 'AGENTS.md');

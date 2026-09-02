@@ -155,7 +155,7 @@ To build and test from source:
 ```bash
 cd cli
 npm install
-npm.cmd run build
-npm.cmd test
+npm run build
+npm test
 node dist/index.js --help
 ```

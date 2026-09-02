@@ -72,13 +72,16 @@ function appendManagedSection(existing: string, section: string): string {
 
 function findManagedSection(content: string, file: string): ManagedSectionRange | undefined {
   const start = content.indexOf(MANAGED_SECTION_START);
-  const endMarkerStart = content.indexOf(MANAGED_SECTION_END);
+  const endMarkerStart =
+    start === -1
+      ? content.indexOf(MANAGED_SECTION_END)
+      : content.indexOf(MANAGED_SECTION_END, start + MANAGED_SECTION_START.length);
 
   if (start === -1 && endMarkerStart === -1) {
     return undefined;
   }
 
-  if (start === -1 || endMarkerStart === -1 || endMarkerStart < start) {
+  if (start === -1 || endMarkerStart === -1) {
     throw new OperationError(`Managed Microsoft Learn CLI markers are incomplete in ${file}.`);
   }
 
