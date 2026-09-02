@@ -4,6 +4,8 @@ import { Command } from 'commander';
 
 import type { CliContext } from '../context.js';
 import {
+  detectConfiguredDiscoveryAgents,
+  formatDiscoveryAgentNames,
   getAgentDiscoveryPaths,
   getSelectedDiscoveryAgents,
   type DiscoveryAgentOptions,
@@ -30,9 +32,23 @@ export function registerRemoveCommand(program: Command, context: CliContext): vo
 
       const project = options.project ?? false;
       const scope = project ? 'project' : 'global';
-      context.writeOut('\n');
+      const explicitAgents = getSelectedDiscoveryAgents(options);
+      const agents =
+        explicitAgents.length > 0
+          ? explicitAgents
+          : await detectConfiguredDiscoveryAgents(project, context);
+      if (agents.length === 0) {
+        throw new UsageError(
+          'No Microsoft Learn CLI agent discovery detected. Pass --copilot, --claude, or --codex.',
+        );
+      }
 
-      for (const agent of getSelectedDiscoveryAgents(options)) {
+      context.writeOut('\n');
+      if (explicitAgents.length === 0) {
+        context.writeOut(`  Detected: ${formatDiscoveryAgentNames(agents, project, context)}\n\n`);
+      }
+
+      for (const agent of agents) {
         const paths = getAgentDiscoveryPaths(agent, project, context);
 
         const skillStatus = await removeFileIfPresent(paths.skillFile);
@@ -80,10 +96,6 @@ function validateRemoveOptions(options: RemoveCommandOptions): asserts options i
 } {
   if (!options.cli) {
     throw new UsageError('--cli is required. Run "mslearn remove --cli --copilot".');
-  }
-
-  if (getSelectedDiscoveryAgents(options).length === 0) {
-    throw new UsageError('An agent target is required: --copilot, --claude, or --codex.');
   }
 }
 

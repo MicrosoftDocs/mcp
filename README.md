@@ -108,11 +108,15 @@ GitHub Copilot, Claude Code, and Codex.
 
 ```sh
 # User profile (default)
+mslearn setup --cli
+
+# Current repository
+mslearn setup --cli --project
+
+# Override auto-detection with explicit targets
 mslearn setup --cli --copilot
 mslearn setup --cli --claude
 mslearn setup --cli --codex
-
-# Current repository
 mslearn setup --cli --copilot --project
 mslearn setup --cli --claude --project
 mslearn setup --cli --codex --project
@@ -124,6 +128,7 @@ mslearn setup --cli --copilot --claude --codex
 Remove only managed discovery content with:
 
 ```sh
+mslearn remove --cli
 mslearn remove --cli --copilot
 mslearn remove --cli --claude --codex --project
 ```
@@ -134,10 +139,12 @@ mslearn remove --cli --claude --codex --project
 | Claude Code | `~/.claude/skills/` and `~/.claude/rules/` | `.claude/skills/` and `.claude/rules/` |
 | Codex | `~/.agents/skills/` and `~/.codex/AGENTS.md` | `.agents/skills/` and `AGENTS.md` |
 
-At least one explicit target (`--copilot`, `--claude`, or `--codex`) is required. This workflow does
-not auto-detect agents, configure MCP, or install agents outside the plugin ecosystems such as
-Cursor. Codex updates and removes only a marked section in the active `AGENTS.md` or
-`AGENTS.override.md`, preserving unrelated instructions.
+When no target is specified, setup detects installed agents from their well-known user or project
+directories. Removal detects only agents with Microsoft Learn CLI-managed discovery artifacts.
+Explicit targets (`--copilot`, `--claude`, or `--codex`) override detection and can be combined. This
+workflow does not configure MCP or install agents outside the plugin ecosystems such as Cursor.
+Codex updates and removes only a marked section in the active `AGENTS.md` or `AGENTS.override.md`,
+preserving unrelated instructions.
 
 Pass `--json` to get structured JSON output, useful for programmatic processing:
 
@@ -163,7 +170,7 @@ Choose the integration that matches how you want the agent to retrieve Microsoft
 
 | Mode | Installation | Agent behavior |
 |------|--------------|----------------|
-| Standalone CLI-first | Install/run `@microsoft/learn-cli`, then run `mslearn setup --cli <agent-target>` | The selected agent invokes `npx @microsoft/learn-cli@latest`; MCP is not configured |
+| Standalone CLI-first | Install/run `@microsoft/learn-cli`, then run `mslearn setup --cli [agent-target]` | Detected or selected agents invoke `npx @microsoft/learn-cli@latest`; MCP is not configured |
 | Repository plugin, MCP-first | Install the repository plugin for GitHub Copilot, Claude Code, or Codex | The plugin supplies the Learn MCP endpoint and MCP-oriented skills |
 
 The repository plugin also supports Claude Code. Run the following command and restart Claude Code:

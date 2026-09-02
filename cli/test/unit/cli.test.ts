@@ -283,13 +283,44 @@ describe('runCli', () => {
     expect(stderr.join('')).toContain('--cli is required');
   });
 
-  it.each(['setup', 'remove'])('requires an explicit agent target for %s', async (command) => {
-    const { context, stderr } = createTestContext(createMockClient());
+  it('requires an explicit target when setup detects no supported agents', async () => {
+    const test = await createFilesystemTestContext();
 
-    const exitCode = await runCli(['node', 'mslearn', command, '--cli'], context);
+    try {
+      const exitCode = await runCli(
+        ['node', 'mslearn', 'setup', '--cli', '--project'],
+        test.context,
+      );
 
-    expect(exitCode).toBe(2);
-    expect(stderr.join('')).toContain('--copilot, --claude, or --codex');
+      expect(exitCode).toBe(2);
+      expect(test.stderr.join('')).toContain('No supported agents detected');
+      expect(test.stderr.join('')).toContain('--copilot, --claude, or --codex');
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('requires an explicit target when remove detects no managed discovery', async () => {
+    const test = await createFilesystemTestContext();
+
+    try {
+      await Promise.all([
+        mkdir(join(test.cwd, '.github'), { recursive: true }),
+        mkdir(join(test.cwd, '.claude'), { recursive: true }),
+        mkdir(join(test.cwd, '.codex'), { recursive: true }),
+      ]);
+
+      const exitCode = await runCli(
+        ['node', 'mslearn', 'remove', '--cli', '--project'],
+        test.context,
+      );
+
+      expect(exitCode).toBe(2);
+      expect(test.stderr.join('')).toContain('No Microsoft Learn CLI agent discovery detected');
+      expect(test.stderr.join('')).toContain('--copilot, --claude, or --codex');
+    } finally {
+      await test.cleanup();
+    }
   });
 
   it.each(discoveryScopeCases)('installs CLI-first discovery for $name', async ({
@@ -356,6 +387,62 @@ describe('runCli', () => {
       for (const agent of discoveryAgentCases) {
         expect(await fileExists(agent.projectSkill(test.cwd, test.homeDir))).toBe(true);
       }
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('auto-detects installed agents from their project directories', async () => {
+    const test = await createFilesystemTestContext();
+
+    try {
+      await Promise.all([
+        mkdir(join(test.cwd, '.github'), { recursive: true }),
+        mkdir(join(test.cwd, '.codex'), { recursive: true }),
+      ]);
+
+      expect(
+        await runCli(
+          ['node', 'mslearn', 'setup', '--cli', '--project'],
+          test.context,
+        ),
+      ).toBe(0);
+
+      expect(test.stdout.join('')).toContain('Detected: GitHub Copilot, Codex');
+      expect(await fileExists(discoveryAgentCases[0].projectSkill(test.cwd, test.homeDir))).toBe(
+        true,
+      );
+      expect(await fileExists(discoveryAgentCases[1].projectSkill(test.cwd, test.homeDir))).toBe(
+        false,
+      );
+      expect(await fileExists(discoveryAgentCases[2].projectSkill(test.cwd, test.homeDir))).toBe(
+        true,
+      );
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('uses explicit setup targets instead of combining them with detected agents', async () => {
+    const test = await createFilesystemTestContext();
+
+    try {
+      await mkdir(join(test.cwd, '.claude'), { recursive: true });
+
+      expect(
+        await runCli(
+          ['node', 'mslearn', 'setup', '--cli', '--copilot', '--project'],
+          test.context,
+        ),
+      ).toBe(0);
+
+      expect(test.stdout.join('')).not.toContain('Detected:');
+      expect(await fileExists(discoveryAgentCases[0].projectSkill(test.cwd, test.homeDir))).toBe(
+        true,
+      );
+      expect(await fileExists(discoveryAgentCases[1].projectSkill(test.cwd, test.homeDir))).toBe(
+        false,
+      );
     } finally {
       await test.cleanup();
     }
@@ -542,6 +629,48 @@ describe('runCli', () => {
       expect(await runCli(removeArgs, test.context)).toBe(0);
       expect(test.stdout.join('')).toContain('    ~ Skill not found');
       expect(test.stdout.join('')).toContain('    ~ Rule not found');
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('auto-detects only agents with managed discovery during removal', async () => {
+    const test = await createFilesystemTestContext();
+
+    try {
+      await mkdir(join(test.cwd, '.claude'), { recursive: true });
+      expect(
+        await runCli(
+          [
+            'node',
+            'mslearn',
+            'setup',
+            '--cli',
+            '--copilot',
+            '--codex',
+            '--project',
+          ],
+          test.context,
+        ),
+      ).toBe(0);
+      test.stdout.length = 0;
+
+      expect(
+        await runCli(
+          ['node', 'mslearn', 'remove', '--cli', '--project'],
+          test.context,
+        ),
+      ).toBe(0);
+
+      const output = test.stdout.join('');
+      expect(output).toContain('Detected: GitHub Copilot, Codex');
+      expect(output).not.toContain('Claude Code');
+      expect(await fileExists(discoveryAgentCases[0].projectSkill(test.cwd, test.homeDir))).toBe(
+        false,
+      );
+      expect(await fileExists(discoveryAgentCases[2].projectSkill(test.cwd, test.homeDir))).toBe(
+        false,
+      );
     } finally {
       await test.cleanup();
     }

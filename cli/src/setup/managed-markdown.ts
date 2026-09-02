@@ -14,6 +14,11 @@ interface ManagedSectionRange {
 export type ManagedSectionStatus = 'installed' | 'updated';
 export type ManagedSectionRemovalStatus = 'removed' | 'not found';
 
+export async function hasManagedSection(file: string): Promise<boolean> {
+  const existing = await readOptionalFile(file);
+  return existing === undefined ? false : findManagedSection(existing, file) !== undefined;
+}
+
 export async function selectFirstNonEmptyFile(files: string[], defaultFile: string): Promise<string> {
   for (const file of files) {
     const content = await readOptionalFile(file);

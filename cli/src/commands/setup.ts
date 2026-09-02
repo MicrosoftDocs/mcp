@@ -5,7 +5,9 @@ import { Command } from 'commander';
 
 import type { CliContext } from '../context.js';
 import {
+  detectInstalledDiscoveryAgents,
   formatAgentInstruction,
+  formatDiscoveryAgentNames,
   getAgentDiscoveryAssets,
   getAgentDiscoveryPaths,
   getSelectedDiscoveryAgents,
@@ -37,8 +39,21 @@ export function registerSetupCommand(program: Command, context: CliContext): voi
 
       const project = options.project ?? false;
       const scope = project ? 'project' : 'global';
-      const agents = getSelectedDiscoveryAgents(options);
+      const explicitAgents = getSelectedDiscoveryAgents(options);
+      const agents =
+        explicitAgents.length > 0
+          ? explicitAgents
+          : await detectInstalledDiscoveryAgents(project, context);
+      if (agents.length === 0) {
+        throw new UsageError(
+          'No supported agents detected. Pass --copilot, --claude, or --codex.',
+        );
+      }
+
       context.writeOut('\n');
+      if (explicitAgents.length === 0) {
+        context.writeOut(`  Detected: ${formatDiscoveryAgentNames(agents, project, context)}\n\n`);
+      }
 
       for (const agent of agents) {
         const paths = getAgentDiscoveryPaths(agent, project, context);
@@ -88,10 +103,6 @@ function validateSetupOptions(options: SetupCommandOptions): asserts options is 
 } {
   if (!options.cli) {
     throw new UsageError('--cli is required. Run "mslearn setup --cli --copilot".');
-  }
-
-  if (getSelectedDiscoveryAgents(options).length === 0) {
-    throw new UsageError('An agent target is required: --copilot, --claude, or --codex.');
   }
 }
 

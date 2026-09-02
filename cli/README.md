@@ -42,7 +42,19 @@ agent ecosystems supported by this repository's plugins: GitHub Copilot, Claude 
 The instruction routes Microsoft technology questions to the skill, and the skill teaches the agent
 to invoke `npx @microsoft/learn-cli@latest`.
 
-Select one or more agents explicitly. Install discovery for the current user:
+Install discovery for detected agents in the current user profile:
+
+```bash
+mslearn setup --cli
+```
+
+Or detect agents in the current repository and install discovery there:
+
+```bash
+mslearn setup --cli --project
+```
+
+Override auto-detection by selecting one or more agents explicitly:
 
 ```bash
 mslearn setup --cli --copilot
@@ -67,6 +79,7 @@ mslearn setup --cli --copilot --claude --codex
 Remove the managed files without changing unrelated agent configuration:
 
 ```bash
+mslearn remove --cli
 mslearn remove --cli --copilot
 mslearn remove --cli --claude --codex --project
 ```
@@ -80,10 +93,12 @@ mslearn remove --cli --claude --codex --project
 | Codex | User | `~/.agents/skills/microsoft-learn-cli/SKILL.md` | `$CODEX_HOME/AGENTS.md` or `~/.codex/AGENTS.md` |
 | Codex | Project | `.agents/skills/microsoft-learn-cli/SKILL.md` | `AGENTS.md` |
 
-`--cli` and at least one agent target (`--copilot`, `--claude`, or `--codex`) are required. The CLI
-does not auto-detect agents or configure MCP. Agents outside the plugin ecosystems, including
-Cursor, are not installed by this workflow. Re-running setup refreshes managed content; re-running
-removal succeeds when it is already absent.
+`--cli` is required. Without an agent target, setup detects installed agents from their well-known
+user or project directories, while removal detects only Microsoft Learn CLI-managed discovery
+artifacts. Explicit targets (`--copilot`, `--claude`, or `--codex`) override detection and can be
+combined. Agents outside the plugin ecosystems, including Cursor, are not installed by this
+workflow. Re-running setup refreshes managed content; explicitly targeted removal succeeds when
+discovery is already absent.
 
 For Codex, setup updates the active non-empty `AGENTS.override.md` when present; otherwise it uses
 `AGENTS.md`. Only the marked Microsoft Learn CLI section is updated or removed, preserving all
@@ -93,7 +108,7 @@ unrelated instructions.
 
 | Mode | Installation | Agent behavior |
 |------|--------------|----------------|
-| Standalone CLI-first | Install/run this npm package, then use `mslearn setup --cli <agent-target>` | The selected agent invokes the standalone CLI through `npx`; no MCP configuration is added |
+| Standalone CLI-first | Install/run this npm package, then use `mslearn setup --cli [agent-target]` | Detected or selected agents invoke the standalone CLI through `npx`; no MCP configuration is added |
 | Repository plugin, MCP-first | Install the repository plugin for GitHub Copilot, Claude Code, or Codex | The plugin supplies the Microsoft Learn MCP endpoint and MCP-oriented skills |
 
 ## Commands
@@ -107,10 +122,13 @@ mslearn code-search "cosmos db change feed processor"
 mslearn code-search "cosmos db change feed processor" --language csharp
 mslearn doctor
 mslearn doctor --format json
+mslearn setup --cli
+mslearn setup --cli --project
 mslearn setup --cli --copilot
 mslearn setup --cli --copilot --project
 mslearn setup --cli --claude
 mslearn setup --cli --codex
+mslearn remove --cli
 mslearn remove --cli --copilot
 mslearn remove --cli --copilot --project
 mslearn remove --cli --claude
@@ -125,8 +143,8 @@ Available commands:
 - `fetch <url> --max-chars <number>` truncates output.
 - `code-search <query> --language <name>` searches official code samples.
 - `doctor [--format text|json]` checks runtime and connectivity.
-- `setup --cli (--copilot|--claude|--codex) [--project]` installs discovery for one or more agents.
-- `remove --cli (--copilot|--claude|--codex) [--project]` removes only managed discovery content.
+- `setup --cli [--copilot|--claude|--codex] [--project]` detects agents or installs discovery for explicit targets.
+- `remove --cli [--copilot|--claude|--codex] [--project]` detects and removes only managed discovery content.
 
 The `search` and `code-search` commands output human-readable formatted text by
 default. Pass `--json` to get the raw JSON response, which is useful for piping
