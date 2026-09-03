@@ -1,4 +1,4 @@
-# Microsoft Learn CLI `preview`
+# Microsoft Learn CLI
 
 `mslearn` is a terminal CLI for the public Microsoft Learn MCP server.
 

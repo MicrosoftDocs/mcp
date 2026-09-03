@@ -86,7 +86,7 @@ https://learn.microsoft.com/api/mcp?maxTokenBudget=2000
 | `microsoft_docs_fetch` | Fetch and convert a Microsoft documentation page into markdown format | `url` (string): URL of the documentation page to read |
 | `microsoft_code_sample_search` | Search for official Microsoft/Azure code snippets and examples | `query` (string): Search query for Microsoft/Azure code snippets<br/>`language` (string, optional): Programming language filter.|
 
-## 💻 Microsoft Learn CLI `preview`
+## 💻 Microsoft Learn CLI
 
 [![npm version](https://img.shields.io/npm/v/@microsoft/learn-cli?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/@microsoft/learn-cli)
 
