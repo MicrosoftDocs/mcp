@@ -274,7 +274,7 @@ class LearnCliClient implements LearnCliClientLike {
     return new Client(
       {
         name: this.options.clientName ?? DEFAULT_CLIENT_NAME,
-        version: this.options.clientVersion ?? '0.1.0',
+        version: this.options.clientVersion ?? '1.0.0',
       },
       {
         capabilities: {},
