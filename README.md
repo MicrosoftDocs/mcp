@@ -103,8 +103,8 @@ mslearn search "azure functions timeout"
 ```
 
 Installing the npm package alone does not install agent discovery. The CLI can install a CLI-first
-skill and always-loaded instruction for the same ecosystems supported by this repository's plugins:
-GitHub Copilot, Claude Code, and Codex.
+skill for the same ecosystems supported by this repository's plugins: GitHub Copilot, Claude Code,
+and Codex.
 
 ```sh
 # User profile (default)
@@ -135,16 +135,16 @@ mslearn remove --cli --claude --codex --project
 
 | Agent | User scope | Project scope |
 |-------|------------|---------------|
-| GitHub Copilot | `~/.copilot/skills/` and `~/.copilot/instructions/` | `.github/skills/` and `.github/instructions/` |
-| Claude Code | `~/.claude/skills/` and `~/.claude/rules/` | `.claude/skills/` and `.claude/rules/` |
-| Codex | `~/.agents/skills/` and `~/.codex/AGENTS.md` | `.agents/skills/` and `AGENTS.md` |
+| GitHub Copilot | `~/.copilot/skills/` | `.github/skills/` |
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| Codex | `~/.agents/skills/` | `.agents/skills/` |
 
 When no target is specified, setup detects installed agents from their well-known user or project
 directories. Removal detects only agents with Microsoft Learn CLI-managed discovery artifacts.
 Explicit targets (`--copilot`, `--claude`, or `--codex`) override detection and can be combined. This
 workflow does not configure MCP or install agents outside the plugin ecosystems such as Cursor.
-Codex updates and removes only a marked section in the active `AGENTS.md` or `AGENTS.override.md`,
-preserving unrelated instructions.
+When both integrations are installed, agents should prefer the Microsoft Learn MCP tools and use
+the standalone CLI skill only as a fallback.
 
 Pass `--json` to get structured JSON output, useful for programmatic processing:
 

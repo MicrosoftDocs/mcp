@@ -7,7 +7,6 @@ export const SKILL_NAME = 'microsoft-learn-cli';
 export interface CopilotDiscoveryPaths {
   skillDirectory: string;
   skillFile: string;
-  instructionFile: string;
 }
 
 export function getCopilotDiscoveryPaths(
@@ -20,6 +19,5 @@ export function getCopilotDiscoveryPaths(
   return {
     skillDirectory,
     skillFile: join(skillDirectory, 'SKILL.md'),
-    instructionFile: join(copilotRoot, 'instructions', `${SKILL_NAME}.instructions.md`),
   };
 }

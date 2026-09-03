@@ -371,11 +371,9 @@ if (-not (Test-Path $cliDir)) {
         "src/commands/remove.ts",
         "src/setup/copilot.ts",
         "src/setup/agents.ts",
-        "src/setup/managed-markdown.ts",
         "src/mcp/client.ts",
         "src/mcp/tool-discovery.ts",
         "assets/microsoft-learn-cli/SKILL.md",
-        "assets/microsoft-learn-cli/INSTRUCTIONS.md",
         "test/unit/cli.test.ts"
     )
 

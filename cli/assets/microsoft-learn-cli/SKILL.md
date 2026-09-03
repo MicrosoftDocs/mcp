@@ -1,14 +1,14 @@
 ---
 name: microsoft-learn-cli
-description: Use the Microsoft Learn CLI to retrieve current official Microsoft documentation and code samples. Use whenever the user asks about Microsoft technologies, SDKs, APIs, configuration, limits, best practices, tutorials, or Microsoft-specific coding errors, even if they do not explicitly ask for documentation.
+description: Use the Microsoft Learn CLI to retrieve current official Microsoft documentation and code samples when Microsoft Learn MCP tools are unavailable. Use for questions about Microsoft technologies, SDKs, APIs, configuration, limits, best practices, tutorials, or Microsoft-specific coding errors that would otherwise benefit from current official documentation.
 compatibility: Requires command-line access and Node.js 22 or later.
 ---
 
 # Microsoft Learn CLI
 
-Use the Learn CLI instead of relying on training data for questions about Microsoft technologies.
-The CLI retrieves official Microsoft Learn documentation and code samples without requiring an
-MCP client.
+Prefer Microsoft Learn MCP tools when they are available. Otherwise, use the Learn CLI instead of
+relying on training data for questions about Microsoft technologies. The CLI retrieves official
+Microsoft Learn documentation and code samples without requiring an MCP client.
 
 ```sh
 npx @microsoft/learn-cli@latest search "<query>" --json

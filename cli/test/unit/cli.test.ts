@@ -88,9 +88,7 @@ interface DiscoveryAgentCase {
   name: string;
   flag: string;
   globalSkill: (cwd: string, homeDir: string) => string;
-  globalInstruction: (cwd: string, homeDir: string) => string;
   projectSkill: (cwd: string, homeDir: string) => string;
-  projectInstruction: (cwd: string, homeDir: string) => string;
 }
 
 const discoveryAgentCases: DiscoveryAgentCase[] = [
@@ -99,34 +97,24 @@ const discoveryAgentCases: DiscoveryAgentCase[] = [
     flag: '--copilot',
     globalSkill: (cwd, homeDir) =>
       join(homeDir, '.copilot', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
-    globalInstruction: (cwd, homeDir) =>
-      join(homeDir, '.copilot', 'instructions', 'microsoft-learn-cli.instructions.md'),
     projectSkill: (cwd) =>
       join(cwd, '.github', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
-    projectInstruction: (cwd) =>
-      join(cwd, '.github', 'instructions', 'microsoft-learn-cli.instructions.md'),
   },
   {
     name: 'Claude Code',
     flag: '--claude',
     globalSkill: (cwd, homeDir) =>
       join(homeDir, '.claude', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
-    globalInstruction: (cwd, homeDir) =>
-      join(homeDir, '.claude', 'rules', 'microsoft-learn-cli.md'),
     projectSkill: (cwd) =>
       join(cwd, '.claude', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
-    projectInstruction: (cwd) =>
-      join(cwd, '.claude', 'rules', 'microsoft-learn-cli.md'),
   },
   {
     name: 'Codex',
     flag: '--codex',
     globalSkill: (cwd, homeDir) =>
       join(homeDir, '.agents', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
-    globalInstruction: (cwd, homeDir) => join(homeDir, '.codex', 'AGENTS.md'),
     projectSkill: (cwd) =>
       join(cwd, '.agents', 'skills', 'microsoft-learn-cli', 'SKILL.md'),
-    projectInstruction: (cwd) => join(cwd, 'AGENTS.md'),
   },
 ];
 
@@ -137,7 +125,6 @@ const discoveryScopeCases = discoveryAgentCases.flatMap((agent) => [
     flag: agent.flag,
     args: [] as string[],
     skill: agent.globalSkill,
-    instruction: agent.globalInstruction,
   },
   {
     name: `${agent.name} project`,
@@ -145,7 +132,6 @@ const discoveryScopeCases = discoveryAgentCases.flatMap((agent) => [
     flag: agent.flag,
     args: ['--project'],
     skill: agent.projectSkill,
-    instruction: agent.projectInstruction,
   },
 ]);
 
@@ -327,7 +313,6 @@ describe('runCli', () => {
     flag,
     args,
     skill,
-    instruction,
     displayName,
   }) => {
     const test = await createFilesystemTestContext();
@@ -338,28 +323,19 @@ describe('runCli', () => {
         test.context,
       );
       const skillPath = skill(test.cwd, test.homeDir);
-      const instructionPath = instruction(test.cwd, test.homeDir);
 
       expect(exitCode).toBe(0);
       const output = test.stdout.join('');
       expect(output).toContain(`  ${displayName}`);
       expect(output).toContain('    + Skill installed');
-      expect(output).toContain('    + Rule installed');
       expect(output).toContain(skillPath);
-      expect(output).toContain(instructionPath);
 
       const skillContent = await readFile(skillPath, 'utf8');
-      const instructionContent = await readFile(instructionPath, 'utf8');
       expect(skillContent).toContain('---');
       expect(skillContent).toContain('search');
       expect(skillContent).toContain('fetch');
       expect(skillContent).toContain('code-search');
-      expect(instructionContent).toContain('microsoft-learn-cli');
-      if (flag === '--copilot') {
-        expect(instructionContent).toContain('applyTo: "**"');
-      } else {
-        expect(instructionContent).not.toContain('applyTo:');
-      }
+      expect(skillContent).toContain('Prefer Microsoft Learn MCP tools when they are available');
     } finally {
       await test.cleanup();
     }
@@ -448,157 +424,81 @@ describe('runCli', () => {
     }
   });
 
-  it('refreshes managed content when setup is repeated', async () => {
+  it('refreshes managed skill content when setup is repeated', async () => {
     const test = await createFilesystemTestContext();
     const skillPath = join(test.cwd, '.github', 'skills', 'microsoft-learn-cli', 'SKILL.md');
-    const instructionPath = join(
+
+    try {
+      const args = ['node', 'mslearn', 'setup', '--cli', '--copilot', '--project'];
+      expect(await runCli(args, test.context)).toBe(0);
+      await writeFile(skillPath, 'stale skill', 'utf8');
+
+      expect(await runCli(args, test.context)).toBe(0);
+
+      const bundledSkill = await readFile(new URL('../../assets/microsoft-learn-cli/SKILL.md', import.meta.url), 'utf8');
+      expect(await readFile(skillPath, 'utf8')).toBe(bundledSkill);
+    } finally {
+      await test.cleanup();
+    }
+  });
+
+  it('does not create or modify always-loaded agent instructions', async () => {
+    const test = await createFilesystemTestContext();
+    const agentsFile = join(test.cwd, 'AGENTS.md');
+    const copilotInstruction = join(
       test.cwd,
       '.github',
       'instructions',
       'microsoft-learn-cli.instructions.md',
     );
+    const claudeRule = join(test.cwd, '.claude', 'rules', 'microsoft-learn-cli.md');
+    const originalContent = '# Existing instructions\n';
 
     try {
-      const args = ['node', 'mslearn', 'setup', '--cli', '--copilot', '--project'];
-      expect(await runCli(args, test.context)).toBe(0);
       await Promise.all([
-        writeFile(skillPath, 'stale skill', 'utf8'),
-        writeFile(instructionPath, 'stale instruction', 'utf8'),
+        mkdir(join(test.cwd, '.github', 'instructions'), { recursive: true }),
+        mkdir(join(test.cwd, '.claude', 'rules'), { recursive: true }),
       ]);
-
-      expect(await runCli(args, test.context)).toBe(0);
-      expect(test.stdout.join('')).toContain('    + Rule updated');
-
-      const bundledSkill = await readFile(new URL('../../assets/microsoft-learn-cli/SKILL.md', import.meta.url), 'utf8');
-      const bundledInstruction = await readFile(
-        new URL('../../assets/microsoft-learn-cli/INSTRUCTIONS.md', import.meta.url),
-        'utf8',
-      );
-      expect(await readFile(skillPath, 'utf8')).toBe(bundledSkill);
-      expect(await readFile(instructionPath, 'utf8')).toBe(
-        `---\napplyTo: "**"\n---\n\n${bundledInstruction}`,
-      );
-    } finally {
-      await test.cleanup();
-    }
-  });
-
-  it('updates the Codex managed section idempotently and preserves unrelated AGENTS.md content', async () => {
-    const test = await createFilesystemTestContext();
-    const agentsFile = join(test.cwd, 'AGENTS.md');
-    const skillDirectory = join(test.cwd, '.agents', 'skills', 'microsoft-learn-cli');
-    const notesFile = join(skillDirectory, 'NOTES.md');
-    const originalContent = '# Existing instructions\n\nKeep this content.\n';
-
-    try {
-      await writeFile(agentsFile, originalContent, 'utf8');
-      const setupArgs = ['node', 'mslearn', 'setup', '--cli', '--codex', '--project'];
-      expect(await runCli(setupArgs, test.context)).toBe(0);
-      expect(await runCli(setupArgs, test.context)).toBe(0);
-      await writeFile(notesFile, 'keep', 'utf8');
-
-      const installedContent = await readFile(agentsFile, 'utf8');
-      expect(installedContent).toContain(originalContent.trim());
-      expect(installedContent.match(/mslearn:microsoft-learn-cli:start/g)).toHaveLength(1);
-
-      expect(
-        await runCli(
-          ['node', 'mslearn', 'remove', '--cli', '--codex', '--project'],
-          test.context,
-        ),
-      ).toBe(0);
-      const removedContent = await readFile(agentsFile, 'utf8');
-      expect(removedContent).toContain(originalContent.trim());
-      expect(removedContent).not.toContain('mslearn:microsoft-learn-cli');
-      expect(await readFile(notesFile, 'utf8')).toBe('keep');
-    } finally {
-      await test.cleanup();
-    }
-  });
-
-  it('matches a Codex managed end marker only after its start marker', async () => {
-    const test = await createFilesystemTestContext();
-    const agentsFile = join(test.cwd, 'AGENTS.md');
-    const orphanEndMarker = '<!-- mslearn:microsoft-learn-cli:end -->';
-    const existingSection = [
-      orphanEndMarker,
-      '# Existing instructions',
-      '<!-- mslearn:microsoft-learn-cli:start -->',
-      'stale content',
-      orphanEndMarker,
-      '',
-    ].join('\n');
-
-    try {
-      await writeFile(agentsFile, existingSection, 'utf8');
-
-      expect(
-        await runCli(
-          ['node', 'mslearn', 'setup', '--cli', '--codex', '--project'],
-          test.context,
-        ),
-      ).toBe(0);
-
-      const installedContent = await readFile(agentsFile, 'utf8');
-      expect(installedContent.startsWith(`${orphanEndMarker}\n# Existing instructions\n`)).toBe(true);
-      expect(installedContent).not.toContain('stale content');
-      expect(installedContent.match(/mslearn:microsoft-learn-cli:start/g)).toHaveLength(1);
-      expect(installedContent.match(/mslearn:microsoft-learn-cli:end/g)).toHaveLength(2);
-    } finally {
-      await test.cleanup();
-    }
-  });
-
-  it('uses an existing non-empty Codex AGENTS.override.md without changing AGENTS.md', async () => {
-    const test = await createFilesystemTestContext();
-    const agentsFile = join(test.cwd, 'AGENTS.md');
-    const overrideFile = join(test.cwd, 'AGENTS.override.md');
-
-    try {
       await Promise.all([
-        writeFile(agentsFile, '# Base instructions\n', 'utf8'),
-        writeFile(overrideFile, '# Override instructions\n', 'utf8'),
+        writeFile(agentsFile, originalContent, 'utf8'),
+        writeFile(copilotInstruction, originalContent, 'utf8'),
+        writeFile(claudeRule, originalContent, 'utf8'),
       ]);
 
       expect(
         await runCli(
-          ['node', 'mslearn', 'setup', '--cli', '--codex', '--project'],
+          [
+            'node',
+            'mslearn',
+            'setup',
+            '--cli',
+            '--copilot',
+            '--claude',
+            '--codex',
+            '--project',
+          ],
           test.context,
         ),
       ).toBe(0);
-      expect(await readFile(agentsFile, 'utf8')).toBe('# Base instructions\n');
-      expect(await readFile(overrideFile, 'utf8')).toContain('microsoft-learn-cli');
-
       expect(
         await runCli(
-          ['node', 'mslearn', 'remove', '--cli', '--codex', '--project'],
+          [
+            'node',
+            'mslearn',
+            'remove',
+            '--cli',
+            '--copilot',
+            '--claude',
+            '--codex',
+            '--project',
+          ],
           test.context,
         ),
       ).toBe(0);
-      expect(await readFile(agentsFile, 'utf8')).toBe('# Base instructions\n');
-      expect(await readFile(overrideFile, 'utf8')).toContain('# Override instructions');
-      expect(await readFile(overrideFile, 'utf8')).not.toContain('microsoft-learn-cli');
-    } finally {
-      await test.cleanup();
-    }
-  });
 
-  it('respects CODEX_HOME for global Codex instructions', async () => {
-    const test = await createFilesystemTestContext();
-    const codexHome = join(test.homeDir, 'custom-codex');
-    test.context.env = { CODEX_HOME: codexHome };
-    const instructionFile = join(codexHome, 'AGENTS.md');
-
-    try {
-      expect(
-        await runCli(['node', 'mslearn', 'setup', '--cli', '--codex'], test.context),
-      ).toBe(0);
-      expect(await readFile(instructionFile, 'utf8')).toContain('microsoft-learn-cli');
-
-      expect(
-        await runCli(['node', 'mslearn', 'remove', '--cli', '--codex'], test.context),
-      ).toBe(0);
-      expect(await fileExists(instructionFile)).toBe(false);
+      expect(await readFile(agentsFile, 'utf8')).toBe(originalContent);
+      expect(await readFile(copilotInstruction, 'utf8')).toBe(originalContent);
+      expect(await readFile(claudeRule, 'utf8')).toBe(originalContent);
     } finally {
       await test.cleanup();
     }
@@ -608,27 +508,22 @@ describe('runCli', () => {
     flag,
     args,
     skill,
-    instruction,
     displayName,
   }) => {
     const test = await createFilesystemTestContext();
     const setupArgs = ['node', 'mslearn', 'setup', '--cli', flag, ...args];
     const removeArgs = ['node', 'mslearn', 'remove', '--cli', flag, ...args];
     const skillPath = skill(test.cwd, test.homeDir);
-    const instructionPath = instruction(test.cwd, test.homeDir);
 
     try {
       expect(await runCli(setupArgs, test.context)).toBe(0);
       expect(await runCli(removeArgs, test.context)).toBe(0);
       expect(await fileExists(skillPath)).toBe(false);
-      expect(await fileExists(instructionPath)).toBe(false);
       const output = test.stdout.join('');
       expect(output).toContain(`  ${displayName}`);
       expect(output).toContain('    - Skill removed');
-      expect(output).toContain('    - Rule removed');
       expect(await runCli(removeArgs, test.context)).toBe(0);
       expect(test.stdout.join('')).toContain('    ~ Skill not found');
-      expect(test.stdout.join('')).toContain('    ~ Rule not found');
     } finally {
       await test.cleanup();
     }
@@ -702,6 +597,7 @@ describe('runCli', () => {
       expect(
         await runCli(['node', 'mslearn', 'setup', '--cli', '--copilot', ...args], test.context),
       ).toBe(0);
+      await mkdir(instructionsDirectory, { recursive: true });
       await Promise.all(unrelatedFiles.map((path) => writeFile(path, 'keep', 'utf8')));
 
       expect(

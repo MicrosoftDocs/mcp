@@ -10,7 +10,6 @@ import {
   getSelectedDiscoveryAgents,
   type DiscoveryAgentOptions,
 } from '../setup/agents.js';
-import { removeManagedSection } from '../setup/managed-markdown.js';
 import { UsageError } from '../utils/errors.js';
 
 interface RemoveCommandOptions extends DiscoveryAgentOptions {
@@ -54,37 +53,9 @@ export function registerRemoveCommand(program: Command, context: CliContext): vo
         const skillStatus = await removeFileIfPresent(paths.skillFile);
         await removeDirectoryIfEmpty(paths.skillDirectory);
 
-        const ruleResults: Array<{ path: string; status: 'removed' | 'not found' }> = [];
-        if (paths.instruction.kind === 'file') {
-          ruleResults.push({
-            path: paths.instruction.file,
-            status: await removeFileIfPresent(paths.instruction.file),
-          });
-        } else {
-          for (const instructionFile of paths.instruction.files) {
-            ruleResults.push({
-              path: instructionFile,
-              status: await removeManagedSection(instructionFile),
-            });
-          }
-        }
-
         context.writeOut(`  ${paths.displayName} (${scope})\n`);
         context.writeOut(`    ${skillStatus === 'removed' ? '-' : '~'} Skill ${skillStatus}\n`);
         context.writeOut(`      ${paths.skillFile}\n`);
-
-        const removedRules = ruleResults.filter((result) => result.status === 'removed');
-        if (removedRules.length > 0) {
-          for (const result of removedRules) {
-            context.writeOut('    - Rule removed\n');
-            context.writeOut(`      ${result.path}\n`);
-          }
-        } else {
-          context.writeOut('    ~ Rule not found\n');
-          for (const result of ruleResults) {
-            context.writeOut(`      ${result.path}\n`);
-          }
-        }
       }
 
       context.writeOut('\n');

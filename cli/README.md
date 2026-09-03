@@ -37,10 +37,9 @@ Installing the npm package alone does not install agent discovery.
 
 ## Agent discovery
 
-The standalone CLI can install a CLI-first skill plus an always-loaded instruction for the same
-agent ecosystems supported by this repository's plugins: GitHub Copilot, Claude Code, and Codex.
-The instruction routes Microsoft technology questions to the skill, and the skill teaches the agent
-to invoke `npx @microsoft/learn-cli@latest`.
+The standalone CLI can install a CLI-first skill for the same agent ecosystems supported by this
+repository's plugins: GitHub Copilot, Claude Code, and Codex. The skill teaches the agent to invoke
+`npx @microsoft/learn-cli@latest` when Microsoft Learn MCP tools are unavailable.
 
 Install discovery for detected agents in the current user profile:
 
@@ -84,14 +83,14 @@ mslearn remove --cli --copilot
 mslearn remove --cli --claude --codex --project
 ```
 
-| Agent | Scope | Skill | Always-loaded instruction |
-|-------|-------|-------|---------------------------|
-| GitHub Copilot | User | `~/.copilot/skills/microsoft-learn-cli/SKILL.md` | `~/.copilot/instructions/microsoft-learn-cli.instructions.md` |
-| GitHub Copilot | Project | `.github/skills/microsoft-learn-cli/SKILL.md` | `.github/instructions/microsoft-learn-cli.instructions.md` |
-| Claude Code | User | `~/.claude/skills/microsoft-learn-cli/SKILL.md` | `~/.claude/rules/microsoft-learn-cli.md` |
-| Claude Code | Project | `.claude/skills/microsoft-learn-cli/SKILL.md` | `.claude/rules/microsoft-learn-cli.md` |
-| Codex | User | `~/.agents/skills/microsoft-learn-cli/SKILL.md` | `$CODEX_HOME/AGENTS.md` or `~/.codex/AGENTS.md` |
-| Codex | Project | `.agents/skills/microsoft-learn-cli/SKILL.md` | `AGENTS.md` |
+| Agent | Scope | Skill |
+|-------|-------|-------|
+| GitHub Copilot | User | `~/.copilot/skills/microsoft-learn-cli/SKILL.md` |
+| GitHub Copilot | Project | `.github/skills/microsoft-learn-cli/SKILL.md` |
+| Claude Code | User | `~/.claude/skills/microsoft-learn-cli/SKILL.md` |
+| Claude Code | Project | `.claude/skills/microsoft-learn-cli/SKILL.md` |
+| Codex | User | `~/.agents/skills/microsoft-learn-cli/SKILL.md` |
+| Codex | Project | `.agents/skills/microsoft-learn-cli/SKILL.md` |
 
 `--cli` is required. Without an agent target, setup detects installed agents from their well-known
 user or project directories, while removal detects only Microsoft Learn CLI-managed discovery
@@ -100,16 +99,15 @@ combined. Agents outside the plugin ecosystems, including Cursor, are not instal
 workflow. Re-running setup refreshes managed content; explicitly targeted removal succeeds when
 discovery is already absent.
 
-For Codex, setup updates the active non-empty `AGENTS.override.md` when present; otherwise it uses
-`AGENTS.md`. Only the marked Microsoft Learn CLI section is updated or removed, preserving all
-unrelated instructions.
-
 ### CLI-first versus MCP-first
 
 | Mode | Installation | Agent behavior |
 |------|--------------|----------------|
-| Standalone CLI-first | Install/run this npm package, then use `mslearn setup --cli [agent-target]` | Detected or selected agents invoke the standalone CLI through `npx`; no MCP configuration is added |
+| Standalone CLI-first | Install/run this npm package, then use `mslearn setup --cli [agent-target]` | Detected or selected agents invoke the standalone CLI through `npx` when Learn MCP tools are unavailable; no MCP configuration is added |
 | Repository plugin, MCP-first | Install the repository plugin for GitHub Copilot, Claude Code, or Codex | The plugin supplies the Microsoft Learn MCP endpoint and MCP-oriented skills |
+
+When both integrations are installed, agents should prefer the Microsoft Learn MCP tools and use
+the standalone CLI skill only as a fallback.
 
 ## Commands
 
