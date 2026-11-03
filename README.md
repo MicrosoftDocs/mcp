@@ -194,7 +194,7 @@ Otherwise:
 Agent Skills work across multiple AI agents:
 - **VS Code** (Insiders) — enable `chat.useAgentSkills` setting
 - **GitHub Copilot CLI** & **Copilot coding agent**
-- **Claude Code**, **Cursor**, **OpenAI Codex**, and [more](https://agentskills.io/)
+- **Claude Code**, **Cursor**, **OpenAI Codex**, **Neotask**, and [more](https://agentskills.io/)
 
 ### Which Skill Do I Need?
 
@@ -227,6 +227,7 @@ The Microsoft Learn MCP Server supports quick installation across multiple devel
 | **ChatGPT** | Manual configuration required<br/> <details><summary>View Instructions</summary>1. Open ChatGPT in the browser<br/>2. Go to **Settings → Connectors → Advanced settings → Turn Developer mode on**<br/>3. Go back to connectors and click **create**<br/>4. Give the connector a **name**, enter **URL** `https://learn.microsoft.com/api/mcp`, set **authentication** to `No authentication` and **trust** the application<br/>5. Click **create**<br/> </details> | [ChatGPT Official Guide](https://platform.openai.com/docs/guides/developer-mode)|
 | **Windsurf** | Manual configuration required<br/> <details><summary>View Config</summary><pre>{<br/>  "mcpServers": {<br/>    "microsoft-learn": {<br/>      "serverUrl": "https://learn.microsoft.com/api/mcp"<br/>    }<br/>  }<br/>}</pre></details>| [Windsurf MCP Guide](https://docs.windsurf.com/windsurf/cascade/mcp) |
 | **Kiro** | <details><summary>View Config</summary><pre>{<br/>  "microsoft-learn": {<br/>    "url": "https://learn.microsoft.com/api/mcp"<br/>    }<br/>}</pre> </details>| [Kiro MCP Guide](https://kiro.dev/docs/mcp/index) |
+| **Neotask** | `neotask construct install microsoft-docs` (includes skills; uses your Microsoft Learn connection in Neotask) | [Neotask Construct listing](https://construct.neotask.ai/p/microsoft-docs) |
 
 
 > ### ⚠️ Building a Custom Client
