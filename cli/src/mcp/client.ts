@@ -1,5 +1,4 @@
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import type { ListToolsResult } from '@modelcontextprotocol/sdk/types.js';
 
 import type { ReachabilityReport, ToolKind } from '../utils/contracts.js';
@@ -68,10 +67,11 @@ export async function probeEndpoint(endpoint: string, fetchImpl: typeof fetch = 
 }
 
 class LearnCliClient implements LearnCliClientLike {
-  private readonly client: SdkClientLike;
   private readonly endpoint: URL;
   private readonly cacheStore: LearnSessionCacheStore;
   private readonly fetchImpl: typeof fetch;
+  private client?: SdkClientLike;
+  private clientPromise?: Promise<SdkClientLike>;
   private transport?: TransportLike;
   private cachedTools?: ListedTool[];
   private discoveredTools?: DiscoveredLearnTools;
@@ -82,7 +82,6 @@ class LearnCliClient implements LearnCliClientLike {
     this.endpoint = new URL(options.endpoint);
     this.cacheStore = options.cacheStore ?? createFileLearnSessionCacheStore();
     this.fetchImpl = options.fetchImpl ?? globalThis.fetch.bind(globalThis);
-    this.client = options.createSdkClient?.() ?? this.createDefaultSdkClient();
   }
 
   async close(): Promise<void> {
@@ -136,10 +135,11 @@ class LearnCliClient implements LearnCliClientLike {
     }
 
     const attemptedSessionId = this.cachedSessionId;
-    const transport = this.createTransport(attemptedSessionId);
+    const client = await this.getSdkClient();
+    const transport = await this.createTransport(attemptedSessionId);
 
     try {
-      await this.client.connect(transport);
+      await client.connect(transport);
       this.transport = transport;
       this.cachedSessionId = transport.sessionId ?? attemptedSessionId;
       await this.persistCache();
@@ -161,7 +161,8 @@ class LearnCliClient implements LearnCliClientLike {
     let cursor: string | undefined;
 
     do {
-      const page: ListToolsResult = await this.client.listTools(cursor ? { cursor } : undefined);
+      const client = await this.getSdkClient();
+      const page: ListToolsResult = await client.listTools(cursor ? { cursor } : undefined);
       tools.push(...page.tools);
       cursor = page.nextCursor;
     } while (cursor);
@@ -267,10 +268,24 @@ class LearnCliClient implements LearnCliClientLike {
   }
 
   private async invokeToolWithSdk(toolName: string, args: Record<string, unknown>): Promise<ToolCallResult> {
-    return this.client.callTool({ name: toolName, arguments: args });
+    const client = await this.getSdkClient();
+    return client.callTool({ name: toolName, arguments: args });
   }
 
-  private createDefaultSdkClient(): SdkClientLike {
+  private async getSdkClient(): Promise<SdkClientLike> {
+    if (this.client) {
+      return this.client;
+    }
+
+    this.clientPromise ??= this.options.createSdkClient
+      ? Promise.resolve().then(() => this.options.createSdkClient!())
+      : this.createDefaultSdkClient();
+    this.client = await this.clientPromise;
+    return this.client;
+  }
+
+  private async createDefaultSdkClient(): Promise<SdkClientLike> {
+    const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
     return new Client(
       {
         name: this.options.clientName ?? DEFAULT_CLIENT_NAME,
@@ -301,11 +316,12 @@ class LearnCliClient implements LearnCliClientLike {
     );
   }
 
-  private createTransport(sessionId?: string): TransportLike {
+  private async createTransport(sessionId?: string): Promise<TransportLike> {
     if (this.options.createTransport) {
       return this.options.createTransport(this.endpoint, sessionId);
     }
 
+    const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
     return new StreamableHTTPClientTransport(this.endpoint, sessionId ? { sessionId } : undefined);
   }
 
